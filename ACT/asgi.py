@@ -1,5 +1,5 @@
 """
-ASGI config for Recruitment_Management_System project.
+ASGI config for ACT project.
 
 It exposes the ASGI callable as a module-level variable named ``application``.
 
@@ -11,6 +11,6 @@ import os
 
 from django.core.asgi import get_asgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'Recruitment_Management_System.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ACT.settings')
 
 application = get_asgi_application()
