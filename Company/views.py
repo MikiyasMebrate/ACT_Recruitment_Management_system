@@ -1,11 +1,20 @@
 from django.shortcuts import render
+from .models import Blog
 
 # Create your views here.
 def blog(request):
-    return render(request, 'Company/blog.html')
+    context = {
+        'latest_blog' : Blog.objects.first(),
+        'blogs' : Blog.objects.all()[1:]
+    }
+    return render(request, 'Company/blog.html', context)
 
-def single_blog(request):
-    return render(request, 'Company/blog-details.html')
+def single_blog(request, slug):
+    blog = Blog.objects.get(slug = slug)
+    context = {
+        'blog' : blog
+    }
+    return render(request, 'Company/blog-details.html', context)
 
 def contact(request):
     return render(request, 'Company/contact.html')

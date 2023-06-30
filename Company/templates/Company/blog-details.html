@@ -77,7 +77,7 @@
               <div class="row justify-content-center">
                 <div class="col-lg-7">
                   <div class="text-center mb-5">
-                    <p class="text-danger fw-semibold mb-0">Fashion</p>
+                    <p class="text-danger fw-semibold mb-0">{{blog.type}}</p>
                     <h3>How to get creative in your work ?</h3>
                   </div>
                 </div>
@@ -89,21 +89,7 @@
                       <div class="swiper-wrapper">
                         <div class="swiper-slide">
                           <img
-                            src="{% static 'assets/images/blog/img-11.jpg' %} "
-                            alt=""
-                            class="img-fluid rounded-3"
-                          />
-                        </div>
-                        <div class="swiper-slide">
-                          <img
-                            src="{% static 'assets/images/blog/img-14.jpg' %} "
-                            alt=""
-                            class="img-fluid rounded-3"
-                          />
-                        </div>
-                        <div class="swiper-slide">
-                          <img
-                            src="{% static 'assets/images/blog/img-15.jpg' %} "
+                            src="/media/{{blog.image}} "
                             alt=""
                             class="img-fluid rounded-3"
                           />
@@ -115,26 +101,10 @@
                       <li class="list-inline-item">
                         <div class="d-flex align-items-center">
                           <div class="flex-shrink-0">
-                            <img
-                              src="{% static 'assets/images/user/img-03.jpg' %} "
-                              alt=""
-                              class="avatar-sm rounded-circle"
-                            />
-                          </div>
-                          <div class="ms-3">
-                            <a href="blog-author.html" class="primary-link"
-                              ><h6 class="mb-0">By Alice Mellor</h6></a
-                            >
-                          </div>
-                        </div>
-                      </li>
-                      <li class="list-inline-item">
-                        <div class="d-flex align-items-center">
-                          <div class="flex-shrink-0">
                             <i class="uil uil-calendar-alt"></i>
                           </div>
                           <div class="ms-2">
-                            <p class="mb-0">Aug 02, 2021</p>
+                            <p class="mb-0">{{blog.created_at|date:"F j, Y"}}</p>
                           </div>
                         </div>
                       </li>
@@ -150,54 +120,10 @@
                       </li>
                     </ul>
                     <div class="mt-4">
-                      <h5>What makes the best co-working space?</h5>
-                      <p class="text-muted">
-                        Objectively pursue diverse catalysts for change for
-                        interoperable meta-services. Distinctively re-engineer
-                        revolutionary meta-services and premium architectures.
-                        Intrinsically incubate intuitive opportunities and
-                        real-time potentialities. Appropriately communicate
-                        one-to-one technology.
-                      </p>
-                      <p class="text-muted mb-4">
-                        Home renovations, especially those involving plentiful
-                        of demolition can be a very dusty affair. The same is
-                        true as we experience the emotional sensation of stress
-                        from our first instances of social rejection ridicule.
-                        We quickly learn to fear and thus automatically avoid
-                        potentially stressful situations of all kinds, including
-                        the most common of all making mistakes.
-                      </p>
-                      <figure class="blog-blockquote text-center">
-                        <blockquote class="blockquote">
-                          <p class="fs-17">
-                            "A business consulting agency is involved in the
-                            planning, implementation, and education of
-                            businesses."
-                          </p>
-                        </blockquote>
-                        <figcaption class="blockquote-footer fs-15 mb-4">
-                          Creative Agency<cite
-                            title="Source Title"
-                            class="text-primary fw-semibold"
-                          >
-                            Alice Mellor</cite
-                          >
-                        </figcaption>
-                      </figure>
-                      <p class="text-muted">
-                        Whether article spirits new her covered hastily sitting
-                        her. Money witty books nor son add. Chicken age had
-                        evening believe but proceed pretend mrs. At missed
-                        advice my it no sister. Miss told ham dull knew see she
-                        spot near can. Spirit her entire her called.
-                      </p>
-                      <p class="text-muted">
-                        The advantage of its Latin origin and the relative
-                        meaninglessness of Lorum Ipsum is that the text does not
-                        attract attention to itself or distract the viewer's
-                        attention from the layout.
-                      </p>
+                      <h5>{{blog.title}}</h5>
+                     
+                       {{blog.content | safe }}
+                    
                       <div class="d-flex align-items-center mb-4">
                         <div class="flex-shrink-0">
                           <b>Tags:</b>
