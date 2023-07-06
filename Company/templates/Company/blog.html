@@ -36,9 +36,6 @@
                         <li class="breadcrumb-item">
                           <a href="{% url 'index' %}">Home</a>
                         </li>
-                        <li class="breadcrumb-item">
-                          <a href="javascript:void(0)">Blog</a>
-                        </li>
                         <li class="breadcrumb-item active" aria-current="page">
                           Blog
                         </li>
@@ -125,14 +122,14 @@
                 <article class="post position-relative mt-4">
                   <div class="post-preview overflow-hidden mb-3 rounded-3">
                     <a href="{% url 'single_blog' blog.slug%}"><img src="/media/{{blog.image}}" alt=""
-                        class="img-fluid blog-img" style="width: auto; height: 300px;" /></a>
+                        class="img-fluid blog-img" style="width: auto; height: 230px;" /></a>
                   </div>
                   <p class="text-muted mb-2">
                    
                     <b>  {% for type in blog.type.all %} {{type}} {% endfor %} </b> - {{blog.created_at|timesince }} ago
                   </p>
                   <h5 class="mb-3">
-                    <a href="{% url 'single_blog' blog.slug%}" class="primary-link">{{blog.title}}</a>
+                    <a href="{% url 'single_blog' blog.slug %}" class="primary-link">{{blog.title}}</a>
                   </h5>
                   <p class="text">{{blog.description}}</p>
                   <a class="read-more" href="{% url 'single_blog' blog.slug%}">Read More</a>

@@ -12,11 +12,9 @@
   </head>
 
   <body>
-
-
     <!-- Begin page -->
     <div>
-        {% include 'include/navbar.html' %}
+      {% include 'include/navbar.html' %}
       <div class="main-content">
         <div class="page-content">
           <!-- Start home -->
@@ -36,7 +34,7 @@
                             <a href="{% url 'index' %}">Home</a>
                           </li>
                           <li class="breadcrumb-item">
-                            <a href="javascript:void(0)">Blog</a>
+                            <a href="{% url 'blog' %}">Blog</a>
                           </li>
                           <li
                             class="breadcrumb-item active"
@@ -77,8 +75,10 @@
               <div class="row justify-content-center">
                 <div class="col-lg-7">
                   <div class="text-center mb-5">
-                    <p class="text-danger fw-semibold mb-0">{{blog.type}}</p>
-                    <h3>How to get creative in your work ?</h3>
+                    <p class="text-danger fw-semibold mb-0">
+                      {% for cate in blog.type.all%} {{cate}} {% endfor %}
+                    </p>
+                    <h3>{{blog.title}}</h3>
                   </div>
                 </div>
               </div>
@@ -104,7 +104,9 @@
                             <i class="uil uil-calendar-alt"></i>
                           </div>
                           <div class="ms-2">
-                            <p class="mb-0">{{blog.created_at|date:"F j, Y"}}</p>
+                            <p class="mb-0">
+                              {{blog.created_at|date:"F j, Y"}}
+                            </p>
                           </div>
                         </div>
                       </li>
@@ -114,151 +116,55 @@
                             <i class="uil uil-comments-alt"></i>
                           </div>
                           <div class="ms-2 flex-grow-1">
-                            <p class="mb-0">2 Comments</p>
+                            <p class="mb-0">{{blog.count_comment}} Comments </p>
                           </div>
                         </div>
                       </li>
                     </ul>
                     <div class="mt-4">
                       <h5>{{blog.title}}</h5>
-                     
-                       {{blog.content | safe }}
-                    
-                      <div class="d-flex align-items-center mb-4">
-                        <div class="flex-shrink-0">
-                          <b>Tags:</b>
-                        </div>
-                        <div class="flex-grow-1 ms-2">
-                          <a
-                            href="javascript:void(0)"
-                            class="badge bg-success-subtle text-success mt-1 fs-14"
-                            >Business</a
-                          >
-                          <a
-                            href="javascript:void(0)"
-                            class="badge bg-success-subtle text-success mt-1 fs-14"
-                            >design</a
-                          >
-                          <a
-                            href="javascript:void(0)"
-                            class="badge bg-success-subtle text-success mt-1 fs-14"
-                            >Creative</a
-                          >
-                          <a
-                            href="javascript:void(0)"
-                            class="badge bg-success-subtle text-success mt-1 fs-14"
-                            >Event</a
-                          >
-                        </div>
-                      </div>
-                      <ul class="blog-social-menu list-inline mb-0 text-end">
-                        <li class="list-inline-item">
-                          <b>Share post:</b>
-                        </li>
-                        <li class="list-inline-item">
-                          <a
-                            href="javascript:void(0)"
-                            class="social-link bg-primary-subtle text-primary"
-                          >
-                            <i class="uil uil-facebook-f"></i>
-                          </a>
-                        </li>
-                        <li class="list-inline-item">
-                          <a
-                            href="javascript:void(0)"
-                            class="social-link bg-success-subtle text-success"
-                          >
-                            <i class="uil uil-whatsapp"></i>
-                          </a>
-                        </li>
-                        <li class="list-inline-item">
-                          <a
-                            href="javascript:void(0)"
-                            class="social-link bg-blue-subtle text-blue"
-                          >
-                            <i class="uil uil-linkedin-alt"></i>
-                          </a>
-                        </li>
-                        <li class="list-inline-item">
-                          <a
-                            href="javascript:void(0)"
-                            class="social-link bg-danger-subtle text-danger"
-                          >
-                            <i class="uil uil-envelope"></i>
-                          </a>
-                        </li>
-                      </ul>
+
+                      {{blog.content | safe }}
+
+              
                     </div>
                     <!-- comment start -->
                     <h5 class="border-bottom pb-3 mt-5">Comments</h5>
+                    
+                    {% for comment in comments%}
                     <div class="mt-5">
                       <div class="d-sm-flex align-items-top">
                         <div class="flex-shrink-0">
                           <img
                             class="rounded-circle avatar-md img-thumbnail"
-                            src="{% static 'assets/images/user/img-01.jpg' %} "
+                            src="{% static 'assets/images/user/user.png' %} "
                             alt="img"
                           />
                         </div>
                         <div class="flex-grow-1 ms-sm-3">
                           <small class="float-end fs-12 text-muted"
-                            ><i class="uil uil-clock"></i> 30 min Ago</small
+                            ><i class="uil uil-clock"></i> {{comment.created_at | timesince}}</small
                           >
                           <a href="javascript:(0)" class="primary-link"
                             ><h6 class="fs-16 mt-sm-0 mt-3 mb-0">
-                              Rebecca Swartz
+                              {{comment.name}}
                             </h6></a
                           >
-                          <p class="text-muted fs-14 mb-0">Aug 10, 2021</p>
-                          <div class="my-3 badge bg-light">
+                          <p class="text-muted fs-14 mb-0">{{comment.created_at | date }}</p>
+                          {% comment %} <div class="my-3 badge bg-light">
                             <a href="javascript: void(0);" class="text-primary"
                               ><i class="mdi mdi-reply"></i> Reply</a
                             >
-                          </div>
+                          </div> {% endcomment %}
                           <p class="text-muted fst-italic mb-0">
-                            " There are many variations of passages of Lorem
-                            Ipsum available, but the majority have suffered
-                            alteration in some form, by injected humour "
+                          {{comment.comment}}
                           </p>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="mt-5">
-                      <div class="d-sm-flex align-items-top">
-                        <div class="flex-shrink-0">
-                          <img
-                            class="rounded-circle avatar-md img-thumbnail"
-                            src="{% static 'assets/images/user/img-02.jpg' %} "
-                            alt="img"
-                          />
-                        </div>
-                        <div class="flex-grow-1 ms-sm-3">
-                          <small class="float-end fs-12 text-muted"
-                            ><i class="uil uil-clock"></i> 2 hrs Ago</small
-                          >
-                          <a href="javascript:(0)" class="primary-link"
-                            ><h6 class="fs-16 mt-sm-0 mt-3 mb-0">
-                              Adam Gibson
-                            </h6></a
-                          >
-                          <p class="text-muted fs-14 mb-0">Aug 10, 2021</p>
-                          <div class="my-3 badge bg-light">
-                            <a href="javascript: void(0);" class="text-primary"
-                              ><i class="mdi mdi-reply"></i> Reply</a
-                            >
-                          </div>
-                          <p class="text-muted fst-italic mb-0">
-                            " The most important aspect of beauty was,
-                            therefore, an inherent part of an object, rather
-                            than something applied superficially, and was based
-                            on universal, recognisable truths. "
-                          </p>
-
+                          {% comment %}
                           <div class="d-sm-flex align-items-top mt-5">
                             <div class="flex-shrink-0">
                               <img
                                 class="rounded-circle avatar-md img-thumbnail"
-                                src="{% static 'assets/images/user/img-04.jpg' %} "
+                                src="{% static 'assets/images/user/user.png' %} "
                                 alt="img"
                               />
                             </div>
@@ -287,66 +193,59 @@
                               </p>
                             </div>
                           </div>
+                          {% endcomment %}
                         </div>
                       </div>
                     </div>
+
+                    {% endfor %}
                     <!-- end comment -->
 
-                    <form action="#" class="contact-form mt-5">
+                    <form action="" class="contact-form mt-5" method="POST">
+                      {% csrf_token %}
+
                       <h5 class="border-bottom pb-3">Leave a Message</h5>
                       <div class="row mt-4">
                         <div class="col-lg-6">
                           <div class="position-relative mb-3">
-                            <label for="name" class="form-label">Name</label>
+                            <label for="name" class="form-label"
+                              >Name{% for err in form.name.errors %}
+                              :<small class="text-danger"> {{err}}</small>
+                              {% endfor %}</label
+                            >
                             <input
                               name="name"
-                              id="name"
+                              id="id_name"
                               type="text"
-                              class="form-control"
+                              class="form-control   {% if form.name.errors %} is-invalid {% endif %}   "
                               placeholder="Enter your name*"
-                              required=""
                             />
                           </div>
                         </div>
                         <div class="col-lg-6">
                           <div class="position-relative mb-3">
                             <label for="email" class="form-label"
-                              >Email address</label
+                              >Email address{% for err in form.email.errors %}: <small class="text-danger"> {{err}}</small>{% endfor %} </label
                             >
                             <input
                               name="email"
-                              id="email"
+                              id="id_email"
                               type="email"
-                              class="form-control"
+                              class="form-control {%if form.email.errors%} is-invalid {% endif %} "
                               placeholder="Enter your email*"
-                              required=""
                             />
                           </div>
                         </div>
                         <div class="col-lg-12">
                           <div class="position-relative mb-3">
-                            <label for="subject" class="form-label"
-                              >Subject</label
-                            >
-                            <input
-                              name="subject"
-                              id="subject"
-                              type="text"
-                              class="form-control"
-                              placeholder="Subject"
-                            />
-                          </div>
-                        </div>
-                        <div class="col-lg-12">
-                          <div class="position-relative mb-3">
-                            <label for="comments" class="form-label"
-                              >Meassage</label
+                            <label for="comment" class="form-label"
+                              >Meassage{% for err in form.comment.errors %}: <small class="text-danger"> {{err}}</small>{% endfor %} </label
                             >
                             <textarea
-                              name="comments"
-                              id="comments"
+                              name="comment"
+                              id="id_comment"
                               rows="4"
-                              class="form-control"
+                              class="form-control {% if form.comment.errors %} is-invalid {% endif %}" 
                               placeholder="Enter your message"
                             ></textarea>
                           </div>
@@ -366,392 +265,39 @@
                       </div>
                     </form>
                     <!--end form-->
-                    <div class="mt-5">
-                      <h5 class="border-bottom pb-3">Related Blog Posts</h5>
-                      <div class="swiper blogSlider pb-5 mt-4">
-                        <div class="swiper-wrapper">
-                          <div class="swiper-slide">
-                            <div
-                              class="card blog-modern-box overflow-hidden border-0"
-                            >
-                              <img
-                                src="{% static 'assets/images/blog/img-04.jpg' %} "
-                                alt=""
-                                class="img-fluid"
-                              />
-                              <div class="bg-overlay"></div>
-                              <div class="card-img-overlay">
-                                <a href="blog-details.html" class="text-white"
-                                  ><h5 class="card-title">
-                                    Manage white space in responsive layouts ?
-                                  </h5></a
-                                >
-                                <p class="card-text text-white-50">
-                                  <a
-                                    href="blog-author.html"
-                                    class="text-white-50"
-                                    >Rebecca Swartz</a
-                                  >
-                                  - 5 mins ago
-                                </p>
-                              </div>
-                            </div>
-                          </div>
-                          <!--end blogSlider-->
-                          <div class="swiper-slide">
-                            <div
-                              class="card blog-modern-box overflow-hidden border-0"
-                            >
-                              <img
-                                src="{% static 'assets/images/blog/img-05.jpg' %} "
-                                alt=""
-                                class="img-fluid"
-                              />
-                              <div class="bg-overlay"></div>
-                              <div class="card-img-overlay">
-                                <a href="blog-details.html" class="text-white"
-                                  ><h5 class="card-title">
-                                    A day in the of a professional fashion
-                                    designer
-                                  </h5></a
-                                >
-                                <p class="card-text text-white-50">
-                                  <a
-                                    href="blog-author.html"
-                                    class="text-white-50"
-                                    >Rebecca Swartz</a
-                                  >
-                                  - 5 mins ago
-                                </p>
-                              </div>
-                            </div>
-                          </div>
-                          <!--end blogSlider-->
-                          <div class="swiper-slide">
-                            <div
-                              class="card blog-modern-box overflow-hidden border-0"
-                            >
-                              <img
-                                src="{% static 'assets/images/blog/img-06.jpg' %} "
-                                alt=""
-                                class="img-fluid"
-                              />
-                              <div class="bg-overlay"></div>
-                              <div class="card-img-overlay">
-                                <a href="blog-details.html" class="text-white"
-                                  ><h5 class="card-title">
-                                    Design your apps in your own way
-                                  </h5></a
-                                >
-                                <p class="card-text text-white-50">
-                                  <a
-                                    href="blog-author.html"
-                                    class="text-white-50"
-                                    >Rebecca Swartz</a
-                                  >
-                                  - 5 mins ago
-                                </p>
-                              </div>
-                            </div>
-                          </div>
-                          <!--swiper-slide-->
-                        </div>
-                        <div class="swiper-pagination"></div>
-                      </div>
-                      <!--end blogSlider-->
-                    </div>
-                    <!--end related post-->
                   </div>
                 </div>
                 <!--end col-->
                 <div class="col-lg-4 col-md-5">
                   <div class="sidebar ms-lg-4 ps-lg-4 mt-5 mt-lg-0">
-                    <!-- Search widget-->
-                    <aside class="widget widget_search">
-                      <form class="position-relative">
-                        <input
-                          class="form-control"
-                          type="text"
-                          placeholder="Search..."
-                        />
-                        <button
-                          class="bg-transparent border-0 position-absolute top-50 end-0 translate-middle-y fs-22 me-2"
-                          type="submit"
-                        >
-                          <span class="mdi mdi-magnify text-muted"></span>
-                        </button>
-                      </form>
-                    </aside>
                     <div class="mt-4 pt-2">
                       <div class="sd-title">
-                        <h6 class="fs-16 mb-3">Categories</h6>
-                      </div>
-                      <div class="my-3">
-                        <div class="form-check mb-2">
-                          <input
-                            class="form-check-input"
-                            type="checkbox"
-                            value=""
-                            id="education"
-                          />
-                          <label class="form-check-label ms-2" for="education"
-                            >Education</label
-                          >
-                        </div>
-                        <div class="form-check mb-2">
-                          <input
-                            class="form-check-input"
-                            type="checkbox"
-                            value=""
-                            id="flexCheckChecked1"
-                            checked
-                          />
-                          <label
-                            class="form-check-label ms-2"
-                            for="flexCheckChecked1"
-                            >Business</label
-                          >
-                        </div>
-                        <div class="form-check mb-2">
-                          <input
-                            class="form-check-input"
-                            type="checkbox"
-                            value=""
-                            id="flexCheckChecked2"
-                            checked
-                          />
-                          <label
-                            class="form-check-label ms-2"
-                            for="flexCheckChecked2"
-                            >Information</label
-                          >
-                        </div>
-                        <div class="form-check mb-2">
-                          <input
-                            class="form-check-input"
-                            type="checkbox"
-                            value=""
-                            id="flexCheckChecked3"
-                          />
-                          <label
-                            class="form-check-label ms-2"
-                            for="flexCheckChecked3"
-                            >Interview</label
-                          >
-                        </div>
-                        <div class="form-check mb-2">
-                          <input
-                            class="form-check-input"
-                            type="checkbox"
-                            value=""
-                            id="flexCheckChecked4"
-                          />
-                          <label
-                            class="form-check-label ms-2"
-                            for="flexCheckChecked4"
-                            >Travel</label
-                          >
-                        </div>
-                        <div class="form-check mb-2">
-                          <input
-                            class="form-check-input"
-                            type="checkbox"
-                            value=""
-                            id="flexCheckChecked5"
-                          />
-                          <label
-                            class="form-check-label ms-2"
-                            for="flexCheckChecked5"
-                            >Jobs</label
-                          >
-                        </div>
-                        <div class="form-check mb-2">
-                          <input
-                            class="form-check-input"
-                            type="checkbox"
-                            value=""
-                            id="flexCheckChecked6"
-                          />
-                          <label
-                            class="form-check-label ms-2"
-                            for="flexCheckChecked6"
-                            >Fashion</label
-                          >
-                        </div>
-                      </div>
-                    </div>
-                    <!--end Categories-->
-
-                    <div class="mt-4 pt-2">
-                      <div class="sd-title">
-                        <h6 class="fs-16 mb-3">Polular Post</h6>
+                        <h6 class="fs-16 mb-3">Latest Post</h6>
                       </div>
                       <ul class="widget-popular-post list-unstyled my-4">
+                        {% for latest_blog in latest_posts%}
                         <li
                           class="d-flex mb-3 align-items-center pb-3 border-bottom"
                         >
                           <img
-                            src="{% static 'assets/images/blog/img-01.jpg' %} "
+                            src="/media/{{latest_blog.image}}"
                             alt=""
                             class="widget-popular-post-img rounded"
                           />
                           <div class="flex-grow-1 text-truncate ms-3">
-                            <a href="blog-details.html" class="text-dark"
-                              >The evolution of landing page creativity</a
+                            <a
+                              href="{% url 'single_blog' latest_blog.slug %}"
+                              class="text-dark"
+                              >{{latest_blog.title}}</a
                             >
                             <span class="d-block text-muted fs-14"
-                              >Aug 10, 2021</span
+                              >{{latest_blog.created_at | date:'F d, Y'}}</span
                             >
                           </div>
                         </li>
-                        <li
-                          class="d-flex mb-3 align-items-center pb-3 border-bottom"
-                        >
-                          <img
-                            src="{% static 'assets/images/blog/img-02.jpg' %} "
-                            alt=""
-                            class="widget-popular-post-img rounded"
-                          />
-                          <div class="flex-grow-1 text-truncate ms-3">
-                            <a href="blog-details.html" class="text-dark"
-                              >Beautiful day with friends in paris</a
-                            >
-                            <span class="d-block text-muted fs-14"
-                              >Jun 24, 2021</span
-                            >
-                          </div>
-                        </li>
-                        <li
-                          class="d-flex mb-3 align-items-center pb-3 border-bottom"
-                        >
-                          <img
-                            src="{% static 'assets/images/blog/img-03.jpg' %} "
-                            alt=""
-                            class="widget-popular-post-img rounded"
-                          />
-                          <div class="flex-grow-1 text-truncate ms-3">
-                            <a href="blog-details.html" class="text-dark"
-                              >Project discussion with team</a
-                            >
-                            <span class="d-block text-muted fs-14"
-                              >July 13, 2021</span
-                            >
-                          </div>
-                        </li>
-                        <li class="d-flex mb-3 align-items-center">
-                          <img
-                            src="{% static 'assets/images/blog/img-10.jpg' %} "
-                            alt=""
-                            class="widget-popular-post-img rounded"
-                          />
-                          <div class="flex-grow-1 text-truncate ms-3">
-                            <a href="blog-details.html" class="text-dark"
-                              >Smartest Applications for Business</a
-                            >
-                            <span class="d-block text-muted fs-14"
-                              >Feb 01, 2021</span
-                            >
-                          </div>
-                        </li>
+                        {% endfor %}
                       </ul>
                     </div>
-                    <!--end Polular Post-->
-
-                    <div class="mt-4 pt-2">
-                      <div class="sd-title">
-                        <h6 class="fs-16 mb-3">Text Widget</h6>
-                      </div>
-                      <p class="mb-0 text-muted mt-3">
-                        Exercitation photo booth stumptown tote bag Banksy, elit
-                        small batch freegan sed. Craft beer elit seitan
-                        exercitation, photo booth et 8-bit kale chips proident
-                        chillwave deep v laborum. Aliquip veniam delectus, Marfa
-                        eiusmod Pinterest in do umami readymade swag.
-                      </p>
-                    </div>
-
-                    <div class="mt-4 pt-2">
-                      <div class="sd-title">
-                        <h6 class="fs-16 mb-3">Archives</h6>
-                      </div>
-                      <ul class="list-unstyled mb-0 mt-3">
-                        <li class="py-1">
-                          <a class="me-2 text-muted" href="javascript:void(0)"
-                            ><i class="uil uil-angle-right-b"></i> March 2021</a
-                          >
-                          (40)
-                        </li>
-                        <li class="py-1">
-                          <a class="me-2 text-muted" href="javascript:void(0)"
-                            ><i class="uil uil-angle-right-b"></i> April 2021</a
-                          >
-                          (08)
-                        </li>
-                        <li class="py-1">
-                          <a class="me-2 text-muted" href="javascript:void(0)"
-                            ><i class="uil uil-angle-right-b"></i> Nov 2020</a
-                          >
-                          (32)
-                        </li>
-                        <li class="py-1">
-                          <a class="me-2 text-muted" href="javascript:void(0)"
-                            ><i class="uil uil-angle-right-b"></i> May 2020</a
-                          >
-                          (11)
-                        </li>
-                        <li class="py-1">
-                          <a class="me-2 text-muted" href="javascript:void(0)"
-                            ><i class="uil uil-angle-right-b"></i> Jun 2019</a
-                          >
-                          (21)
-                        </li>
-                      </ul>
-                    </div>
-
-                    <div class="mt-4 pt-2">
-                      <div class="sd-title">
-                        <h6 class="fs-16 mb-3">Latest Tags</h6>
-                      </div>
-                      <div class="tagcloud mt-3">
-                        <a
-                          class="badge tag-cloud fs-12 mt-2"
-                          href="javascript:void(0)"
-                          >Fashion</a
-                        >
-                        <a
-                          class="badge tag-cloud fs-12 mt-2"
-                          href="javascript:void(0)"
-                          >Jobs</a
-                        >
-                        <a
-                          class="badge tag-cloud fs-12 mt-2"
-                          href="javascript:void(0)"
-                          >Business</a
-                        >
-                        <a
-                          class="badge tag-cloud fs-12 mt-2"
-                          href="javascript:void(0)"
-                          >Corporate</a
-                        >
-                        <a
-                          class="badge tag-cloud fs-12 mt-2"
-                          href="javascript:void(0)"
-                          >E-commerce</a
-                        >
-                        <a
-                          class="badge tag-cloud fs-12 mt-2"
-                          href="javascript:void(0)"
-                          >Agency</a
-                        >
-                        <a
-                          class="badge tag-cloud fs-12 mt-2"
-                          href="javascript:void(0)"
-                          >Responsive</a
-                        >
-                      </div>
-                    </div>
-                    <!--end Latest Tags-->
-
                     <div class="mt-4 pt-2">
                       <div class="sd-title">
                         <h6 class="fs-16 mb-3">Follow & Connect</h6>
@@ -799,8 +345,7 @@
       </div>
       <!-- end main content-->
     </div>
-    {% include 'include/footer.html'%}
-    {% include 'include/footerjs.html' %}
+    {% include 'include/footer.html'%} {% include 'include/footerjs.html' %}
   </body>
 
   <!-- Mirrored from themesdesign.in/jobcy/layout/blog-details.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 12 Jun 2023 16:56:27 GMT -->
