@@ -1,4 +1,5 @@
 {% load static %}
+{% load fontawesome_5 %}
 <!-- START SUBSCRIBE -->
 <section class="bg-subscribe">
   <div class="container">
@@ -59,18 +60,14 @@
           </p>
           <p class="text-white mt-3">Follow Us on:</p>
           <ul class="footer-social-menu list-inline mb-0">
+          {% for social in social_medias %}
             <li class="list-inline-item">
-              <a href="#"><i class="uil uil-facebook-f"></i></a>
+              <a href="{{social.link}}"><i class="fab fa-{{social.icon.name}} fa-lg "></i></a>
             </li>
-            <li class="list-inline-item">
-              <a href="#"><i class="uil uil-linkedin-alt"></i></a>
-            </li>
-            <li class="list-inline-item">
-              <a href="#"><i class="uil uil-google"></i></a>
-            </li>
-            <li class="list-inline-item">
-              <a href="#"><i class="uil uil-twitter"></i></a>
-            </li>
+
+            {% endfor %}
+
+
           </ul>
         </div>
       </div>

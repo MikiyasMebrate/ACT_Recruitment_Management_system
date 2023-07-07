@@ -1,4 +1,4 @@
-{% load static %}
+{% load static %} {% load fontawesome_5 %}
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -14,8 +14,7 @@
   <body>
     <!-- Begin page -->
     <div>
-       {%include 'include/navbar.html' %}
-
+      {%include 'include/navbar.html' %}
       <div class="main-content">
         <div class="page-content">
           <!-- Start home -->
@@ -74,6 +73,17 @@
           <section class="section">
             <div class="container">
               <div class="row align-items-center mt-5">
+                {% if messages %}
+                <ul class="messages">
+                    {% for message in messages %}
+                    <div class="alert alert-success alert-dismissible">
+                      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                       {{message}}
+                    </div>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+
                 <div class="col-lg-6">
                   <div class="section-title mt-4 mt-lg-0">
                     <h3 class="title">Get in touch</h3>
@@ -81,25 +91,20 @@
                       Start working with Jobcy that can provide everything you
                       need to generate awareness, drive traffic, connect.
                     </p>
-                    <form
-                      method="post"
-                      onsubmit="return validateForm()"
-                      class="contact-form mt-4"
-                      name="myForm"
-                      id="myForm"
-                    >
+                    <form method="post" class="contact-form mt-4">
+                      {% csrf_token %}
                       <span id="error-msg"></span>
                       <div class="row">
                         <div class="col-lg-12">
                           <div class="mb-3">
                             <label for="nameInput" class="form-label"
-                              >Name</label
+                              >Name {% for err in form.name.errors %}   <small class="text-danger">{{err}}</small>  {% endfor %} </label
                             >
                             <input
                               type="text"
                               name="name"
-                              id="name"
-                              class="form-control"
+                              id="id_name"
+                              class="form-control {% if form.name.errors %} is-invalid  {% endif %} "
                               placeholder="Enter your name"
                             />
                           </div>
@@ -108,12 +113,12 @@
                         <div class="col-md-6">
                           <div class="mb-3">
                             <label for="emailInput" class="form-label"
-                              >Email</label
+                              >Email {% for err in form.email.errors %}   <small class="text-danger">{{err}}</small>  {% endfor %}</label
                             >
                             <input
                               type="email"
-                              class="form-control"
-                              id="emaiol"
+                              class="form-control  {% if form.email.errors %} is-invalid  {% endif %}"
+                              id="id_email"
                               name="email"
                               placeholder="Enter your email"
                             />
@@ -123,14 +128,14 @@
                         <div class="col-md-6">
                           <div class="mb-3">
                             <label for="subjectInput" class="form-label"
-                              >Subject</label
+                              >Subject {% for err in form.subject.errors %}   <small class="text-danger">{{err}}</small>  {% endfor %}</label
                             >
                             <input
                               type="text"
-                              class="form-control"
+                              class="form-control  {% if form.subject.errors %} is-invalid  {% endif %}"
                               id="subjectInput"
                               name="subject"
-                              id="subject"
+                              id="id_subject"
                               placeholder="Enter your subject"
                             />
                           </div>
@@ -139,14 +144,14 @@
                         <div class="col-lg-12">
                           <div class="mb-3">
                             <label for="meassageInput" class="form-label"
-                              >Your Message</label
+                              >Your Message {% for err in form.message.errors %}   <small class="text-danger">{{err}}</small>  {% endfor %}</label
                             >
                             <textarea
-                              class="form-control"
+                              class="form-control  {% if form.message.errors %} is-invalid  {% endif %}"
                               id="meassageInput"
                               placeholder="Enter your message"
-                              name="comments"
-                              id="comments"
+                              name="message"
+                              id="id_message"
                               rows="3"
                             ></textarea>
                           </div>
@@ -183,25 +188,25 @@
                         <i class="uil uil-map-marker"></i>
                       </div>
                       <div class="flex-grow-1 ms-2">
-                        <p class="mb-0">
-                          2453 Clinton StreetLittle Rock, California, USA
-                        </p>
+                        <p class="mb-0">{{contact.location}}</p>
                       </div>
                     </div>
+
                     <div class="d-flex text-muted align-items-center mt-2">
                       <div class="flex-shrink-0 fs-22 text-primary">
                         <i class="uil uil-envelope"></i>
                       </div>
                       <div class="flex-grow-1 ms-2">
-                        <p class="mb-0">contactus@Jobcy.com</p>
+                        <p class="mb-0">{{contact.email}}</p>
                       </div>
                     </div>
+
                     <div class="d-flex text-muted align-items-center mt-2">
                       <div class="flex-shrink-0 fs-22 text-primary">
                         <i class="uil uil-phone-alt"></i>
                       </div>
                       <div class="flex-grow-1 ms-2">
-                        <p class="mb-0">(+245) 223 1245</p>
+                        <p class="mb-0">{{contact.phone}}</p>
                       </div>
                     </div>
                   </div>
@@ -216,17 +221,16 @@
 
           <div class="map">
             <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d6509157.364974411!2d-123.79641389801948!3d37.193115265681!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x808fb9fe5f285e3d%3A0x8b5109a227086f55!2sCalifornia%2C%20USA!5e0!3m2!1sen!2sin!4v1628684675253!5m2!1sen!2sin"
-              height="350"
-              style="border: 0; width: 100%"
-              allowfullscreen=""
-              loading="lazy"
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3940.356360776719!2d38.75922877384892!3d9.031219888956608!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x164b85f0f9a06d85%3A0x4331551f2e0d81cb!2zQUNUIEFtZXJpY2FuIENvbGxlZ2Ugb2YgVGVjaG5vbG9neSB8IDQgS2lsbyB8IOGKoOGKreGJtSDhiqDhiJzhiKrhiqvhipUg4Ym04Yqt4YqW4YiO4YyCIOGKruGIjOGMhSB8IDQg4Yqq4YiO!5e0!3m2!1sen!2set!4v1688731587813!5m2!1sen!2set"height="350"
+            style="border: 0; width: 100%"
+            allowfullscreen=""
+            loading="lazy"
             ></iframe>
+            
           </div>
         </div>
         <!-- End Page-content -->
         {% include 'include/footer.html' %}
-
       </div>
       <!-- end main content-->
     </div>

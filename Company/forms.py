@@ -1,10 +1,10 @@
 from django import forms
-from  .models import Comment
+from  .models import Comment, Contact_Message
 
 class CommentForm(forms.ModelForm):
-    name = forms.CharField(max_length=40, error_messages={'required' : 'Title can not be empty'})
-    email = forms.EmailField(widget=forms.TextInput(), error_messages={'required' : 'Email can not be empty'})
-    comment = forms.CharField(widget=forms.TextInput(), error_messages={'required': 'Comment can not be empty'})
+    name = forms.CharField(max_length=40, error_messages={'required' : 'Can not be empty'})
+    email = forms.EmailField(widget=forms.TextInput(), error_messages={'required' : 'Can not be empty'})
+    comment = forms.CharField(widget=forms.TextInput(), error_messages={'required': 'Can not be empty'})
     
     class Meta:
         model = Comment
@@ -16,3 +16,12 @@ class CommentForm(forms.ModelForm):
             raise forms.ValidationError(' Enter a valid name.')
         return name
 
+class ContactForm(forms.ModelForm):
+    name = forms.CharField(max_length=40, error_messages={'required' : 'Can not be empty'})
+    email = forms.EmailField(error_messages={'required' : 'Can not be empty'})
+    subject = forms.CharField(error_messages={'required' : 'Can not be empty'})
+    message = forms.CharField(widget=forms.TextInput, error_messages={'required' : 'Can not be empty'})
+
+    class Meta:
+        model = Contact_Message
+        fields = '__all__'

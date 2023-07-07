@@ -4,3 +4,6 @@ from . import models
 admin.site.register(models.Blog_Categories)
 admin.site.register(models.Blog)
 admin.site.register(models.Comment)
+admin.site.register(models.Contact)
+admin.site.register(models.Social_Media)
+admin.site.register(models.Contact_Message)

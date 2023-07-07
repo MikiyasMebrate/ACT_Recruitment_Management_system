@@ -3,7 +3,10 @@ from django.utils.text import slugify
 from froala_editor.fields import FroalaField
 from unidecode import unidecode
 import datetime
+from phonenumber_field.modelfields import PhoneNumberField
+from fontawesome_5.fields import IconField
 
+#Blog 
 class Blog_Categories(models.Model):
     name = models.CharField(max_length=100)
     slug = models.SlugField(max_length=200, unique=True,blank=True, editable=False)
@@ -56,4 +59,32 @@ class Comment(models.Model):
     def __str__(self) -> str:
         return self.name
 
-#class Social_Media(models.Model):
+#Contact 
+class Contact(models.Model):
+    phone = PhoneNumberField()
+    email = models.EmailField()
+    location = models.CharField(max_length=200)
+
+    def __str__(self) -> str:
+        return self.email
+
+class Social_Media(models.Model):
+    name = models.CharField(max_length=30)
+    icon = IconField()
+    link = models.URLField()
+
+    def __str__(self) -> str:
+        return self.name
+
+
+class Contact_Message(models.Model):
+    name = models.CharField(max_length=30)
+    email = models.EmailField()
+    subject = models.CharField(max_length=100)
+    message = models.TextField()
+
+    def __str__(self) -> str:
+        return self.name
+
+
+
