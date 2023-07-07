@@ -1,11 +1,20 @@
-from django.shortcuts import render, HttpResponse
+from django.shortcuts import render
+from django.core.paginator import Paginator
 from .models import Blog, Comment
 from .forms import CommentForm
 # Create your views here.
 def blog(request):
+    latest_blog = Blog.objects.first()
+    blogs = Blog.objects.all().exclude(id = latest_blog.id)
+    
+
+    paginator = Paginator(blogs, 9)
+    page_number = request.GET.get('page')
+    page = paginator.get_page(page_number)
+
     context = {
-        'latest_blog' : Blog.objects.first(),
-        'blogs' : Blog.objects.all()[1:]
+        'latest_blog' : latest_blog,
+        'blogs' : page
     }
     return render(request, 'Company/blog.html', context)
 

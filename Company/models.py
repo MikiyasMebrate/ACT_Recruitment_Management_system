@@ -1,15 +1,18 @@
 from django.db import models
 from django.utils.text import slugify
 from froala_editor.fields import FroalaField
-
+from unidecode import unidecode
+import datetime
 
 class Blog_Categories(models.Model):
     name = models.CharField(max_length=100)
-    slug = models.SlugField(max_length=100, unique=True,blank=True, editable=False)
+    slug = models.SlugField(max_length=200, unique=True,blank=True, editable=False)
 
     def save(self, *args, **kwargs):
-        self.slug = slugify(self.name) + '-' + self.created_at.strftime('%Y-%m-%d')
-        super(Blog_Categories, self).save(*args, **kwargs)
+        if not self.slug:
+            now = datetime.datetime.now()
+            self.slug = slugify(unidecode(self.name)) + '-' + now.strftime("%Y-%m-%d")
+        super().save(*args, **kwargs)
     
     def count_categories(self):
         return Blog.objects.filter(__type = self.name).count()
@@ -19,7 +22,7 @@ class Blog_Categories(models.Model):
 
 class Blog(models.Model):
     title = models.CharField(max_length=100)
-    slug = models.SlugField(unique=True, max_length=100, blank=True)
+    slug = models.SlugField(unique=True, max_length=200, blank=True)
     image = models.ImageField(upload_to='blog/')
     description = models.CharField(max_length=400)
     content = FroalaField()
@@ -31,8 +34,10 @@ class Blog(models.Model):
         ordering = ['-created_at', '-updated_at']
 
     def save(self, *args, **kwargs):
-     self.slug = slugify(self.title) + '-' + self.created_at.strftime('%Y-%m-%d')
-     super(Blog, self).save(*args, **kwargs)
+        if not self.slug:
+            now = datetime.datetime.now()
+            self.slug = slugify(unidecode(self.title)) + '-' + now.strftime("%Y-%m-%d %H:%M:%S")
+        super().save(*args, **kwargs)
     
     def count_comment(self):
         return Comment.objects.filter(blog = self.id).count()

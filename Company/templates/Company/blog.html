@@ -11,7 +11,6 @@
   <meta content="Themesdesign" name="author" />
   {% include 'include/head.html' %}
 
-
 </head>
 
 <body>
@@ -138,7 +137,61 @@
               <!--end col-->
               {% endfor %}
 
+          
+              <div class="row">
+                <div class="col-lg-12 mt-5">
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination job-pagination mb-0 justify-content-center">
+                          {% if not blogs.has_previous %}
+                          <li class="page-item ">
+                            <a class="page-link disabled" href="">
+                                <i class="mdi mdi-chevron-double-left fs-15"></i>
+                            </a>
+                        </li>
+                        {% endif %}
+                          {% if blogs.has_previous %}
+                          <li class="page-item ">
+                            <a class="page-link" href="?page={{ blogs.previous_page_number }}">
+                                <i class="mdi mdi-chevron-double-left fs-15"></i>
+                            </a>
+                        </li>
+                          {% endif %}
 
+                          {% if blogs.has_previous %}
+                                <li class="page-item "><a class="page-link" href="?page={{ blogs.previous_page_number }}">{{ blogs.previous_page_number }}</a></li>
+                          {% endif %}
+
+                          <span class="current-page">
+                            <li class="page-item active"><a class="page-link" href="#">{{ blogs.number }}</a></li>
+                          </span>
+                           
+                          {% if blogs.has_next %}
+                          <li class="page-item"><a  class="page-link"  href="?page={{ blogs.next_page_number }}">{{ blogs.next_page_number }}</a></li>
+                         {% endif %}
+
+                         {% if blogs.has_next %}
+                         <li class="page-item">
+                          <a class="page-link" href="?page={{ blogs.next_page_number }}">
+                              <i class="mdi mdi-chevron-double-right fs-15"></i>
+                          </a>
+                          </li>
+                        {% endif %}
+
+                        {% if  not blogs.has_next %}
+                        <li class="page-item">
+                         <a class="page-link disabled " href="">
+                             <i class="mdi mdi-chevron-double-right fs-15"></i>
+                         </a>
+                         </li>
+                       {% endif %}
+                                <!-- End blog pagination -->
+                            
+                        </ul>
+                    </nav>
+                </div><!--end col-->
+            </div><!-- end row -->
+              
+     
 
 
             </div>
