@@ -3,6 +3,8 @@ from django.db import models
 from django.contrib.auth.models import User
 from phonenumber_field.modelfields import PhoneNumberField
 
+
+#Candidate
 gender_list = [
     ('male', 'Male'),
     ('female', 'Female'),
@@ -32,7 +34,6 @@ class Candidate(models.Model):
     def __str__(self) -> str:
         return self.first_name + " " + self.last_name
 
-# Education
 education_status_list = [
     ('highschool', 'High School'),
     ('Certificate', 'Certificate'),
@@ -54,7 +55,6 @@ class Education(models.Model):
     def __str__(self) -> str:
         return self.institution_name
 
-# Experience
 class Experience(models.Model):
     company_name = models.CharField(max_length=40)
     work_time_line_start =models.DateField()
@@ -66,7 +66,6 @@ class Experience(models.Model):
     reference_job_title = models.CharField(max_length=40)
     responsibility = models.TextField()
 
-# Skill
 class Skill(models.Model):
     title = models.CharField(max_length=30)
    
@@ -82,6 +81,13 @@ class Social_media(models.Model):
     def __str__(self) -> str:
         return self.name
 
+class Bookmarks(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    jobs = models.ForeignKey('Job_Posting', on_delete=models.CASCADE)
+
+    def __str__(self) -> str:
+        return self.jobs
+
 
 class Department(models.Model):
     name = models.CharField(max_length=50)
@@ -89,13 +95,11 @@ class Department(models.Model):
     def __str__(self) -> str:
         return self.name
 
-
 class Job_Type(models.Model):
     type = models.CharField(max_length=20)  # Full Time, Part Time, Freelance
 
     def __str__(self) -> str:
         return self.type
-
 
 class Job_Posting(models.Model):
     title = models.CharField(max_length=50)
@@ -113,14 +117,12 @@ class Job_Posting(models.Model):
     def __str__(self) -> str:
         return self.title
 
-
 application_status = [
     ('new', 'new'),
     ('in_review', 'in review'),
     ('rejected', 'rejected'),
     ('hired', 'hired')
 ]
-
 
 class Application(models.Model):
     candidate = models.ForeignKey(
@@ -134,7 +136,6 @@ class Application(models.Model):
     def __str__(self) -> str:
         return self.candidate+" "+self.job
 
-
 interview_status = [
     ('scheduled', 'scheduled'),
     ('completed', 'completed'),
@@ -146,6 +147,7 @@ interview_type = [
     ('in-person', 'in-person'),
     ('video', 'video')
 ]
+
 class Interviews(models.Model):
     candidate = models.ForeignKey(
         Candidate, on_delete=models.SET_NULL, null=True)  # Related Wih Candidate
@@ -161,7 +163,6 @@ class Interviews(models.Model):
 
     def __str__(self) -> str:
         return self.candidate + " Interviewer: " + self.interviewer
-
 
 class Notes(models.Model):
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)

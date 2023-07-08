@@ -21,17 +21,11 @@ def job_detail(request):
     }
     return render(request, 'RMS/job-details.html', context)
 
-def bookmark_job(request):
-    context = {
-        'social_medias' : social_medias,
-    }
-    return render(request, 'RMS/bookmark-jobs.html', context) 
-
 def profile(request):
     context = {
         'social_medias' : social_medias,
     }
-    return render(request, 'RMS/profile.html', context)
+    return render(request, 'RMS/user/profile.html', context)
 
 def reset_password(request):
     context = {
@@ -51,8 +45,20 @@ def sign_up(request):
     }
     return render(request, 'RMS/sign-up.html', context)
 
-def error(request):
-    context = {
-        'social_medias' : social_medias,
-    }
-    return render(request, 'RMS/404-error.html', context)
+def user_dashboard(request):
+    return render(request, 'RMS/user/candidate-dashboard.html')
+
+def user_resume(request):
+    return render(request, 'RMS/user/dashboard-add-resume.html')
+
+def user_applied_jobs(request):
+    return render(request, 'RMS/user/dashboard-applied-jobs.html')
+
+def user_bookmark(request):
+    return render(request, 'RMS/user/dashboard-saved-jobs.html')
+
+def user_change_password(request):
+    return render(request, 'RMS/user/dashboard-change-password.html')
+
+def user_profile(request):
+    return render(request, 'RMS/user/dashboard-my-profile.html')
