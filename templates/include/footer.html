@@ -61,11 +61,12 @@
           <p class="text-white mt-3">Follow Us on:</p>
           <ul class="footer-social-menu list-inline mb-0">
           {% for social in social_medias %}
-            <li class="list-inline-item">
-              <a href="{{social.link}}"><i class="fab fa-{{social.icon.name}} fa-lg "></i></a>
-            </li>
 
-            {% endfor %}
+            <li class="list-inline-item">
+              <a href="{{social.link}}"><i class="fab fa-{{social.icon.name}} fa-lg"></i></a>
+            </li>
+            
+          {% endfor %}
 
 
           </ul>
@@ -127,7 +128,7 @@
               >
             </li>
             <li>
-              <a href="{% url 'faqs' %}"
+              <a href="{% url 'Privacy-policy' %}"
                 ><i class="mdi mdi-chevron-right"></i> Privacy Policy</a
               >
             </li>

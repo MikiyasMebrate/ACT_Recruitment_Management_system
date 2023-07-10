@@ -90,8 +90,11 @@
                 <article class="post position-relative">
                   <div class="post ms-lg-4">
                     <p class="text-muted mb-2">
-                     <b> {% for types in latest_blog.type.all %}
-                      {{types}} {% endfor %}</b>- {{latest_blog.created_at|timesince }} ago
+                     <b>
+                      {% if latest_blog %} 
+                      {% for types in latest_blog.type.all %}
+                      {{types}} {% endfor %}</b>- {{latest_blog.created_at|timesince }} ago 
+                      {% endif %}
                     </p>
                     <h5 class="mb-3">
                       <a href="{% url 'single_blog' latest_blog.slug%}" class="primary-link">{{ latest_blog.title }}</a>

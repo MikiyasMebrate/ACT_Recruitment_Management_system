@@ -11,7 +11,7 @@ gender_list = [
 ]
 
 class Candidate(models.Model):
-    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    #user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     first_name = models.CharField(max_length=20)
     last_name = models.CharField(max_length=20)
     gender = models.CharField(max_length=10, choices=gender_list)
@@ -19,11 +19,10 @@ class Candidate(models.Model):
     email = models.EmailField(max_length=40)
     phone1 = PhoneNumberField()
     phone2 = PhoneNumberField(blank = True)
-    address = models.CharField(max_length=30)
+    address = models.CharField(max_length=100)
     country = models.CharField(max_length=20)
-    region = models.CharField(max_length=20)
     city = models.CharField(max_length=20)
-    zip_code = models.CharField(max_length=10)
+    zip_code = models.CharField(max_length=10, blank=True, null=True)
     photo = models.ImageField(upload_to='Candidate/photo', null=True, blank=True)
     resume = models.FileField(upload_to='Candidate/Resume', null=True, blank=True)
     about = models.TextField()
@@ -56,6 +55,7 @@ class Education(models.Model):
         return self.institution_name
 
 class Experience(models.Model):
+    candidate = models.ForeignKey(Candidate, on_delete=models.SET_NULL, null=True)
     company_name = models.CharField(max_length=40)
     work_time_line_start =models.DateField()
     work_time_line_end = models.DateField()
@@ -66,8 +66,14 @@ class Experience(models.Model):
     reference_job_title = models.CharField(max_length=40)
     responsibility = models.TextField()
 
+    def __str__(self) -> str:
+        return self.company_name
+
 class Skill(models.Model):
     title = models.CharField(max_length=30)
+
+    class Meta:
+        ordering = ['title']
    
     def __str__(self) -> str:
         return self.title

@@ -25,3 +25,9 @@ class ContactForm(forms.ModelForm):
     class Meta:
         model = Contact_Message
         fields = '__all__'
+    
+    def clean_name(self):
+     name = self.cleaned_data['name']
+     if len(name) < 2:
+         raise forms.ValidationError(' Enter a valid name.')
+     return name

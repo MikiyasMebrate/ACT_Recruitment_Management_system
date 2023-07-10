@@ -7,10 +7,13 @@ from django.contrib import messages
 social_medias = Social_Media.objects.all()
 
 def blog(request):
-    latest_blog = Blog.objects.first()
-    blogs = Blog.objects.all().exclude(id = latest_blog.id)
+    try:
+        latest_blog = Blog.objects.first()
+        blogs = Blog.objects.all().exclude(id = latest_blog.id)
+    except:
+        latest_blog  = None
+        blogs = None
     
-
     paginator = Paginator(blogs, 9)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)

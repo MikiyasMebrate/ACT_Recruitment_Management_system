@@ -1,12 +1,17 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
- <head>
+  <head>
     <meta charset="utf-8" />
     <meta name="author" content="Themezhub" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>User Resume | ACT - American College Of Technology </title>
+    <title>User Resume | ACT - American College Of Technology</title>
     <link href="{% static 'assets/css/styles.css' %}" rel="stylesheet" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/gh/habibmhamadi/multi-select-tag/dist/css/multi-select-tag.css"
+    />
+    <script src="https://cdn.jsdelivr.net/gh/habibmhamadi/multi-select-tag/dist/js/multi-select-tag.js"></script>
     {% include 'include/head.html' %}
   </head>
 
@@ -15,9 +20,9 @@
     <!-- ======================= dashboard Detail ======================== -->
     <div class="dashboard-wrap bg-light mt-5">
       <!--Left Navbar-->
-     {% include 'RMS/user/include/user-dashboard.html'%}
+      {% include 'RMS/user/include/user-dashboard.html'%}
 
-      <div class="dashboard-content ">
+      <div class="dashboard-content">
         <div class="dashboard-tlbar d-block mb-5">
           <div class="row">
             <div class="colxl-12 col-lg-12 col-md-12">
@@ -76,77 +81,276 @@
                 </div>
 
                 <div class="_dashboard_content_body py-3 px-3">
-                  <form class="row">
+                  <!-- From -->
+                  {% if messages %}
+                  <ul class="messages">
+                      {% for message in messages %}
+                      <div class="alert alert-success alert-dismissible">
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                         {{message}}
+                      </div>
+                      {% endfor %}
+                  </ul>
+                  {% endif %}
+           
+
+                  <form class="row" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <!--Photo-->
                     <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12">
+                      <label for="id_photo">Upload photo less than 1 MB {% for err in form.photo.errors %} <small class="text-danger"> {{err}} </small> {% endfor %}</label>
                       <div class="custom-file avater_uploads">
                         <input
                           type="file"
-                          class="custom-file-input"
-                          id="customFile"
+                          class="custom-file-input {% if form.photo.errors  %} is-invalid {% endif %}"
+                          id="id_photo"
+                          name="photo"
                         />
-                        <label class="custom-file-label" for="customFile"
+                        <label class="custom-file-label" for="id_photo"
                           ><i class="fa fa-user"></i
                         ></label>
                       </div>
                     </div>
-
                     <div class="col-xl-9 col-lg-9 col-md-9 col-sm-12">
                       <div class="row">
+                        <!--First Name-->
                         <div class="col-xl-6 col-lg-6">
                           <div class="form-group">
-                            <label class="text-dark ft-medium">Your Name</label>
-                            <input
-                              type="text"
-                              class="form-control rounded"
-                              placeholder="Full Name"
-                            />
-                          </div>
-                        </div>
-                        <div class="col-xl-6 col-lg-6">
-                          <div class="form-group">
-                            <label class="text-dark ft-medium"
-                              >Professional Title</label
+                            <label
+                              class="text-dark ft-medium"
+                              for="id_first_name"
+                              >*First Name {% for err in form.first_name.errors %} <small class="text-danger"> {{err}} </small> {% endfor %} </label
                             >
                             <input
                               type="text"
-                              class="form-control rounded"
-                              placeholder="e.g. Web Designer"
+                              class="form-control rounded {% if form.first_name.errors  %} is-invalid {% endif %} "
+                              placeholder="Last Name"
+                              name="first_name"
+                              id="id_first_name"
                             />
                           </div>
                         </div>
+
+                        <!--Last Name-->
                         <div class="col-xl-6 col-lg-6">
                           <div class="form-group">
-                            <label class="text-dark ft-medium"
-                              >Job category</label
+                            <label
+                              class="text-dark ft-medium"
+                              for="id_last_name"
+                              >*Last Name {% for err in form.last_name.errors %} <small class="text-danger"> {{err}} </small> {% endfor %}</label
                             >
-                            <select class="form-control rounded">
-                              <option>Banking</option>
-                              <option>Hospital</option>
-                              <option>It Services</option>
+                            <input
+                              type="text"
+                              class="form-control rounded {% if form.last_name.errors  %} is-invalid {% endif %} "
+                              placeholder="Last Name"
+                              name="last_name"
+                              id="id_last_name"
+                            />
+                          </div>
+                        </div>
+
+                        <!--Gender-->
+                        <div class="col-xl-6 col-lg-6">
+                          <div class="form-group">
+                            <label class="text-dark ft-medium" for="id_gender"
+                              >*Gender {% for err in form.gender.errors %} <small class="text-danger"> {{err}} </small> {% endfor %}</label
+                            >
+                            <select
+                              class="form-control rounded  {% if form.gender.errors  %} is-invalid {% endif %} "
+                              name="gender"
+                              id="id_gender"
+                            >
+                              <option selected disabled>Select Gender</option>
+                              <option value="male">Male</option>
+                              <option value="female">Female</option>
                             </select>
                           </div>
                         </div>
+
+                        <!--Date Of Birth-->
                         <div class="col-xl-6 col-lg-6">
                           <div class="form-group">
-                            <label class="text-dark ft-medium">Email</label>
+                            <label
+                              class="text-dark ft-medium"
+                              for="id_date_of_birth"
+                              >*Date Of Birth {% for err in form.date_of_birth.errors %} <small class="text-danger"> {{err}} </small> {% endfor %}</label
+                            >
                             <input
-                              type="email"
-                              class="form-control rounded"
-                              value="uppcl@gmail.com"
+                              type="date"
+                              class="form-control rounded  {% if form.date_of_birth.errors  %} is-invalid {% endif %}"
+                              name="date_of_birth"
+                              id="id_date_of_birth"
                             />
                           </div>
                         </div>
+
+                        <!--Phone 1-->
+                        <div class="col-xl-6 col-lg-6">
+                          <div class="form-group">
+                            <label class="text-dark ft-medium" for="id_phone1"
+                              >*Phone {% for err in form.phone1.errors %} <small class="text-danger"> {{err}} </small> {% endfor %}</label
+                            >
+                            <input
+                              type="tel"
+                              class="form-control rounded {% if form.phone1.errors  %} is-invalid {% endif %}"
+                              placeholder="+251 000-000-00"
+                              name="phone1"
+                              id="id_phone1"
+                            />
+                          </div>
+                        </div>
+
+                        <!--Phone 2-->
+                        <div class="col-xl-6 col-lg-6">
+                          <div class="form-group">
+                            <label class="text-dark ft-medium" for="id_phone2"
+                              >Additional Phone {% for err in form.phone2.errors %} <small class="text-danger"> {{err}} </small> {% endfor %}</label
+                            >
+                            <input
+                              type="tel"
+                              class="form-control rounded {% if form.phone2.errors  %} is-invalid {% endif %}"
+                              placeholder="+251 000-000-00"
+                              name="phone2"
+                              id="id_phone2"
+                            />
+                          </div>
+                        </div>
+
+                        <!--Email-->
                         <div class="col-xl-12 col-lg-12">
                           <div class="form-group">
-                            <label class="text-dark ft-medium"
-                              >Resume Content</label
+                            <label class="text-dark ft-medium" for="id_email"
+                              >*Email {% for err in form.email.errors %} <small class="text-danger"> {{err}} </small> {% endfor %}</label
+                            >
+                            <input
+                              type="email"
+                              class="form-control rounded  {% if form.email.errors  %} is-invalid {% endif %}"
+                              placeholder="Email"
+                              name="email"
+                              id="id_email"
+                            />
+                          </div>
+                        </div>
+
+                        <!--Address-->
+                        <div class="col-xl-6 col-lg-6">
+                          <div class="form-group">
+                            <label class="text-dark ft-medium" for="id_address"
+                              >*Address {% for err in form.address.errors %} <small class="text-danger"> {{err}} </small> {% endfor %}</label
+                            >
+                            <input
+                              type="text"
+                              class="form-control rounded  {% if form.address.errors  %} is-invalid {% endif %}"
+                              placeholder="Address"
+                              name="address"
+                              id="id_address"
+                            />
+                          </div>
+                        </div>
+
+                        <!--Country-->
+                        <div class="col-xl-6 col-lg-6">
+                          <div class="form-group">
+                            <label class="text-dark ft-medium" for="id_country"
+                              >*Country {% for err in form.country.errors %} <small class="text-danger"> {{err}} </small> {% endfor %}</label
+                            >
+                            <input
+                              type="text"
+                              class="form-control rounded {% if form.country.errors  %} is-invalid {% endif %}"
+                              placeholder="Country"
+                              name="country"
+                              id="id_country"
+                            />
+                          </div>
+                        </div>
+
+                        <!--City-->
+                        <div class="col-xl-6 col-lg-6">
+                          <div class="form-group">
+                            <label class="text-dark ft-medium" for="id_city"
+                              >*City {% for err in form.city.errors %} <small class="text-danger"> {{err}} </small> {% endfor %}</label
+                            >
+                            <input
+                              type="text"
+                              class="form-control rounded {% if form.city.errors  %} is-invalid {% endif %}"
+                              placeholder="City"
+                              name="city"
+                              id="id_city"
+                            />
+                          </div>
+                        </div>
+
+                        <!--ZIPs-->
+                        <div class="col-xl-6 col-lg-6">
+                          <div class="form-group">
+                            <label class="text-dark ft-medium" for="id_zip_code"
+                              >Zip Code {% for err in form.zip_code.errors %} <small class="text-danger"> {{err}} </small> {% endfor %} </label
+                            >
+                            <input
+                              type="number"
+                              class="form-control rounded {% if form.zip_code.errors  %} is-invalid {% endif %}"
+                              placeholder="Zip Code"
+                              name="zip_code"
+                              id="id_zip_code"
+                            />
+                          </div>
+                        </div>
+
+                        <!--CV-->
+                        <div class="col-xl-12 col-lg-12">
+                          <div class="form-group">
+                            <label class="text-dark ft-medium" for="id_resume"
+                              >CV {% for err in form.resume.errors %} <small class="text-danger"> {{err}} </small> {% endfor %} </label
+                            >
+                            <input
+                              type="file"
+                              class="form-control rounded {% if form.resume.errors  %} is-invalid {% endif %}"
+                              placeholder="CV"
+                              name="resume"
+                              id="id_resume"
+                            />
+                          </div>
+                        </div>
+                        <!--SKILL-->
+                        <div class="col-xl-12 col-lg-12">
+                          <div class="form-group">
+                            <label class="text-dark ft-medium" for="id_skill"
+                              >*Skills  {% for err in form.skill.errors %} <small class="text-danger"> {{err}} </small> {% endfor %}</label
+                            >
+                            <select class="{% if form.skill.errors  %} is-invalid {% endif %}" name="skill" id="id_skill" multiple >
+                              {% for skill in skills %}
+                              <option value="{{skill.id}}">
+                                {{skill.title}}
+                              </option>
+                              {% endfor %}
+                            </select>
+                          </div>
+                        </div>
+
+                        <div class="col-xl-12 col-lg-12">
+                          <div class="form-group">
+                            <label class="text-dark ft-medium" for="id_about"
+                              >*Resume Content {% for err in form.about.errors %} <small class="text-danger"> {{err}} </small> {% endfor %}</label
                             >
                             <textarea
-                              class="form-control with-light"
+                              class="form-control with-light {% if form.about.errors  %} is-invalid {% endif %}"
                               placeholder="Resume Content"
+                              name="about"
+                              id="id_about"
                             ></textarea>
                           </div>
                         </div>
+                      </div>
+                    </div>
+                    <!-- Save -->
+                    <div class="row mb-5">
+                      <div class="col-lg-12 col-md-12">
+                        <button
+                          type="submit"
+                          class="btn btn-md ft-medium text-light rounded theme-bg"
+                        >
+                          Save
+                        </button>
                       </div>
                     </div>
                   </form>
@@ -400,6 +604,17 @@
       </div>
     </div>
     {% include 'include/footer.html' %}
-	{% include 'RMS/user/include/user-footer-js.html' %}
+    <script>
+      new MultiSelectTag("id_skill", {
+        rounded: true, // default true
+        shadow: true, // default false
+        placeholder: "Search", // default Search...
+        onChange: function (values) {
+          console.log(values);
+        },
+      });
+    </script>
+
+    {% include 'RMS/user/include/user-footer-js.html' %}
   </body>
 </html>

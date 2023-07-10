@@ -96,6 +96,7 @@
                     </p>
                     <form method="post" class="contact-form mt-4">
                       {% csrf_token %}
+                      
                       <span id="error-msg"></span>
                       <div class="row">
                         <div class="col-lg-12">
@@ -109,6 +110,7 @@
                               id="id_name"
                               class="form-control {% if form.name.errors %} is-invalid  {% endif %} "
                               placeholder="Enter your name"
+                              required
                             />
                           </div>
                         </div>
@@ -124,6 +126,7 @@
                               id="id_email"
                               name="email"
                               placeholder="Enter your email"
+                              required
                             />
                           </div>
                         </div>
@@ -140,6 +143,7 @@
                               name="subject"
                               id="id_subject"
                               placeholder="Enter your subject"
+                              required
                             />
                           </div>
                         </div>
@@ -156,6 +160,7 @@
                               name="message"
                               id="id_message"
                               rows="3"
+                              required
                             ></textarea>
                           </div>
                         </div>

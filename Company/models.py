@@ -39,7 +39,7 @@ class Blog(models.Model):
     def save(self, *args, **kwargs):
         if not self.slug:
             now = datetime.datetime.now()
-            self.slug = slugify(unidecode(self.title)) + '-' + now.strftime("%Y-%m-%d %H:%M:%S")
+            self.slug = slugify(unidecode(self.title)) + '-' + now.strftime("%Y-%m-%d")
         super().save(*args, **kwargs)
     
     def count_comment(self):
