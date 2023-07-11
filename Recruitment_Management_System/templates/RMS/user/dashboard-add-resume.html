@@ -124,7 +124,7 @@
                             <input
                               type="text"
                               class="form-control rounded {% if form.first_name.errors  %} is-invalid {% endif %} "
-                              placeholder="Last Name"
+                              placeholder="Last Name (Required)"
                               name="first_name"
                               id="id_first_name"
                             />
@@ -142,7 +142,7 @@
                             <input
                               type="text"
                               class="form-control rounded {% if form.last_name.errors  %} is-invalid {% endif %} "
-                              placeholder="Last Name"
+                              placeholder="Last Name (Required)"
                               name="last_name"
                               id="id_last_name"
                             />
@@ -160,7 +160,7 @@
                               name="gender"
                               id="id_gender"
                             >
-                              <option selected disabled>Select Gender</option>
+                              <option selected disabled >Select Gender (Required)</option>
                               <option value="male">Male</option>
                               <option value="female">Female</option>
                             </select>
@@ -193,7 +193,7 @@
                             <input
                               type="tel"
                               class="form-control rounded {% if form.phone1.errors  %} is-invalid {% endif %}"
-                              placeholder="+251 000-000-00"
+                              placeholder="+251 000-000-00 (Required)"
                               name="phone1"
                               id="id_phone1"
                             />
@@ -209,7 +209,7 @@
                             <input
                               type="tel"
                               class="form-control rounded {% if form.phone2.errors  %} is-invalid {% endif %}"
-                              placeholder="+251 000-000-00"
+                              placeholder="+251 000-000-00 (Optional)"
                               name="phone2"
                               id="id_phone2"
                             />
@@ -225,7 +225,7 @@
                             <input
                               type="email"
                               class="form-control rounded  {% if form.email.errors  %} is-invalid {% endif %}"
-                              placeholder="Email"
+                              placeholder="Email (Required)"
                               name="email"
                               id="id_email"
                             />
@@ -241,7 +241,7 @@
                             <input
                               type="text"
                               class="form-control rounded  {% if form.address.errors  %} is-invalid {% endif %}"
-                              placeholder="Address"
+                              placeholder="Address (Required)"
                               name="address"
                               id="id_address"
                             />
@@ -257,7 +257,7 @@
                             <input
                               type="text"
                               class="form-control rounded {% if form.country.errors  %} is-invalid {% endif %}"
-                              placeholder="Country"
+                              placeholder="Country (Required)"
                               name="country"
                               id="id_country"
                             />
@@ -273,7 +273,7 @@
                             <input
                               type="text"
                               class="form-control rounded {% if form.city.errors  %} is-invalid {% endif %}"
-                              placeholder="City"
+                              placeholder="City (Required)"
                               name="city"
                               id="id_city"
                             />
@@ -289,12 +289,45 @@
                             <input
                               type="number"
                               class="form-control rounded {% if form.zip_code.errors  %} is-invalid {% endif %}"
-                              placeholder="Zip Code"
+                              placeholder="Zip Code (Optional)"
                               name="zip_code"
                               id="id_zip_code"
                             />
                           </div>
                         </div>
+
+
+                             <!--GitHub-->
+                             <div class="col-xl-6 col-lg-6">
+                              <div class="form-group">
+                                <label class="text-dark ft-medium" for="id_city"
+                                  >GitHub {% for err in form.city.errors %} <small class="text-danger"> {{err}} </small> {% endfor %}</label
+                                >
+                                <input
+                                  type="text"
+                                  class="form-control rounded {% if form.city.errors  %} is-invalid {% endif %}"
+                                  placeholder="GitHub (Optional)"
+                                  name="city"
+                                  id="id_city"
+                                />
+                              </div>
+                            </div>
+    
+                            <!--Linked In-->
+                            <div class="col-xl-6 col-lg-6">
+                              <div class="form-group">
+                                <label class="text-dark ft-medium" for="id_zip_code"
+                                  >Linked In {% for err in form.zip_code.errors %} <small class="text-danger"> {{err}} </small> {% endfor %} </label
+                                >
+                                <input
+                                  type="number"
+                                  class="form-control rounded {% if form.zip_code.errors  %} is-invalid {% endif %}"
+                                  placeholder="Linked In (Optional)"
+                                  name="zip_code"
+                                  id="id_zip_code"
+                                />
+                              </div>
+                            </div>
 
                         <!--CV-->
                         <div class="col-xl-12 col-lg-12">
@@ -305,7 +338,7 @@
                             <input
                               type="file"
                               class="form-control rounded {% if form.resume.errors  %} is-invalid {% endif %}"
-                              placeholder="CV"
+                              placeholder="CV (Optional)"
                               name="resume"
                               id="id_resume"
                             />
@@ -326,7 +359,7 @@
                             </select>
                           </div>
                         </div>
-
+                      <!--Resume Content-->
                         <div class="col-xl-12 col-lg-12">
                           <div class="form-group">
                             <label class="text-dark ft-medium" for="id_about"
@@ -334,7 +367,7 @@
                             >
                             <textarea
                               class="form-control with-light {% if form.about.errors  %} is-invalid {% endif %}"
-                              placeholder="Resume Content"
+                              placeholder="Resume Content (Required)"
                               name="about"
                               id="id_about"
                             ></textarea>
@@ -442,6 +475,17 @@
                         </button>
                       </div>
                     </div>
+                   <!-- Save -->
+                   <div class="row mb-5">
+                    <div class="col-lg-12 col-md-12">
+                      <button
+                        type="submit"
+                        class="btn btn-md ft-medium text-light rounded theme-bg"
+                      >
+                        Save
+                      </button>
+                    </div>
+                  </div>
                   </form>
                 </div>
               </div>
@@ -529,75 +573,20 @@
                         </button>
                       </div>
                     </div>
-                  </form>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Add Skills -->
-          <div class="row">
-            <div class="col-lg-12 col-md-12">
-              <div class="_dashboard_content bg-white rounded mb-4">
-                <div class="_dashboard_content_header br-bottom py-3 px-3">
-                  <div class="_dashboard__header_flex">
-                    <h4 class="mb-0 ft-medium fs-md">
-                      <i class="fas fa-graduation-cap me-1 theme-cl fs-sm"></i
-                      >Skills Details
-                    </h4>
+                                       <!-- Save -->
+                   <div class="row mb-5">
+                    <div class="col-lg-12 col-md-12">
+                      <button
+                        type="submit"
+                        class="btn btn-md ft-medium text-light rounded theme-bg"
+                      >
+                        Save
+                      </button>
+                    </div>
                   </div>
-                </div>
-
-                <div class="_dashboard_content_body py-3 px-3">
-                  <form class="row">
-                    <div class="col-xl-12 col-lg-12">
-                      <div class="gray rounded p-3 mb-3 position-relative">
-                        <button class="aps-clone">
-                          <i class="fas fa-times"></i>
-                        </button>
-                        <div class="form-group">
-                          <label class="text-dark ft-medium">Skills Name</label>
-                          <input
-                            type="text"
-                            class="form-control rounded"
-                            placeholder="Skills Name"
-                          />
-                        </div>
-                        <div class="form-group">
-                          <label class="text-dark ft-medium">Percentage</label>
-                          <input
-                            type="text"
-                            class="form-control rounded"
-                            placeholder="e.x. 80%"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col-xl-12 col-lg-12">
-                      <div class="form-group">
-                        <button
-                          type="button"
-                          class="btn gray ft-medium apply-btn fs-sm rounded"
-                        >
-                          <i class="fas fa-plus me-1"></i>Add Skills
-                        </button>
-                      </div>
-                    </div>
                   </form>
                 </div>
               </div>
-            </div>
-          </div>
-
-          <!-- Save -->
-          <div class="row mb-5">
-            <div class="col-lg-12 col-md-12">
-              <button
-                type="button"
-                class="btn btn-md ft-medium text-light rounded theme-bg"
-              >
-                Save
-              </button>
             </div>
           </div>
         </div>

@@ -1,5 +1,5 @@
 from django import forms
-from .models import Candidate, Skill, Education, Social_media, Experience
+from .models import Candidate, Skill, Education, Experience
 from datetime import date
 class CandidateForm(forms.ModelForm):
     class Meta:

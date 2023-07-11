@@ -20,6 +20,8 @@ class Candidate(models.Model):
     phone1 = PhoneNumberField()
     phone2 = PhoneNumberField(blank = True)
     address = models.CharField(max_length=100)
+    linked_in = models.URLField(blank=True, null=True)
+    git_hub = models.URLField(blank=True, null=True)
     country = models.CharField(max_length=20)
     city = models.CharField(max_length=20)
     zip_code = models.CharField(max_length=10, blank=True, null=True)
@@ -78,21 +80,15 @@ class Skill(models.Model):
     def __str__(self) -> str:
         return self.title
     
-class Social_media(models.Model):
-    name = models.CharField(max_length=20, null=True, blank=True)
-    link = models.CharField(max_length=70, null=True, blank=True)
-    candidate = models.ForeignKey(
-        Candidate, on_delete=models.CASCADE)  # Related With Candidate
-
-    def __str__(self) -> str:
-        return self.name
-
 class Bookmarks(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     jobs = models.ForeignKey('Job_Posting', on_delete=models.CASCADE)
 
     def __str__(self) -> str:
         return self.jobs
+
+
+
 
 
 class Department(models.Model):
@@ -113,6 +109,7 @@ class Job_Posting(models.Model):
         Department, on_delete=models.SET_NULL, null=True)  # Related With Department
     description = models.TextField()  # HTML Editor
     experience = models.IntegerField()
+    skills = models.ManyToManyField(Skill)
     location = models.CharField(max_length=50)
     salary_range = models.CharField(max_length=20)
     # Related With Job_Type
@@ -148,6 +145,11 @@ interview_status = [
     ('canceled', 'canceled'),
 ]
 
+job_status_interview = [
+    ('rejected', 'Rejected'),
+    ('hired', 'hired'),
+]
+
 interview_type = [
     ('phone', 'phone'),
     ('in-person', 'in-person'),
@@ -164,6 +166,7 @@ class Interviews(models.Model):
     date_schedule = models.DateField()
     time_schedule = models.TimeField()
     status = models.CharField(max_length=15, choices=interview_status)
+    job_status = models.CharField(max_length=25, choices=job_status_interview)
     # feedback
     type = models.CharField(max_length=15, choices=interview_type)
 
