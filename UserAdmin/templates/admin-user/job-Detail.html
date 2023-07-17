@@ -1,0 +1,218 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" data-footer="true">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,maximum-scale=1"
+    />
+    <title>Acorn Admin Template | Product Detail</title>
+    <meta name="description" content="Ecommerce Product Detail" />
+    {% include 'admin-user/include/head.html' %}
+    <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/gh/habibmhamadi/multi-select-tag/dist/css/multi-select-tag.css"
+  />
+  <script src="https://cdn.jsdelivr.net/gh/habibmhamadi/multi-select-tag/dist/js/multi-select-tag.js"></script>
+    
+  </head>
+  <body>
+
+<!-- Modal -->
+<div class="modal fade" id="deleteJob" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="deleteJobLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteJobLabel">Are you sure you want to delete</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body h3">
+        {{form.title.value}}?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-muted" data-bs-dismiss="modal">Close</button>
+        <form action="" method="post">
+          {% csrf_token %}
+        <a href="{% url 'delete-job-admin' job.id %}" type="submit" class="btn btn-danger">Yes</a>
+      </form>
+      </div>
+    </div>
+  </div>
+</div>
+    <div id="root">
+        {% include 'admin-user/include/navbar.html'%}
+      <main>
+        <form action="" method="post"> {% csrf_token %}
+        <div class="container">
+          <div class="page-title-container">
+            <div class="row g-0">
+              <div class="col-auto mb-3 mb-md-0 me-auto">
+                <div class="w-auto sw-md-30">
+                  <a
+                    href="{% url 'job-list-admin' %}"
+                    class="muted-link pb-1 d-inline-block breadcrumb-back"
+                  >
+                    <i data-acorn-icon="chevron-left" data-acorn-size="13"></i>
+                    <span class="text-small align-middle">JOB</span>
+                  </a>
+                  <h1 class="mb-0 pb-0 display-4" id="title">JOB Detail</h1>
+                </div>
+
+                {% if messages %}
+                <ul class="messages">
+                    {% for message in messages %}
+                    <div class="alert {% if message.tags == 'success' %} alert-success {% else %} alert-danger {% endif %}  alert-dismissible">
+                      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                       {{message}}
+                    </div>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+
+              </div>
+              <div class="w-100 d-md-none"></div>
+              <div class="col-auto d-flex align-items-end justify-content-end">
+                <button
+                  type="button"
+                  class="btn btn-outline-primary btn-icon btn-icon-only"
+                  data-delay='{"show":"500", "hide":"0"}'
+                  data-bs-toggle="tooltip"
+                  data-bs-placement="top"
+                  title="Save"
+                >
+                  <i data-acorn-icon="save"></i>
+                </button>
+              </div>
+              <div
+                class="col col-md-auto d-flex align-items-end justify-content-end"
+              >
+                <div class="btn-group ms-1 w-100 w-md-auto">
+                  <button
+                    type="submit"
+                    class="btn btn-outline-primary btn-icon btn-icon-start w-100"
+                  >
+                    <i data-acorn-icon="send"></i>
+                    <span>Publish</span>
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn-outline-primary dropdown-toggle dropdown-toggle-split"
+                    data-bs-offset="0,3"
+                    data-bs-toggle="dropdown"
+                    aria-haspopup="true"
+                    aria-expanded="false"
+                  ></button>
+
+                  <div class="dropdown-menu dropdown-menu-end">
+                    <button class="dropdown-item"  data-bs-toggle="modal" data-bs-target="#deleteJob" type="button">Delete</button>
+                  </div>
+
+
+                </div>
+              </div>
+            </div>
+          </div>
+
+            <div class="row">
+            <div class="col-xl-8">
+              <div class="mb-5">
+                <h2 class="small-title">JOB Info</h2>
+                <div class="card">
+                  <div class="card-body">
+                      <div class="mb-3">
+                        <label class="form-label">Title</label>
+                        {{form.title}}
+                      </div>
+                      <div class="mb-3">
+                        <label class="form-label">Department</label>
+                        {{form.department}}
+                      </div>
+                      <div class="mb-3 w-100">
+                        <label class="form-label">Description</label>
+                        {{form.description}}
+                      </div>
+
+                      <div class="mb-3 row">
+                        <div class="col-6">
+                          <label class="form-label">Experience</label>
+                          {{form.experience}}
+                        </div>
+                        <div class="col-6">
+                          <label class="form-label">Job Type</label>
+                          {{form.type}}
+                        </div>
+                      </div>
+
+                      <div class="mb-3">
+                        <label class="form-label">Skills</label>
+                        {{form.skills}}
+                      </div>
+
+
+                      <div class="mb-3">
+                        <label class="form-label">Location</label>
+                        {{form.location}}
+                      </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+            <div class="col-xl-4 mb-n5">
+              <div class="mb-5">
+                <h2 class="small-title">Salary Range</h2>
+                <div class="card">
+                  <div class="card-body">
+                      <div class="mb-3">
+                        <label class="form-label">Start</label>
+                        {{form.salary_range_start}}
+                      </div>
+                      <div class="mb-0">
+                        <label class="form-label">Final</label>
+                        {{form.salary_range_final}}
+                      </div>
+
+                  </div>
+                </div>
+              </div>
+
+              <div class="mb-5">
+                <h2 class="small-title">Actions</h2>
+                <div class="card">
+                  <div class="card-body m-0">
+                    <div class="mb-3">
+                      <label class="form-label">Open</label>
+                      {{form.job_status}}
+                    </div>
+                    <div class="mb-2">
+                      <label class="form-label">Close Date</label>
+                      {{form.date_closed}}
+                    </div>
+                  </div>
+              </div>
+
+
+                </div>
+              </div>
+            </div>
+          
+          </form>
+
+          </div>
+        </div>
+      </main>
+      <script>
+        new MultiSelectTag("id_skills", {
+          rounded: true, // default true
+          shadow: true, // default false
+          placeholder: "Search", // default Search...
+          onChange: function (values) {
+            console.log(values);
+          },
+        });
+      </script>
+    {% include 'admin-user/include/footer-js.html'%}
+  </body>
+</html>

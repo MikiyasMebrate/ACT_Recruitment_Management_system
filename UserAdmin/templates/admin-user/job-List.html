@@ -1,22 +1,132 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en" data-footer="true">
-   <head>
+  <head>
     <meta charset="UTF-8" />
     <meta
       name="viewport"
       content="width=device-width,initial-scale=1,maximum-scale=1"
     />
-    <title>Acorn Admin Template | Customer List Page</title>
-    <meta name="description" content="Ecommerce Customer List Page" />
-    {% include 'admin-user/include/head.html' %}
+    <title>ACT American College OF Technology | JOB List</title>
+    <meta name="description" content="Ecommerce Products List" />
+    <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/gh/habibmhamadi/multi-select-tag/dist/css/multi-select-tag.css"
+  />
+  <script src="https://cdn.jsdelivr.net/gh/habibmhamadi/multi-select-tag/dist/js/multi-select-tag.js"></script>
+
+    {% include 'admin-user/include/head.html'%}
   </head>
   <body>
-    <div id="root">
+    <div id="root">      
+      <!-- Modal -->
+      <div class="modal fade" id="addJobBoard" tabindex="-1" aria-labelledby="addJobBoardLabel" aria-hidden="true">
+        <form action="" method="post">{% csrf_token %}
+        <div class="modal-dialog  modal-xl modal-dialog-centered modal-dialog-scrollable">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="addJobBoardLabel">Add JOB Board</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+          
+            <div class="modal-body">
+              <div class="row">
+                <div class="col">
+                  <div class="mb-5">
+                    <h2 class="small-title">JOB Info</h2>
+                    <div class="card">
+                      <div class="card-body">
+                          <div class="mb-3">
+                            <label class="form-label">Title {% for err in form.title.errors%} <small class="text-danger">{{err}}</small> {% endfor %} </label>
+                            {{form.title}}
+                          </div>
+                          <div class="mb-3">
+                            <label class="form-label">Department {% for err in form.department.errors%} <small class="text-danger">{{err}}</small> {% endfor %} </label>
+                            {{form.department}}
+                          </div>
+                          <div class="mb-3 w-100">
+                            <label class="form-label">Description {% for err in form.description.errors%} <small class="text-danger">{{err}}</small> {% endfor %} </label>
+                            {{form.description}}
+                          </div>
+    
+                          <div class="mb-3 row">
+                            <div class="col-6">
+                              <label class="form-label">Experience {% for err in form.experience.errors%} <small class="text-danger">{{err}}</small> {% endfor %} </label>
+                              {{form.experience}}
+                            </div>
+                            <div class="col-6">
+                              <label class="form-label">Job Type {% for err in form.type.errors%} <small class="text-danger">{{err}}</small> {% endfor %} </label>
+                              {{form.type}}
+                            </div>
+                          </div>
+    
+                          <div class="mb-3">
+                            <label class="form-label">Skills {% for err in form.skills.errors%} <small class="text-danger">{{err}}</small> {% endfor %} </label>
+                            {{form.skills}}
+                          </div>
+    
+    
+                          <div class="mb-3">
+                            <label class="form-label">Location {% for err in form.location.errors%} <small class="text-danger">{{err}}</small> {% endfor %} </label>
+                            {{form.location}}
+                          </div>
+
+                          <div class="row">
+                            <div class="col-6">
+                              <div class="mb-3">
+                                <label class="form-label">Start {% for err in form.salary_range_start.errors%} <small class="text-danger">{{err}}</small> {% endfor %} </label>
+                                {{form.salary_range_start}}
+                              </div>
+    
+                            </div>
+                            <div class="col-6">
+                              <div class="mb-3">
+                                <label class="form-label">Final {% for err in form.salary_range_final.errors%} <small class="text-danger">{{err}}</small> {% endfor %} </label>
+                                {{form.salary_range_final}}
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="mb-3">
+                            <label class="form-label">Open {% for err in form.job_status.errors%} <small class="text-danger">{{err}}</small> {% endfor %} </label>
+                            {{form.job_status}}
+                          </div>
+
+                          <div class="mb-3">
+                            <label class="form-label">Close Date {% for err in form.date_closed.errors%} <small class="text-danger">{{err}}</small> {% endfor %} </label>
+                            {{form.date_closed}}
+                          </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                </div>
+              
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-muted" data-bs-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary">Save changes</button>
+            </div>
+          </div>
+        </form>
+        </div>
+      </div>
         {% include 'admin-user/include/navbar.html'%}
       <main>
-        <div class="container">
+        <div class="container">    
           <div class="page-title-container">
-            <div class="row">
+            <div class="row g-0">
+              {% if messages %}
+              <ul class="messages">
+                  {% for message in messages %}
+                  <div class="alert {% if message.tags == 'success' %} alert-success {% else %} alert-danger {% endif %}  alert-dismissible">
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                     {{message}}
+                  </div>
+                  {% endfor %}
+              </ul>
+              {% endif %}
+
               <div class="col-auto mb-3 mb-md-0 me-auto">
                 <div class="w-auto sw-md-30">
                   <a
@@ -26,11 +136,48 @@
                     <i data-acorn-icon="chevron-left" data-acorn-size="13"></i>
                     <span class="text-small align-middle">Home</span>
                   </a>
-                  <h1 class="mb-0 pb-0 display-4" id="title">Candidate List</h1>
+                  <h1 class="mb-0 pb-0 display-4" id="title">Job List</h1>
                 </div>
               </div>
-              <div class="col-3 d-flex align-items-end justify-content-end">
-                <div class="btn-group ms-1 check-all-container">
+              <div class="w-100 d-md-none"></div>
+              <div
+                class="col-12 col-sm-6 col-md-auto d-flex align-items-end justify-content-end mb-2 mb-sm-0 order-sm-3"
+              >
+                <button
+                  type="button"
+                  class="btn btn-outline-primary btn-icon btn-icon-start ms-0 ms-sm-1 w-100 w-md-auto"
+                  data-bs-toggle="modal" data-bs-target="#addJobBoard"
+                >
+                  <i data-acorn-icon="plus"></i>
+                  <span>Add JOB</span>
+                </button>
+                <div class="dropdown d-inline-block d-lg-none">
+                  <button
+                    type="button"
+                    class="btn btn-outline-primary btn-icon btn-icon-only ms-1"
+                    data-bs-toggle="dropdown"
+                    data-bs-auto-close="outside"
+                    aria-haspopup="true"
+                    aria-expanded="false"
+                  >
+                    <i data-acorn-icon="sort"></i>
+                  </button>
+                  <div class="dropdown-menu dropdown-menu-end custom-sort">
+                    <a class="dropdown-item sort" data-sort="name" href="#"
+                      >Title</a
+                    >
+                    <a class="dropdown-item sort" data-sort="email" href="#"
+                      >Experience</a
+                    >
+                    <a class="dropdown-item sort" data-sort="phone" href="#"
+                      >Price</a
+                    >
+                    <a class="dropdown-item sort" data-sort="group" href="#"
+                      >Status</a
+                    >
+                  </div>
+                </div>
+                <div class="btn-group ms-1 check-all-container-checkbox-click">
                   <div
                     class="btn btn-outline-primary btn-custom-control p-0 ps-3 pe-2"
                     data-target="#checkboxTable"
@@ -52,21 +199,18 @@
                     aria-expanded="false"
                   ></button>
                   <div class="dropdown-menu dropdown-menu-end">
-                    <a class="dropdown-item" href="#">
-                      <span class="align-middle d-inline-block">Status</span>
-                    </a>
-                    <a class="dropdown-item" href="#">
-                      <span class="align-middle d-inline-block">Move</span>
-                    </a>
-                    <a class="dropdown-item" href="#">
-                      <span class="align-middle d-inline-block">Delete</span>
-                    </a>
+                    <button
+                      class="dropdown-item"
+                      id="deleteChecked"
+                      type="button"
+                    >
+                      Delete
+                    </button>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-
           <div class="row mb-2">
             <div class="col-sm-12 col-md-5 col-lg-3 col-xxl-2 mb-1">
               <div
@@ -154,8 +298,7 @@
             </div>
           </div>
 
-
-          
+                    
           <div class="row">
             <div class="col-12 mb-5">
               <div class="card mb-2 bg-transparent no-shadow d-none d-lg-block">
@@ -171,22 +314,22 @@
                         <div
                           class="col-lg-2 d-flex align-items-center text-muted text-small"
                         >
-                          NAME
+                          Title
                         </div>
                         <div
                           class="col-lg-2 d-flex align-items-center text-muted text-small"
                         >
-                          LOCATION
+                          Experience
                         </div>
                         <div
                           class="col-lg-3 d-flex align-items-center text-muted text-small"
                         >
-                          Email
+                          Salary
                         </div>
                         <div
                           class="col-lg-2 d-flex align-items-center text-muted text-small"
                         >
-                          Phone
+                          Applicant
                         </div>
                         <div
                           class="col-lg-2 d-flex align-items-center text-muted text-small"
@@ -199,8 +342,8 @@
                 </div>
               </div>
               <div id="checkboxTable">
-                {% if candidates %}
-                {% for candidate in candidates %}
+                {% if job_list %}
+                {% for job in job_list %}
                 <div class="card mb-2">
                   
                   <div class="card-body pt-0 pb-0 sh-30 sh-lg-8">
@@ -210,16 +353,16 @@
                       >
                         <div class="text-muted text-small d-lg-none">Id</div>
                         <a
-                          href="{% url 'candidate-detail' candidate.id %}"
+                          href="{% url 'job-detail-admin' job.id %}"
                           class="text-truncate h-100 d-flex align-items-center"
-                          >{{candidate.id}}</a
+                          >{{job.id}}</a
                         >
                       </div>
                       <div
                         class="col-6 col-lg-2 d-flex flex-column justify-content-center mb-2 mb-lg-0 order-3 order-lg-2"
                       >
-                        <div class="text-muted text-small d-lg-none">Name</div>
-                        <div class="text-alternate">{{candidate.first_name}} {{candidate.last_name}}</div>
+                        <div class="text-muted text-small d-lg-none">Title</div>
+                        <div class="text-alternate">{{job.title}}</div>
                       </div>
                       <div
                         class="col-6 col-lg-2 d-flex flex-column justify-content-center mb-2 mb-lg-0 order-5 order-lg-3"
@@ -227,15 +370,15 @@
                         <div class="text-muted text-small d-lg-none">
                           Location
                         </div>
-                        <div class="text-alternate">{{candidate.address}}</div>
+                        <div class="text-alternate">{{job.experience}} Experience</div>
                       </div>
                       <div
                         class="col-6 col-lg-3 d-flex flex-column justify-content-center mb-2 mb-lg-0 order-4 order-lg-4"
                       >
-                        <div class="text-muted text-small d-lg-none">Email</div>
+                        <div class="text-muted text-small d-lg-none">Salary</div>
                         <div class="text-alternate">
                           <span>
-                            {{candidate.email}}
+                            ${{job.salary_range_start}} - ${{job.salary_range_final}}
                           </span>
                         </div>
                       </div>
@@ -243,13 +386,13 @@
                         class="col-6 col-lg-2 d-flex flex-column justify-content-center mb-2 mb-lg-0 order-5 order-lg-4"
                       >
                         <div class="text-muted text-small d-lg-none">
-                          Phone
+                          Applicant
                         </div>
                         <div class="text-alternate">
                           <a
                             class="text-truncate h-100 d-flex align-items-center"
-                            >{{candidate.phone1}}</a
-                          >
+                            >{{job.count_applicant}}  <span><button class="btn btn-sm btn-info m-0 p-1 ms-3">{{job.get_type_display}}</button></span></a>
+                           
                         </div>
                       </div>
                       <div
@@ -260,7 +403,11 @@
                         </div>
                         <div class="text-alternate">
                           <span>
-                            Active
+                            {% if job.job_status %}
+                               <button type="button" class="btn btn-sm btn-primary">Opened</button>
+                            {% else %}
+                                <button type="button" class="btn btn-sm btn-danger">Closed</button>
+                            {% endif %}
                           </span>
                         </div>
                       </div>
@@ -286,7 +433,7 @@
           <div class="d-flex justify-content-center">            
             <nav>
               <ul class="pagination">
-            {% if not candidates.has_previous %}
+            {% if not job_list.has_previous %}
               <li class="page-item disabled"> 
                 <a class="page-link shadow" href="#"  tabindex="-1" aria-disabled="true"> 
                   <i data-acorn-icon="chevron-left"></i>
@@ -295,33 +442,33 @@
             {% endif %}
 
 
-            {% if candidates.has_previous %}
+            {% if job_list.has_previous %}
             <li class="page-item"> 
-              <a class="page-link shadow" href="?page={{ candidates.previous_page_number }}" > 
+              <a class="page-link shadow" href="?page={{ job_list.previous_page_number }}" > 
                 <i data-acorn-icon="chevron-left"></i>
               </a>
             </li>
             <li class="page-item">
-               <a class="page-link shadow" href="?page={{ candidates.previous_page_number }}">{{ candidates.previous_page_number }}</a>
+               <a class="page-link shadow" href="?page={{ job_list.previous_page_number }}">{{ job_list.previous_page_number }}</a>
             </li>
             {% endif %}
 
                 <li class="page-item active">
-                  <a class="page-link shadow" href="#">{{candidates.number}}</a>
+                  <a class="page-link shadow" href="#">{{job_list.number}}</a>
                 </li>
 
-            {% if candidates.has_next %}
+            {% if job_list.has_next %}
             <li class="page-item">
-               <a class="page-link shadow" href="?page={{ candidates.next_page_number }}">{{ candidates.next_page_number }}</a>
+               <a class="page-link shadow" href="?page={{ job_list.next_page_number }}">{{ job_list.next_page_number }}</a>
             </li>
             <li class="page-item">
-              <a class="page-link" href="?page={{ candidates.next_page_number }}">
+              <a class="page-link" href="?page={{ job_list.next_page_number }}">
                 <i data-acorn-icon="chevron-right"></i>
               </a>
             </li>
             {% endif %}
 
-            {% if not candidates.has_next%}
+            {% if not job_list.has_next%}
 
             <li class="page-item disabled">
               <a class="page-link" href="#"  tabindex="-1" aria-disabled="true">
@@ -334,9 +481,17 @@
             </nav>
           </div>
         
-        
-        </div>
-      </main>
-    {% include 'admin-user/include/footer-js.html'%}
+
+          <script>
+            new MultiSelectTag("id_skills", {
+              rounded: true, // default true
+              shadow: true, // default false
+              placeholder: "Search", // default Search...
+              onChange: function (values) {
+                console.log(values);
+              },
+            });
+          </script>
+    {% include 'admin-user/include/footer-js.html' %}
   </body>
-  </html>
+</html>

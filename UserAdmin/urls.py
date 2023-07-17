@@ -5,12 +5,15 @@ urlpatterns = [
     path('', views.admin_index, name='admin-dashboard'),
     path('candidate/', views.candidate_view, name='candidate'),
     path('candidate-detail/<str:id>/', views.candidate_detail_view, name='candidate-detail'),
+    path('job-list/', views.job_board_view, name='job-list-admin'),
+    path('job-detail/<str:pk>', views.job_detail_view, name='job-detail-admin'),
+    path('job-delete/<str:pk>', views.job_delete_view, name='delete-job-admin'),
+
+    
     path('discount/', views.discount, name='discount'),
     path('order-detail/', views.Orders_detail, name='order-detail'),
     path('Orders-List/', views.order_list, name='order-list'),
     path('general-setting/', views.general_setting, name='general-setting'),
-    path('product-detail/', views.product_detail, name='product-detail'),
-    path('product-list/', views.product_list, name='product-list'),
     path('settings/', views.settings, name='setting'),
     path('Shipping/', views.Shipping, name='Shipping'),
     path('Storefront-Cart/', views.Storefront_cart, name='Storefront-Cart'),

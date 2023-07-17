@@ -1,8 +1,9 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from Recruitment_System.models import Candidate, Skill, Education
+from Recruitment_System.models import Candidate, Education, Job_Posting
 from django.core.paginator import Paginator
-from Account.models import CustomUser
+from Recruitment_System.forms import JobPostingForm
+from django.contrib import messages
 # Create your views here.
 @login_required
 def admin_index(request):
@@ -30,6 +31,71 @@ def candidate_detail_view(request, id):
     }
     return render(request, 'admin-user/candidate-Detail.html', context)
 
+
+@login_required
+def job_board_view(request):
+    form = JobPostingForm(request.POST or None)
+
+    if request.method == 'POST':
+        if form.is_valid():
+            obj = form.save(commit=False)
+            obj.save()
+            form.save_m2m()
+            messages.success(request, "Successfully Published.")
+            return redirect('job-list')
+        else:
+            messages.error(request, "Your request has not been Unsuccessful Please try again!")
+    
+    job_list = Job_Posting.objects.all()
+    paginator = Paginator(job_list, 10)
+    page_number = request.GET.get('page')
+    page = paginator.get_page(page_number)
+    context = {
+        'job_list' : page,
+        'form' : form
+    }
+    return render(request, 'admin-user/job-List.html', context)
+
+@login_required
+def job_detail_view(request, pk):
+    job = Job_Posting.objects.get(pk=pk)
+    form = JobPostingForm(request.POST or None, instance=job)
+
+    if request.method == 'POST':
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Successfully Published.")
+            return redirect('job-list-admin')
+        else:
+            messages.error(request, "Your request has not been Unsuccessful Please try again!")
+        
+    context = {
+        'form' : form,
+        'job' : job
+    }
+    return render(request, 'admin-user/job-Detail.html', context)
+
+
+@login_required
+def job_delete_view(request, pk):
+    job = Job_Posting.objects.get(pk=pk)
+
+    if job.delete():
+        messages.success(request, 'Successfully Deleted')
+        return redirect('job-list-admin')
+    else:
+        messages.error(request, 'Your request has not been Successfully please try again!')
+        
+    
+    return redirect('job-detail', pk)
+    
+
+    
+
+
+
+
+
 @login_required
 def discount(request):
     return render(request, 'admin-user/discount.html')
@@ -46,13 +112,6 @@ def order_list(request):
 def general_setting(request):
     return render(request, 'admin-user/Settings-General.html')
 
-@login_required
-def product_detail(request):
-    return render(request, 'admin-user/Products-Detail.html')
-
-@login_required
-def product_list(request):
-    return render(request, 'admin-user/Products-List.html')
 
 @login_required
 def settings(request):

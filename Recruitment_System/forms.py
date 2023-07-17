@@ -1,8 +1,9 @@
 from django import forms
-from .models import Candidate, Skill, Education, Experience
+from .models import Candidate, Skill, Education, Experience, Job_Posting,Department
 from datetime import date
 from django.forms import formset_factory
 from phonenumber_field.formfields import PhoneNumberField
+
 class CandidateForm(forms.ModelForm):
     gender_list = [
     ('male', 'Male'),
@@ -204,3 +205,56 @@ class ExperienceForm(forms.ModelForm):
     class Meta:
         model = Experience
         exclude = ['candidate']
+
+
+
+class JobPostingForm(forms.ModelForm):
+    job_type = [
+    ('full_time', 'Full Time'),
+    ('part_time', 'Part Time'),
+    ('freelance', 'Freelance'),
+    ('internship', 'Internship'),
+    ('seasonal ','seasonal'),
+    ('contract', 'Contract'),
+]
+    
+    title = forms.CharField(widget=forms.TextInput(attrs={
+        'class' : 'form-control '
+    }))
+    department = forms.ModelChoiceField(queryset=Department.objects.all(), widget=forms.Select(attrs={
+        'class' : 'form-select '
+    }))
+
+    description = forms.CharField(widget=forms.Textarea(attrs={
+        'class' : 'form-control',
+        'row' : '30'
+    }))
+    experience = forms.FloatField(widget=forms.NumberInput(attrs={
+        'class ' : 'form-control'
+    }))
+
+    skills = forms.ModelMultipleChoiceField(required=True,queryset=Skill.objects.all())
+    location = forms.CharField(widget=forms.TextInput(attrs={
+        'class' : 'form-control'
+    }))
+    salary_range_start = forms.FloatField(widget=forms.NumberInput(attrs={
+        'class' : 'form-control'
+    }))
+    salary_range_final = forms.FloatField(widget=forms.NumberInput(attrs={
+        'class' : 'form-control'
+    }))
+    type = forms.ChoiceField(choices=job_type, widget=forms.Select(attrs={
+        'class' : 'form-select'
+    }))
+    job_status = forms.BooleanField(widget=forms.CheckboxInput(attrs={
+        'class' : 'form-check-input'
+    }))
+    date_closed = forms.DateField(widget=forms.DateInput(attrs={
+        'class' : 'form-control',
+        'type' : 'date',
+    }))
+    
+
+    class Meta:
+        model = Job_Posting
+        fields = '__all__'

@@ -100,19 +100,41 @@ class Job_Type(models.Model):
     def __str__(self) -> str:
         return self.type
 
+        
+
+
+
+job_type = [
+    ('full_time', 'Full Time'),
+    ('part_time', 'Part Time'),
+    ('freelance', 'Freelance'),
+    ('internship', 'Internship'),
+    ('seasonal ','seasonal'),
+    ('contract', 'Contract'),
+]
+
 class Job_Posting(models.Model):
     title = models.CharField(max_length=50)
-    department = models.ForeignKey(
-        Department, on_delete=models.SET_NULL, null=True)  # Related With Department
+    department = models.ForeignKey(Department, on_delete=models.SET_NULL, null=True)  # Related With Department
     description = models.TextField()  # HTML Editor
-    experience = models.IntegerField()
+    experience = models.FloatField()
     skills = models.ManyToManyField(Skill)
-    location = models.CharField(max_length=50)
-    salary_range = models.CharField(max_length=20)
-    # Related With Job_Type
-    type = models.ForeignKey(Job_Type, on_delete=models.SET_NULL, null=True)
+    location = models.CharField(max_length=200)
+    salary_range_start = models.FloatField()
+    salary_range_final = models.FloatField()
+    type = models.CharField( choices=job_type, max_length=30)
+    job_status = models.BooleanField(default=True)
     date_posted = models.DateTimeField(auto_now_add=True)
     date_closed = models.DateField()
+
+    class Meta:
+        ordering = ['-date_posted','-date_closed']
+
+    def count_applicant(self) -> int:
+        applicant = Application.objects.filter(job__id = self.id).count()
+        return applicant
+
+
 
     def __str__(self) -> str:
         return self.title
