@@ -6,6 +6,9 @@ import datetime
 from phonenumber_field.modelfields import PhoneNumberField
 from fontawesome_5.fields import IconField
 
+# Create your models here.
+
+
 #Blog 
 class Blog_Categories(models.Model):
     name = models.CharField(max_length=100)

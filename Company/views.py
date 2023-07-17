@@ -31,18 +31,14 @@ def single_blog(request, slug):
     latest_post = Blog.objects.all().exclude(slug = slug)[:4]
     comments =  Comment.objects.filter(blog__pk = blog.pk)
    
+    form = CommentForm(request.POST or None)
     if request.method == 'POST':
-        form = CommentForm(request.POST)
-
         if form.is_valid():
             comment = form.save(commit=False)
             comment.blog = blog
             comment.save()
             messages.success(request, 'Your comment has been successfully sent!')
             form = CommentForm()
-    else:
-         form = CommentForm()
-            
 
     context = {
         'social_medias' : social_medias,
@@ -55,9 +51,8 @@ def single_blog(request, slug):
 
 def contact(request):
     contact = Contact.objects.all().first()
-
     if request.method == 'POST':
-        form = ContactForm(request.POST)
+        form = ContactForm(request.POST)  
         if form.is_valid():
             form.save()
             messages.success(request, 'Your request has been successfully sent')
