@@ -47,8 +47,6 @@ INSTALLED_APPS = [
     'froala_editor',
     'fontawesome_5',
     'phonenumber_field',
-    'widget_tweaks',
-
 ]
 
 MIDDLEWARE = [

@@ -17,9 +17,9 @@
           <img
             class="profile"
             alt="profile"
-            src="{% static 'img/profile/profile-1.webp' %}"
+            src="/media/{{user.candidate.photo}}"
           />
-          <div class="name">Zayn Hartley</div>
+          <div class="name">{{user.first_name}} {{user.last_name}}</div>
         </a>
         <div class="dropdown-menu dropdown-menu-end user-menu wide">
           <div class="row mb-3 ms-0 me-0">
@@ -116,7 +116,7 @@
                   </a>
                 </li>
                 <li>
-                  <a href="#">
+                  <a href="{% url 'logout' %}">
                     <i
                       data-acorn-icon="logout"
                       class="me-2"
@@ -302,26 +302,14 @@
             </ul>
           </li>
           <li>
-            <a href="#customers" data-href="Customers.html">
+            <a href="{% url 'candidate' %}" data-href="{% url 'candidate' %}">
               <i
                 data-acorn-icon="user"
                 class="icon"
                 data-acorn-size="18"
               ></i>
-              <span class="label">Customers</span>
+              <span class="label">Candidates</span>
             </a>
-            <ul id="customers">
-              <li>
-                <a href="Customers.List.html">
-                  <span class="label">List</span>
-                </a>
-              </li>
-              <li>
-                <a href="Customers.Detail.html">
-                  <span class="label">Detail</span>
-                </a>
-              </li>
-            </ul>
           </li>
           <li>
             <a href="#storefront" data-href="Storefront.html">

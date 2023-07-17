@@ -20,7 +20,7 @@ def login_view(request):
             user = authenticate(request, email=email,password=password)
         if user is not None and user.is_superuser:
             login(request, user)
-            return redirect('/admin')
+            return redirect('/user_admin')
         elif user is not None and user.is_candidate:
             login(request, user)
             return redirect('/')
