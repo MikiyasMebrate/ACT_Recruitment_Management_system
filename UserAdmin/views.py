@@ -11,7 +11,7 @@ def customer_detail_view(request):
     return render(request, 'admin-user/Customers-Detail.html')
 
 def discount(request):
-    return render(request, 'admin-user/discount.html')
+    return render(request, 'admin-userr/discount.html')
 
 def Orders_detail(request):
     return render(request, 'admin-user/Orders-Detail.html')
