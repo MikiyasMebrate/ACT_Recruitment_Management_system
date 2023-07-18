@@ -7,7 +7,7 @@
       name="viewport"
       content="width=device-width,initial-scale=1,maximum-scale=1"
     />
-    <title>ACT American College OF Technology | JOB List</title>
+    <title>ACT American College OF Technology | Sector List</title>
     <meta name="description" content="Ecommerce Products List" />
     <link
     rel="stylesheet"
@@ -16,17 +16,16 @@
   <script src="https://cdn.jsdelivr.net/gh/habibmhamadi/multi-select-tag/dist/js/multi-select-tag.js"></script>
 
     {% include 'admin-user/include/head.html'%}
-    {{form.media}} 
   </head>
   <body>
     <div id="root">     
       <!-- Modal -->
-      <div class="modal fade" id="addJobBoard" tabindex="-1" aria-labelledby="addJobBoardLabel" aria-hidden="true">
+      <div class="modal fade" id="addDepartment" tabindex="-1" aria-labelledby="addDepartmentLabel" aria-hidden="true">
         <form action="" method="post">{% csrf_token %}
         <div class="modal-dialog  modal-xl modal-dialog-centered modal-dialog-scrollable">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="addJobBoardLabel">Add JOB Board</h5>
+              <h5 class="modal-title" id="addDepartmentLabel">Add Sector</h5>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
           
@@ -34,79 +33,12 @@
               <div class="row">
                 <div class="col">
                   <div class="mb-5">
-                    <h2 class="small-title">JOB Info</h2>
+                    <h2 class="small-title">Sector Info</h2>
                     <div class="card">
                       <div class="card-body">
                           <div class="mb-3">
-                            <label class="form-label">Title {% for err in form.title.errors%} <small class="text-danger">{{err}}</small> {% endfor %} </label>
-                            {{form.title}}
-                          </div>
-                          <div class="mb-3">
-                            <label class="form-label">Sector {% for err in form.sector.errors%} <small class="text-danger">{{err}}</small> {% endfor %} </label>
-                            {{form.sector}}
-                          </div>
-                          <div class="mb-3 w-100">
-                            <label class="form-label">Description {% for err in form.description.errors%} <small class="text-danger">{{err}}</small> {% endfor %} </label>
-                            {{form.description}}
-                          </div>
-    
-                          <div class="mb-3 row">
-                            <div class="col-6">
-                              <label class="form-label">Experience {% for err in form.experience.errors%} <small class="text-danger">{{err}}</small> {% endfor %} </label>
-                              {{form.experience}}
-                            </div>
-                            <div class="col-6">
-                              <label class="form-label">Job Type {% for err in form.type.errors%} <small class="text-danger">{{err}}</small> {% endfor %} </label>
-                              {{form.type}}
-                            </div>
-                          </div>
-    
-                          <div class="mb-3">
-                            <label class="form-label">Skills {% for err in form.skills.errors%} <small class="text-danger">{{err}}</small> {% endfor %} </label>
-                            {{form.skills}}
-                          </div>
-    
-    
-                          <div class="row">
-                            <div class="col-6">
-                               <div class="mb-3">
-                                <label class="form-label">Location {% for err in form.location.errors%} <small class="text-danger">{{err}}</small> {% endfor %} </label>
-                                  {{form.location}}
-                               </div>
-                              </div>
-                            <div class="col-6">
-                          <div class="mb-3">
-                            <label class="form-label">Vacancies {% for err in form.vacancies.errors%} <small class="text-danger">{{err}}</small> {% endfor %} </label>
-                            {{form.vacancies}}
-                          </div>
-                        </div>
-                      </div>
-
-
-                          <div class="row">
-                            <div class="col-6">
-                              <div class="mb-3">
-                                <label class="form-label">Start {% for err in form.salary_range_start.errors%} <small class="text-danger">{{err}}</small> {% endfor %} </label>
-                                {{form.salary_range_start}}
-                              </div>
-    
-                            </div>
-                            <div class="col-6">
-                              <div class="mb-3">
-                                <label class="form-label">Final {% for err in form.salary_range_final.errors%} <small class="text-danger">{{err}}</small> {% endfor %} </label>
-                                {{form.salary_range_final}}
-                              </div>
-                            </div>
-                          </div>
-
-                          <div class="mb-3">
-                            <label class="form-label">Open {% for err in form.job_status.errors%} <small class="text-danger">{{err}}</small> {% endfor %} </label>
-                            {{form.job_status}}
-                          </div>
-
-                          <div class="mb-3">
-                            <label class="form-label">Close Date {% for err in form.date_closed.errors%} <small class="text-danger">{{err}}</small> {% endfor %} </label>
-                            {{form.date_closed}}
+                            <label class="form-label">Name {% for err in form.name.errors%} <small class="text-danger">{{err}}</small> {% endfor %} </label>
+                            {{form.name}}
                           </div>
                       </div>
                     </div>
@@ -148,7 +80,7 @@
                     <i data-acorn-icon="chevron-left" data-acorn-size="13"></i>
                     <span class="text-small align-middle">Home</span>
                   </a>
-                  <h1 class="mb-0 pb-0 display-4" id="title">Job List</h1>
+                  <h1 class="mb-0 pb-0 display-4" id="title">Sector List</h1>
                 </div>
               </div>
               <div class="w-100 d-md-none"></div>
@@ -158,10 +90,10 @@
                 <button
                   type="button"
                   class="btn btn-outline-primary btn-icon btn-icon-start ms-0 ms-sm-1 w-100 w-md-auto"
-                  data-bs-toggle="modal" data-bs-target="#addJobBoard"
+                  data-bs-toggle="modal" data-bs-target="#addDepartment"
                 >
                   <i data-acorn-icon="plus"></i>
-                  <span>Add JOB</span>
+                  <span>Add Sector</span>
                 </button>
                 <div class="dropdown d-inline-block d-lg-none">
                   <button
@@ -319,34 +251,19 @@
                     <div class="card-body pt-0 pb-0 h-100">
                       <div class="row g-0 h-100 align-content-center">
                         <div
-                          class="col-lg-1 d-flex align-items-center mb-2 mb-lg-0 text-muted text-small"
+                          class="col-lg-3 d-flex align-items-center mb-2 mb-lg-0 text-muted text-small"
                         >
                           ID
                         </div>
                         <div
-                          class="col-lg-2 d-flex align-items-center text-muted text-small"
+                          class="col-lg-5 d-flex align-items-center text-muted text-small"
                         >
                           Title
                         </div>
                         <div
                           class="col-lg-2 d-flex align-items-center text-muted text-small"
                         >
-                          Experience
-                        </div>
-                        <div
-                          class="col-lg-3 d-flex align-items-center text-muted text-small"
-                        >
-                          Salary
-                        </div>
-                        <div
-                          class="col-lg-2 d-flex align-items-center text-muted text-small"
-                        >
-                          Applicant
-                        </div>
-                        <div
-                          class="col-lg-2 d-flex align-items-center text-muted text-small"
-                        >
-                          STATUS
+                          Job Post
                         </div>
                       </div>
                     </div>
@@ -354,88 +271,41 @@
                 </div>
               </div>
               <div id="checkboxTable">
-                {% if job_list %}
-                {% for job in job_list %}
+
+                {% if departments %}
+                {% for department in departments %}
                 <div class="card mb-2">
                   
                   <div class="card-body pt-0 pb-0 sh-30 sh-lg-8">
                     <div class="row g-0 h-100 align-content-center">
-                      <div
-                        class="col-11 col-lg-1 d-flex flex-column justify-content-center mb-2 mb-lg-0 order-1 order-lg-1 h-lg-100 position-relative"
-                      >
+                      <div class="col-11 col-lg-3 d-flex flex-column justify-content-center mb-2 mb-lg-0 order-1 order-lg-1 h-lg-100 position-relative" >
+                        
                         <div class="text-muted text-small d-lg-none">Id</div>
                         <a
-                          href="{% url 'job-detail-admin' job.id %}"
+                          href="{% url 'department-detail-admin' department.id %}"
                           class="text-truncate h-100 d-flex align-items-center"
-                          >{{job.id}}</a
-                        >
+                          >{{department.id}}</a>
                       </div>
-                      <div
-                        class="col-6 col-lg-2 d-flex flex-column justify-content-center mb-2 mb-lg-0 order-3 order-lg-2"
-                      >
+
+
+                      <div class="col-6 col-lg-5 d-flex flex-column justify-content-center mb-2 mb-lg-0 order-3 order-lg-2">
                         <div class="text-muted text-small d-lg-none">Title</div>
-                        <div class="text-alternate">{{job.title}}</div>
+                        <div class="text-alternate">{{department.name}}</div>
                       </div>
-                      <div
-                        class="col-6 col-lg-2 d-flex flex-column justify-content-center mb-2 mb-lg-0 order-5 order-lg-3"
-                      >
+
+                      <div class="col-6 col-lg-2 d-flex flex-column justify-content-center mb-2 mb-lg-0 order-5 order-lg-3" >
                         <div class="text-muted text-small d-lg-none">
-                          Location
+                          Experience
                         </div>
-                        <div class="text-alternate">{{job.experience}} </div>
-                      </div>
-                      <div
-                        class="col-6 col-lg-3 d-flex flex-column justify-content-center mb-2 mb-lg-0 order-4 order-lg-4"
-                      >
-                        <div class="text-muted text-small d-lg-none">Salary</div>
-                        <div class="text-alternate">
-                          <span>
-                            ${{job.salary_range_start}} - ${{job.salary_range_final}}
-                          </span>
-                        </div>
-                      </div>
-                      <div
-                        class="col-6 col-lg-2 d-flex flex-column justify-content-center mb-2 mb-lg-0 order-5 order-lg-4"
-                      >
-                        <div class="text-muted text-small d-lg-none">
-                          Applicant
-                        </div>
-                        <div class="text-alternate">
-                          <a
-                            class="text-truncate h-100 d-flex align-items-center"
-                            >{{job.count_applicant}}  <span><button class="btn btn-sm btn-info m-0 p-1 ms-3">{{job.get_type_display}}</button></span></a>
-                           
-                        </div>
-                      </div>
-                      <div
-                        class="col-12 col-lg-1 d-flex flex-column justify-content-center mb-2 mb-lg-0 order-last order-lg-5"
-                       >
-                        <div class="text-muted text-small d-lg-none mb-1">
-                          Status
-                        </div>
-                        <div class="text-alternate">
-                          <span>
-                            {% if job.job_status %}
-                               <button type="button" class="btn btn-sm btn-primary">Opened</button>
-                            {% else %}
-                                <button type="button" class="btn btn-sm btn-danger">Closed</button>
-                            {% endif %}
-                          </span>
-                        </div>
-                      </div>
-                      <div
-                        class="col-1 col-lg-1 d-flex flex-column justify-content-center align-items-lg-end mb-2 mb-lg-0 order-2 text-end order-lg-last"
-                      >
-                        <label class="form-check float-end mt-1">
-                          <input type="checkbox" class="form-check-input" />
-                        </label>
-                      </div>
+                        <div class="text-alternate">{{department.count_job_post}} </div>
+                      </div>                      
                     </div>
                   </div>
 
                 </div>
                 {% endfor %}
                 {% endif %}
+
 
               </div>
             </div>
@@ -445,7 +315,7 @@
           <div class="d-flex justify-content-center">            
             <nav>
               <ul class="pagination">
-            {% if not job_list.has_previous %}
+            {% if not departments.has_previous %}
               <li class="page-item disabled"> 
                 <a class="page-link shadow" href="#"  tabindex="-1" aria-disabled="true"> 
                   <i data-acorn-icon="chevron-left"></i>
@@ -454,33 +324,33 @@
             {% endif %}
 
 
-            {% if job_list.has_previous %}
+            {% if departments.has_previous %}
             <li class="page-item"> 
-              <a class="page-link shadow" href="?page={{ job_list.previous_page_number }}" > 
+              <a class="page-link shadow" href="?page={{ departments.previous_page_number }}" > 
                 <i data-acorn-icon="chevron-left"></i>
               </a>
             </li>
             <li class="page-item">
-               <a class="page-link shadow" href="?page={{ job_list.previous_page_number }}">{{ job_list.previous_page_number }}</a>
+               <a class="page-link shadow" href="?page={{ departments.previous_page_number }}">{{ departments.previous_page_number }}</a>
             </li>
             {% endif %}
 
                 <li class="page-item active">
-                  <a class="page-link shadow" href="#">{{job_list.number}}</a>
+                  <a class="page-link shadow" href="#">{{departments.number}}</a>
                 </li>
 
-            {% if job_list.has_next %}
+            {% if departments.has_next %}
             <li class="page-item">
-               <a class="page-link shadow" href="?page={{ job_list.next_page_number }}">{{ job_list.next_page_number }}</a>
+               <a class="page-link shadow" href="?page={{ departments.next_page_number }}">{{ departments.next_page_number }}</a>
             </li>
             <li class="page-item">
-              <a class="page-link" href="?page={{ job_list.next_page_number }}">
+              <a class="page-link" href="?page={{ departments.next_page_number }}">
                 <i data-acorn-icon="chevron-right"></i>
               </a>
             </li>
             {% endif %}
 
-            {% if not job_list.has_next%}
+            {% if not departments.has_next%}
 
             <li class="page-item disabled">
               <a class="page-link" href="#"  tabindex="-1" aria-disabled="true">

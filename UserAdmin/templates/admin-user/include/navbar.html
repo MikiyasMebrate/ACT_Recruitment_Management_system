@@ -268,26 +268,14 @@
             </a>
           </li>
           <li>
-            <a href="#orders" data-href="Orders.html">
+            <a href="{% url 'department-admin'%}">
               <i
                 data-acorn-icon="cart"
                 class="icon"
                 data-acorn-size="18"
               ></i>
-              <span class="label">Orders</span>
+              <span class="label">Sectors</span>
             </a>
-            <ul id="orders">
-              <li>
-                <a href="Orders.List.html">
-                  <span class="label">List</span>
-                </a>
-              </li>
-              <li>
-                <a href="Orders.Detail.html">
-                  <span class="label">Detail</span>
-                </a>
-              </li>
-            </ul>
           </li>
           <li>
             <a href="{% url 'candidate' %}" data-href="{% url 'candidate' %}">

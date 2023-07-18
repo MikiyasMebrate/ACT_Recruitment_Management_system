@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
-from Company.models import Social_Media 
+from Company.models import Social_Media, Contact
 from .forms import CandidateForm, EducationForm, ExperienceForm
-from .models import Skill, Candidate, Education, Experience
+from .models import Skill, Candidate, Education, Experience, Job_Posting
 from django.contrib import messages
 import csv
 from django.shortcuts import render, redirect
@@ -20,10 +20,10 @@ def login_view(request):
             user = authenticate(request, email=email,password=password)
         if user is not None and user.is_superuser:
             login(request, user)
-            return redirect('/user_admin')
+            return redirect('admin-dashboard')
         elif user is not None and user.is_candidate:
             login(request, user)
-            return redirect('/')
+            return redirect('index')
         else:
             messages.error(request, 'Invalid Password or Email')
     context = {
@@ -58,14 +58,22 @@ def index(request):
     return render(request, 'RMS/index.html', context)
 
 def job_list(request):
+    job = Job_Posting.objects.filter(job_status = True)
     context = {
-        'social_medias' : social_medias
+        'social_medias' : social_medias,
+        'job_list' : job
     }
     return render(request, 'RMS/job-list.html', context)
 
-def job_detail(request):
+def job_detail(request, pk):
+    job = Job_Posting.objects.get(pk=pk)
+    company_info = Contact.objects.all().first()
+    social_media = Social_Media.objects.all().first()
     context = {
         'social_medias' : social_medias,
+        'job' : job,
+        'company_info' : company_info,
+        'social_media' : social_media
     }
     return render(request, 'RMS/job-details.html', context)
 

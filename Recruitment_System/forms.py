@@ -1,8 +1,10 @@
 from django import forms
-from .models import Candidate, Skill, Education, Experience, Job_Posting,Department
+from .models import Candidate, Skill, Education, Experience, Job_Posting,Sector
 from datetime import date
 from django.forms import formset_factory
 from phonenumber_field.formfields import PhoneNumberField
+from froala_editor.widgets import FroalaEditor
+
 
 class CandidateForm(forms.ModelForm):
     gender_list = [
@@ -216,20 +218,17 @@ class JobPostingForm(forms.ModelForm):
     ('internship', 'Internship'),
     ('seasonal ','seasonal'),
     ('contract', 'Contract'),
+    ('remote', 'Remote'),
 ]
     
     title = forms.CharField(widget=forms.TextInput(attrs={
         'class' : 'form-control '
     }))
-    department = forms.ModelChoiceField(queryset=Department.objects.all(), widget=forms.Select(attrs={
+    sector = forms.ModelChoiceField(queryset=Sector.objects.all(), widget=forms.Select(attrs={
         'class' : 'form-select '
     }))
 
-    description = forms.CharField(widget=forms.Textarea(attrs={
-        'class' : 'form-control',
-        'row' : '30'
-    }))
-    experience = forms.FloatField(widget=forms.NumberInput(attrs={
+    experience = forms.CharField(widget=forms.TextInput(attrs={
         'class ' : 'form-control'
     }))
 
@@ -246,15 +245,39 @@ class JobPostingForm(forms.ModelForm):
     type = forms.ChoiceField(choices=job_type, widget=forms.Select(attrs={
         'class' : 'form-select'
     }))
-    job_status = forms.BooleanField(widget=forms.CheckboxInput(attrs={
+    job_status = forms.BooleanField( required=False ,widget=forms.CheckboxInput(attrs={
         'class' : 'form-check-input'
     }))
     date_closed = forms.DateField(widget=forms.DateInput(attrs={
         'class' : 'form-control',
         'type' : 'date',
     }))
+    description = forms.CharField(widget=FroalaEditor())
     
 
     class Meta:
         model = Job_Posting
         fields = '__all__'
+
+        widgets = {
+            'vacancies' : forms.NumberInput(attrs={
+                'class' : 'form-control'
+            })
+        }
+
+        def clean_vacancies(self):
+           vacancies = self.cleaned_data['vacancies']
+           if  vacancies < 1:
+            raise forms.ValidationError('Enter a Valid Number')
+           return vacancies
+
+class SectorForm(forms.ModelForm):
+    class Meta:
+        model = Sector
+        fields = '__all__'
+    
+        widgets = {
+            'name' : forms.TextInput(attrs={
+                'class' : 'form-control'
+            })
+        }

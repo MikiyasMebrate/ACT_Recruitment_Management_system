@@ -1,5 +1,6 @@
 from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
+from froala_editor.fields import FroalaField
 from Account.models import CustomUser
 #Candidate
 gender_list = [
@@ -87,9 +88,12 @@ class Bookmarks(models.Model):
 
 
 
-
-class Department(models.Model):
+class Sector(models.Model):
     name = models.CharField(max_length=50)
+
+    def count_job_post(self) :
+        count = Job_Posting.objects.filter(sector_id = self.id).count()
+        return count
 
     def __str__(self) -> str:
         return self.name
@@ -100,9 +104,6 @@ class Job_Type(models.Model):
     def __str__(self) -> str:
         return self.type
 
-        
-
-
 
 job_type = [
     ('full_time', 'Full Time'),
@@ -111,30 +112,32 @@ job_type = [
     ('internship', 'Internship'),
     ('seasonal ','seasonal'),
     ('contract', 'Contract'),
+    ('remote', 'Remote'),
 ]
+
+
 
 class Job_Posting(models.Model):
     title = models.CharField(max_length=50)
-    department = models.ForeignKey(Department, on_delete=models.SET_NULL, null=True)  # Related With Department
-    description = models.TextField()  # HTML Editor
-    experience = models.FloatField()
+    sector = models.ForeignKey(Sector, on_delete=models.SET_NULL, null=True)  # Related With Sector
+    description = FroalaField()
+    vacancies = models.IntegerField()
+    experience = models.CharField(max_length=20)
     skills = models.ManyToManyField(Skill)
     location = models.CharField(max_length=200)
     salary_range_start = models.FloatField()
     salary_range_final = models.FloatField()
     type = models.CharField( choices=job_type, max_length=30)
-    job_status = models.BooleanField(default=True)
+    job_status = models.BooleanField(default=False)
     date_posted = models.DateTimeField(auto_now_add=True)
     date_closed = models.DateField()
-
+  
     class Meta:
         ordering = ['-date_posted','-date_closed']
 
     def count_applicant(self) -> int:
         applicant = Application.objects.filter(job__id = self.id).count()
         return applicant
-
-
 
     def __str__(self) -> str:
         return self.title

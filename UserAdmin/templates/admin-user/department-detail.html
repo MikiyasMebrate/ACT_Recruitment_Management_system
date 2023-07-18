@@ -1,0 +1,367 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" data-footer="true">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,maximum-scale=1"
+    />
+    <title>Acorn Admin Template | Order Detail Page</title>
+    <meta name="description" content="Ecommerce Order Detail Page" />
+    {% include 'admin-user/include/head.html' %}
+ </head>
+  <body>
+    <div id="root">
+      <!-- Modal -->
+<div class="modal fade" id="deleteDepartment" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="deleteDepartmentLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteDepartmentLabel">Are you sure you want to delete</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body h3">
+        {{form.name.value}}?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-muted" data-bs-dismiss="modal">Close</button>
+        <form action="" method="post">
+          {% csrf_token %}
+        <a href="{% url 'delete-department-admin' department.id %}" type="submit" class="btn btn-danger">Yes</a>
+      </form>
+      </div>
+    </div>
+  </div>
+</div>
+        {% include 'admin-user/include/navbar.html'%}
+      <main>
+        <div class="container">
+          <form action="" method="post">{% csrf_token %}
+          <div class="page-title-container">
+            <div class="row">
+              <div class="col-auto mb-3 mb-md-0 me-auto">
+                <div class="w-auto sw-md-30">
+                  <a
+                    href="#"
+                    class="muted-link pb-1 d-inline-block breadcrumb-back"
+                  >
+                    <i data-acorn-icon="chevron-left" data-acorn-size="13"></i>
+                    <span class="text-small align-middle">Department</span>
+                  </a>
+                  <h1 class="mb-0 pb-0 display-4" id="title">Department Detail</h1>
+                </div>
+              </div>
+              <div class="col-12 col-md-5 d-flex align-items-end justify-content-end">
+                <div class="dropdown-as-select w-100 w-md-auto">
+                  <button type="submit" class="btn btn-primary" href="">Publish</button>
+                </div>
+                <div class="ms-1">
+                  <button
+                    type="button"
+                    class="btn btn-outline-primary btn-icon btn-icon-only"
+                    data-bs-offset="0,3"
+                    data-bs-toggle="dropdown"
+                    aria-haspopup="true"
+                    aria-expanded="false"
+                    data-submenu
+                  >
+                    <i data-acorn-icon="more-horizontal"></i>
+                  </button>
+
+                  <div class="dropdown-menu dropdown-menu-end">
+                    <button class="dropdown-item"  data-bs-toggle="modal" data-bs-target="#deleteDepartment" type="button">Delete</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row gx-4 gy-5">
+            <div class="col-12 col-xl-8 col-xxl-9 mb-n5">
+              <h2 class="small-title">Department</h2>
+              <div class="mb-5">
+                <div class="row">
+                  <div class="col-12 col-sm-12 col-lg-12">
+                    <div class="card sh-13 sh-lg-15 sh-xl-14">
+                      <div
+                        class="h-100 row g-0 card-body align-items-center py-3"
+                      >
+                        <div class="col-auto pe-3">
+                          <div
+                            class="border border-primary sw-6 sh-6 rounded-xl d-flex justify-content-center align-items-center"
+                          >
+                            <i data-acorn-icon="tag" class="text-primary"></i>
+                          </div>
+                        </div>
+                        <div class="col">
+                          <div class="d-flex align-items-center lh-1-25">
+                            {{form.id}}
+                          </div>
+                          <div class="text-primary h2">{{form.name}}</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {% if job_list %}
+              <h2 class="small-title">Job Lists </h2>
+              <div class="card mb-5">
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col-12">
+                      <div class="mb-5">
+                        {% for job in job_list %}                  
+                        <div class="row g-0 sh-9 mb-3">
+                          <div class="col-auto">
+                          </div>
+                         
+                          <div class="col">
+                            <div class="ps-4 pt-0 pb-0 pe-0 h-100">
+                              <div
+                                class="row g-0 h-100 align-items-start align-content-center"
+                              >
+                                <div class="col-12 d-flex flex-column mb-2">
+                                  <a class="fw-bold h5" href="{% url 'job-detail-admin' job.id%}">
+                                    {{job.title}}
+                                  </a>
+                                </div>
+                                
+
+                                <div
+                                  class="col-12 d-flex flex-column mb-md-0 "
+                                >
+                                  <div class="row g-0">
+                                    <div
+                                      class="col-6 d-flex flex-row pe-2 align-items-end text-alternate"
+                                    >
+                                      <span>Vacancies: {{job.vacancies}}</span>
+                                    </div>
+                                    <div
+                                      class="col-6 d-flex flex-row align-items-end justify-content-end text-alternate"
+                                    >
+                                        <a class="btn {% if job.job_status%} btn-primary {% else %} btn-danger {%endif%} ">{% if job.job_status%} Opened {% else %} Closed {%endif%} </a>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        
+
+                        </div>
+                        {% endfor %}
+                        <div class="d-flex justify-content-center">            
+                          <nav>
+                            <ul class="pagination">
+                          {% if not job_list.has_previous %}
+                            <li class="page-item disabled"> 
+                              <a class="page-link shadow" href="#"  tabindex="-1" aria-disabled="true"> 
+                                <i data-acorn-icon="chevron-left"></i>
+                              </a>
+                            </li>
+                          {% endif %}
+              
+              
+                          {% if job_list.has_previous %}
+                          <li class="page-item"> 
+                            <a class="page-link shadow" href="?page={{ job_list.previous_page_number }}" > 
+                              <i data-acorn-icon="chevron-left"></i>
+                            </a>
+                          </li>
+                          <li class="page-item">
+                             <a class="page-link shadow" href="?page={{ job_list.previous_page_number }}">{{ job_list.previous_page_number }}</a>
+                          </li>
+                          {% endif %}
+              
+                              <li class="page-item active">
+                                <a class="page-link shadow" href="#">{{job_list.number}}</a>
+                              </li>
+              
+                          {% if job_list.has_next %}
+                          <li class="page-item">
+                             <a class="page-link shadow" href="?page={{ job_list.next_page_number }}">{{ job_list.next_page_number }}</a>
+                          </li>
+                          <li class="page-item">
+                            <a class="page-link" href="?page={{ job_list.next_page_number }}">
+                              <i data-acorn-icon="chevron-right"></i>
+                            </a>
+                          </li>
+                          {% endif %}
+              
+                          {% if not job_list.has_next%}
+              
+                          <li class="page-item disabled">
+                            <a class="page-link" href="#"  tabindex="-1" aria-disabled="true">
+                              <i data-acorn-icon="chevron-right"></i>
+                            </a>
+                          </li>
+                          {% endif %}
+              
+                            </ul>
+                          </nav>
+                        </div>
+                      
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {% endif %}
+
+            </div>
+            <div class="col-12 col-xl-4 col-xxl-3">
+              <h2 class="small-title">Address</h2>
+              <div class="card mb-5">
+                <div class="card-body mb-n5">
+                  <div class="mb-5">
+                    <p class="text-small text-muted mb-2">CUSTOMER</p>
+                    <div class="row g-0 mb-2">
+                      <div class="col-auto">
+                        <div class="sw-3 me-1">
+                          <i
+                            data-acorn-icon="user"
+                            class="text-primary"
+                            data-acorn-size="17"
+                          ></i>
+                        </div>
+                      </div>
+                      <div class="col text-alternate align-middle">
+                        Blaine Cottrell
+                      </div>
+                    </div>
+                    <div class="row g-0 mb-2">
+                      <div class="col-auto">
+                        <div class="sw-3 me-1">
+                          <i
+                            data-acorn-icon="email"
+                            class="text-primary"
+                            data-acorn-size="17"
+                          ></i>
+                        </div>
+                      </div>
+                      <div class="col text-alternate">blaine@cottrell.com</div>
+                    </div>
+                  </div>
+                  <div class="mb-5">
+                    <p class="text-small text-muted mb-2">SHIPPING ADDRESS</p>
+                    <div class="row g-0 mb-2">
+                      <div class="col-auto">
+                        <div class="sw-3 me-1">
+                          <i
+                            data-acorn-icon="user"
+                            class="text-primary"
+                            data-acorn-size="17"
+                          ></i>
+                        </div>
+                      </div>
+                      <div class="col text-alternate align-middle">
+                        Blaine Cottrell
+                      </div>
+                    </div>
+                    <div class="row g-0 mb-2">
+                      <div class="col-auto">
+                        <div class="sw-3 me-1">
+                          <i
+                            data-acorn-icon="pin"
+                            class="text-primary"
+                            data-acorn-size="17"
+                          ></i>
+                        </div>
+                      </div>
+                      <div class="col text-alternate">
+                        4 Glamis Avenue, Strathmore Park, Wellington 6022, New
+                        Zealand
+                      </div>
+                    </div>
+                    <div class="row g-0 mb-2">
+                      <div class="col-auto">
+                        <div class="sw-3 me-1">
+                          <i
+                            data-acorn-icon="phone"
+                            class="text-primary"
+                            data-acorn-size="17"
+                          ></i>
+                        </div>
+                      </div>
+                      <div class="col text-alternate">+6443884455</div>
+                    </div>
+                  </div>
+                  <div class="mb-5">
+                    <p class="text-small text-muted mb-2">BILLING ADDRESS</p>
+                    <div class="row g-0 mb-2">
+                      <div class="col-auto">
+                        <div class="sw-3 me-1">
+                          <i
+                            data-acorn-icon="user"
+                            class="text-primary"
+                            data-acorn-size="17"
+                          ></i>
+                        </div>
+                      </div>
+                      <div class="col text-alternate align-middle">
+                        Blaine Cottrell
+                      </div>
+                    </div>
+                    <div class="row g-0 mb-2">
+                      <div class="col-auto">
+                        <div class="sw-3 me-1">
+                          <i
+                            data-acorn-icon="pin"
+                            class="text-primary"
+                            data-acorn-size="17"
+                          ></i>
+                        </div>
+                      </div>
+                      <div class="col text-alternate">
+                        4 Glamis Avenue, Strathmore Park, Wellington 6022, New
+                        Zealand
+                      </div>
+                    </div>
+                    <div class="row g-0 mb-2">
+                      <div class="col-auto">
+                        <div class="sw-3 me-1">
+                          <i
+                            data-acorn-icon="phone"
+                            class="text-primary"
+                            data-acorn-size="17"
+                          ></i>
+                        </div>
+                      </div>
+                      <div class="col text-alternate">+6443884455</div>
+                    </div>
+                  </div>
+                  <div class="mb-5">
+                    <div>
+                      <p class="text-small text-muted mb-2">
+                        PAYMENT (CREDIT CARD)
+                      </p>
+                      <div class="row g-0 mb-2">
+                        <div class="col-auto">
+                          <div class="sw-3 me-1">
+                            <i
+                              data-acorn-icon="credit-card"
+                              class="text-primary"
+                              data-acorn-size="17"
+                            ></i>
+                          </div>
+                        </div>
+                        <div class="col text-alternate">
+                          3452 42** **** 4251
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          </form>
+
+        </div>
+      </main>
+    </div>
+    {% include 'admin-user/include/footer-js.html'%}
+  </body>
+</html>

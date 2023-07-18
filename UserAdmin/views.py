@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from Recruitment_System.models import Candidate, Education, Job_Posting
+from Recruitment_System.models import Candidate, Education, Job_Posting, Sector
 from django.core.paginator import Paginator
-from Recruitment_System.forms import JobPostingForm
+from Recruitment_System.forms import JobPostingForm, SectorForm
 from django.contrib import messages
 # Create your views here.
 @login_required
@@ -42,7 +42,7 @@ def job_board_view(request):
             obj.save()
             form.save_m2m()
             messages.success(request, "Successfully Published.")
-            return redirect('job-list')
+            return redirect('job-list-admin')
         else:
             messages.error(request, "Your request has not been Unsuccessful Please try again!")
     
@@ -87,14 +87,66 @@ def job_delete_view(request, pk):
         messages.error(request, 'Your request has not been Successfully please try again!')
         
     
-    return redirect('job-detail', pk)
+    return redirect('job-detail-admin', pk)
     
 
-    
+@login_required
+def department(request):
+    department = Sector.objects.all()
+    form = SectorForm(request.POST or None)
+    paginator = Paginator(department,10)
+    page_number = request.GET.get('page')
+    page = paginator.get_page(page_number)
 
+    if request.method == 'POST':
+        if form.is_valid():
+           form.save()
+           messages.success(request, 'Successfully Published.')
+           return redirect('department-admin')
+        else:
+            messages.error(request, 'Your request has not been Unsuccessful Please try again!')
+    context = {
+        'departments' : page,
+        'form' : form
+    }
+    return render(request, 'admin-user/department-list.html', context)
 
+@login_required
+def department_detail(request, pk):
+    department = Sector.objects.get(id = pk)
+    form = SectorForm(request.POST or None, instance=department)
+    job_list = Job_Posting.objects.filter(sector__id = pk)
+    paginator = Paginator(job_list,5)
+    page_number = request.GET.get('page')
+    page = paginator.get_page(page_number)
 
+    if request.method == 'POST':
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Successfully Published.")
+            return redirect('department-admin')
+        else:
+            messages.error(request, "Your request has not been Unsuccessful Please try again!")
+    context = {
+        'form' : form,
+        'department' : department,
+        'job_list' : page
+    }
 
+    return render(request, 'admin-user/department-detail.html', context)
+
+@login_required
+def department_delete(request, pk):
+    job = Department.objects.get(pk=pk)
+
+    if job.delete():
+        messages.success(request, 'Successfully Deleted')
+        return redirect('department-admin')
+    else:
+        messages.error(request, 'Your request has not been Successfully please try again!')
+        
+    return redirect('department-admin', pk)
+  
 
 @login_required
 def discount(request):
@@ -104,9 +156,7 @@ def discount(request):
 def Orders_detail(request):
     return render(request, 'admin-user/Orders-Detail.html')
 
-@login_required
-def order_list(request):
-    return render(request, 'admin-user/Orders-List.html')
+
 
 @login_required
 def general_setting(request):

@@ -15,7 +15,7 @@
     href="https://cdn.jsdelivr.net/gh/habibmhamadi/multi-select-tag/dist/css/multi-select-tag.css"
   />
   <script src="https://cdn.jsdelivr.net/gh/habibmhamadi/multi-select-tag/dist/js/multi-select-tag.js"></script>
-    
+  {{form.media}} 
   </head>
   <body>
 
@@ -34,7 +34,7 @@
         <button type="button" class="btn btn-muted" data-bs-dismiss="modal">Close</button>
         <form action="" method="post">
           {% csrf_token %}
-        <a href="{% url 'delete-job-admin' job.id %}" type="submit" class="btn btn-danger">Yes</a>
+        <a href="{% url 'delete-department-admin' job.id %}" type="submit" class="btn btn-danger">Yes</a>
       </form>
       </div>
     </div>
@@ -161,6 +161,19 @@
 
 
             <div class="col-xl-4 mb-n5">
+              
+              <div class="mb-5">
+                <h2 class="small-title">Vacancies</h2>
+                <div class="card">
+                  <div class="card-body">
+                      <div class="mb-3">
+                        <label class="form-label">Vacancies</label>
+                        {{form.vacancies}}
+                      </div>
+                  </div>
+                </div>
+              </div>
+
               <div class="mb-5">
                 <h2 class="small-title">Salary Range</h2>
                 <div class="card">
