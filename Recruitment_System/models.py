@@ -211,6 +211,12 @@ class Application(models.Model):
     def __str__(self) -> str:
         return str(self.user.username)+" - "+str(self.job)
 
+interview_status = [
+    ('pending', 'Pending'),
+    ('scheduled', 'Scheduled'),
+    ('completed', 'Completed'),
+    ('canceled', 'Canceled'),
+]
 
 job_status_interview = [
     ('pending', 'Pending'),
@@ -229,7 +235,7 @@ class Interviews(models.Model):
     interviewer = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True)  # Related with User
     date_schedule = models.DateField(null=True, blank=True)
     time_schedule = models.TimeField(null=True, blank=True)
-    job_status = models.CharField(max_length=25, choices=job_status_interview, null=True, blank=True)# feedback
+    status = models.CharField(max_length=15, choices=interview_status, default='pending', null=True, blank=True)
     type = models.CharField(max_length=15, choices=interview_type, null=True, blank=True)
     slug = models.SlugField(unique=True, null=True, blank=True, max_length=600)
 
