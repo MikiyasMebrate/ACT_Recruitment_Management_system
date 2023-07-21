@@ -4,13 +4,13 @@ from . import views
 urlpatterns = [
     path('', views.admin_index, name='admin-dashboard'),
     path('candidate/', views.candidate_view, name='candidate'),
-    path('candidate-detail/<str:id>/', views.candidate_detail_view, name='candidate-detail'),
+    path('candidate-detail/<slug:slug>/', views.candidate_detail_view, name='candidate-detail'),
     path('job-list-admin/', views.job_board_view, name='job-list-admin'),
-    path('job-detail-admin/<str:pk>', views.job_detail_view, name='job-detail-admin'),
-    path('job-delete-admin/<str:pk>', views.job_delete_view, name='delete-job-admin'),
+    path('job-detail-admin/<slug:slug>', views.job_detail_view, name='job-detail-admin'),
+    path('job-delete-admin/<slug:slug>', views.job_delete_view, name='delete-job-admin'),
     path('department-admin/', views.department, name='department-admin'),
-    path('department-detail-admin/<str:pk>', views.department_detail, name='department-detail-admin'),
-    path('department-delete-admin/<str:pk>', views.department_delete, name='delete-department-admin'),
+    path('department-detail-admin/<slug:slug>', views.department_detail, name='department-detail-admin'),
+    path('department-delete-admin/<slug:slug>', views.department_delete, name='delete-department-admin'),
     
     path('discount/', views.discount, name='discount'),
     path('general-setting/', views.general_setting, name='general-setting'),

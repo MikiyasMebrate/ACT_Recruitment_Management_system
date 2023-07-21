@@ -29,7 +29,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
-          <a href="{% url 'user-delete-education' education.id %}" type="button" class="btn btn-danger">Yes</a>
+          <a href="{% url 'user-delete-education' education.slug %}" type="button" class="btn btn-danger">Yes</a>
         </div>
       </div>
     </div>
@@ -196,7 +196,7 @@
                   <div class="h3">Education history's</div>
                   <hr> 
                   {% for education in user_education %}
-                      <a class="btn btn-secondary mt-3 ms-2" href="{% url 'detail-user-education' education.id  %}">{{education.institution_name}}</a>
+                      <a class="btn btn-secondary mt-3 ms-2" href="{% url 'detail-user-education' education.slug  %}">{{education.institution_name}}</a>
                   {% endfor %}
                   {% endif %}
                 </div>

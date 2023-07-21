@@ -28,7 +28,7 @@
         <button type="button" class="btn btn-muted" data-bs-dismiss="modal">Close</button>
         <form action="" method="post">
           {% csrf_token %}
-        <a href="{% url 'delete-department-admin' department.id %}" type="submit" class="btn btn-danger">Yes</a>
+        <a href="{% url 'delete-department-admin' department.slug %}" type="submit" class="btn btn-danger">Yes</a>
       </form>
       </div>
     </div>
@@ -123,7 +123,7 @@
                                 class="row g-0 h-100 align-items-start align-content-center"
                               >
                                 <div class="col-12 d-flex flex-column mb-2">
-                                  <a class="fw-bold h5" href="{% url 'job-detail-admin' job.id%}">
+                                  <a class="fw-bold h5" href="{% url 'job-detail-admin' job.slug%}">
                                     {{job.title}}
                                   </a>
                                 </div>

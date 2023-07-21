@@ -2,6 +2,9 @@ from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
 from froala_editor.fields import FroalaField
 from Account.models import CustomUser
+from django.utils.text import slugify
+from unidecode import unidecode
+import datetime
 #Candidate
 gender_list = [
     ('male', 'Male'),
@@ -27,11 +30,17 @@ class Candidate(models.Model):
     resume = models.FileField(upload_to='Candidate/Resume', null=True, blank=True)
     about = models.TextField()
     skill = models.ManyToManyField("Skill", blank=False) 
+    slug = models.SlugField(unique=True, blank=True,  max_length=200)
     date_created = models.DateField(auto_now_add=True)
     date_modified = models.DateTimeField(auto_now=True)
 
     def __str__(self) -> str:
         return self.first_name + " " + self.last_name
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            now = datetime.datetime.now()
+            self.slug = slugify(unidecode(self.user.username))
+        super().save(*args, **kwargs)
 
 education_status_list = [
     ('highschool', 'High School'),
@@ -46,11 +55,17 @@ education_status_list = [
 class Education(models.Model):
     candidate = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     institution_name = models.CharField(max_length=100)
-    education_status = models.CharField(
-        max_length=40, choices=education_status_list)
+    education_status = models.CharField(max_length=40, choices=education_status_list)
     field_of_study = models.CharField(max_length=40)
     education_period_start = models.DateField()
     education_period_end = models.DateField()
+    slug = models.SlugField(unique=True, blank=True, max_length=200)
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            now = datetime.datetime.now()
+            self.slug = slugify(unidecode(self.candidate.username)) + "-" + slugify(unidecode(self.institution_name)) + "-" + slugify(unidecode(self.field_of_study))
+        super().save(*args, **kwargs)
 
     def __str__(self) -> str:
         return self.institution_name
@@ -66,12 +81,25 @@ class Experience(models.Model):
     reference_email = models.CharField(max_length=40)
     reference_job_title = models.CharField(max_length=40)
     responsibility = models.TextField(null=True, blank=True)
+    slug = models.SlugField(unique=True, blank=True,  max_length=200)
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            now = datetime.datetime.now()
+            self.slug = slugify(unidecode(self.candidate.username)) +"-"+slugify(unidecode(self.company_name))
+        super().save(*args, **kwargs)
 
     def __str__(self) -> str:
         return self.company_name
 
 class Skill(models.Model):
-    title = models.CharField(max_length=30)
+    title = models.CharField(unique=True, max_length=30)
+    slug = models.SlugField(unique=True, blank=True,  max_length=200)
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(unidecode(self.title))
+        super().save(*args, **kwargs)
 
     class Meta:
         ordering = ['title']
@@ -82,13 +110,25 @@ class Skill(models.Model):
 class Bookmarks(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     job = models.ForeignKey('Job_Posting', on_delete=models.CASCADE)
+    slug = models.SlugField(unique=True,blank=True,  max_length=200)
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(unidecode(self.user.username))
+        super().save(*args, **kwargs)
 
     def __str__(self) -> str:
         return self.job.title
 
 
 class Sector(models.Model):
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=50, unique=True)
+    slug = models.SlugField(unique=True, blank=True,  max_length=200)
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(unidecode(self.name))
+        super().save(*args, **kwargs)
 
     def count_job_post(self) :
         count = Job_Posting.objects.filter(sector_id = self.id).count()
@@ -124,6 +164,13 @@ class Job_Posting(models.Model):
     job_status = models.BooleanField(default=False)
     date_posted = models.DateTimeField(auto_now_add=True)
     date_closed = models.DateField()
+    slug = models.SlugField(unique=True,  max_length=200, blank=True)
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            now = datetime.datetime.now()
+            self.slug = slugify(unidecode(self.title)) + '-' + now.strftime("%Y-%m-%d")
+        super().save(*args, **kwargs)
   
     class Meta:
         ordering = ['-date_posted','-date_closed']
@@ -147,6 +194,13 @@ class Application(models.Model):
     job = models.ForeignKey(Job_Posting, on_delete=models.SET_NULL, null=True)  # Related with Job_Post
     date_applied = models.DateField(auto_now_add=True) # Select Option from application_status
     status = models.CharField(max_length=15, choices=application_status, default='new')
+    slug = models.SlugField(unique=True, null=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            now = datetime.datetime.now()
+            self.slug = slugify(unidecode(self.user.username)) + '-' + self.job.title
+        super().save(*args, **kwargs)
 
     def __str__(self) -> str:
         return str(self.user.username)+" - "+str(self.job)

@@ -89,12 +89,11 @@ def job_list(request):
     }
     return render(request, 'RMS/job-list.html', context)
 
-def job_detail(request, pk):
-    job = Job_Posting.objects.get(pk=pk)
+def job_detail(request, slug):
+    job = Job_Posting.objects.get(slug=slug)
     company_info = Contact.objects.all().first()
     social_media = Social_Media.objects.all().first()
-    
-    print(list(job.skills.all()))
+
     try: bookmark = Bookmarks.objects.get(user = request.user, job = job)
     except: bookmark = None
     try: application = Application.objects.filter(user=request.user).values_list('job__id', flat=True)
@@ -167,8 +166,8 @@ def user_add_education(request):
     return render(request, 'RMS/user/dashboard-add-education.html', context)
 
 @login_required
-def user_delete_education(request, pk):
-    education = Education.objects.get(pk = pk)
+def user_delete_education(request, slug):
+    education = Education.objects.get(slug = slug)
 
     if education.delete():
         messages.success(request, 'Successfully Deleted!')
@@ -178,10 +177,10 @@ def user_delete_education(request, pk):
         return redirect('user-add-education')
     
 @login_required
-def detail_user_education(request, pk):
-    education =  Education.objects.get(pk = pk)
+def detail_user_education(request, slug):
+    education =  Education.objects.get(slug = slug)
     form = EducationForm(request.POST or None, instance=education)
-    education_list = Education.objects.filter(candidate = request.user).exclude(pk = pk)
+    education_list = Education.objects.filter(candidate = request.user).exclude(slug = slug)
 
     if request.method == 'POST':
         if form.is_valid():
@@ -216,10 +215,10 @@ def user_add_experience(request):
     return render(request, 'RMS/user/dashboard-add-experience.html', context)
 
 @login_required
-def detail_user_experience(request, pk):
-    experience = Experience.objects.get(pk = pk)
+def detail_user_experience(request, slug):
+    experience = Experience.objects.get(slug = slug)
     form = ExperienceForm(request.POST or None, instance=experience)
-    experience_list = Experience.objects.filter(candidate = request.user).exclude(pk = pk)
+    experience_list = Experience.objects.filter(candidate = request.user).exclude(slug = slug)
 
     if request.method == 'POST':
         if form.is_valid():
@@ -237,8 +236,8 @@ def detail_user_experience(request, pk):
     return render(request,'RMS/user/dashboard-experience-detail.html', context)
 
 @login_required
-def user_delete_experience(request, pk):
-    experience = Experience.objects.get(pk = pk)
+def user_delete_experience(request, slug):
+    experience = Experience.objects.get(slug = slug)
 
     if experience.delete():
         messages.success(request, 'Successfully Deleted!')
@@ -260,12 +259,12 @@ def user_bookmark(request):
     return render(request, 'RMS/user/dashboard-saved-jobs.html', context)
 
 @login_required
-def user_add_bookmark(request, pk):
+def user_add_bookmark(request, slug):
     try:
-        check_job = Bookmarks.objects.get(job_id = pk, user = request.user)
+        check_job = Bookmarks.objects.get(job_slug = slug, user = request.user)
     except: 
         check_job = False
-    job = Job_Posting.objects.get(pk = pk)
+    job = Job_Posting.objects.get(slug = slug)
 
     if check_job:
         messages.error(request, 'You are already Bookmarked')
@@ -280,8 +279,8 @@ def user_add_bookmark(request, pk):
         return redirect(request.META.get('HTTP_REFERER')) 
 
 @login_required
-def user_delete_bookmark(request, pk):
-    job = Bookmarks.objects.get(job__id=pk, user=request.user)
+def user_delete_bookmark(request, slug):
+    job = Bookmarks.objects.get(job__slug=slug, user=request.user)
 
     if job.delete():
         messages.success(request, 'Successfully Removed')
@@ -291,9 +290,9 @@ def user_delete_bookmark(request, pk):
         return redirect(request.META.get('HTTP_REFERER'))
 
 @login_required
-def user_apply_job(request, pk):
+def user_apply_job(request, slug):
     try:
-        applied = Application.objects.get(user = request.user, job__id = pk)
+        applied = Application.objects.get(user = request.user, job__slug = slug)
     except:
         applied = None
 
@@ -309,7 +308,7 @@ def user_apply_job(request, pk):
         messages.error(request, 'Please at least add One Education Background!')
         return redirect('user-add-education')
     else:
-        job = Job_Posting.objects.get(id=pk)
+        job = Job_Posting.objects.get(slug=slug)
         obj = Application()
         obj.user = request.user
         obj.job = job
@@ -317,8 +316,8 @@ def user_apply_job(request, pk):
         messages.success(request, 'Successfully Applied Check your Applied Jobs')
         return redirect(request.META.get('HTTP_REFERER'))
     
-def user_cancel_job(request, pk):
-    application = Application.objects.get(user = request.user, job__id=pk)
+def user_cancel_job(request, slug):
+    application = Application.objects.get(user = request.user, job__slug=slug)
     if application.delete():
         messages.success(request, 'Successfully Canceled')
         return redirect(request.META.get('HTTP_REFERER'))

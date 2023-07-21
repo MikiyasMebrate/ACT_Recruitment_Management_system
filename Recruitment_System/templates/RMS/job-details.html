@@ -29,7 +29,7 @@
               <button type="button" class="btn btn-muted" data-bs-dismiss="modal">Close</button>
               <form action="" method="post">
                 {% csrf_token %}
-              <a href="{% url 'user-apply-job' job.id %}" type="submit" class="btn btn-danger">Yes</a>
+              <a href="{% url 'user-apply-job' job.slug %}" type="submit" class="btn btn-danger">Yes</a>
             </form>
             </div>
           </div>
@@ -51,7 +51,7 @@
               <button type="button" class="btn btn-muted" data-bs-dismiss="modal">Close</button>
               <form action="" method="post">
                 {% csrf_token %}
-              <a href="{% url 'user-cancel-job' job.id %}" type="submit" class="btn btn-danger">Yes</a>
+              <a href="{% url 'user-cancel-job' job.slug %}" type="submit" class="btn btn-danger">Yes</a>
             </form>
             </div>
           </div>
@@ -602,13 +602,13 @@
                           {% if user.is_authenticated %}
                           {% if bookmark %}
                           <a
-                            href="{% url 'user-delete-bookmark' job.id %}"
+                            href="{% url 'user-delete-bookmark' job.slug %}"
                             class="btn btn-soft-warning btn-hover w-100 mt-2"
                             ><i class="uil uil-bookmark"></i> Remove Bookmark</a
                           >
                           {%else%}
                           <a
-                          href="{% url 'user-add-bookmark' job.id %}"
+                          href="{% url 'user-add-bookmark' job.slug %}"
                           class="btn btn-soft-warning btn-hover w-100 mt-2"
                           ><i class="uil uil-bookmark"></i> Add Bookmark</a
                         >

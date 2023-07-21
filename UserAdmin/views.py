@@ -22,8 +22,8 @@ def candidate_view(request):
     return render(request, 'admin-user/candidate-List.html', context)
 
 @login_required
-def candidate_detail_view(request, id):
-    candidate = Candidate.objects.get(id=id)
+def candidate_detail_view(request, slug):
+    candidate = Candidate.objects.get(slug=slug)
     education = Education.objects.filter(candidate__id = candidate.user.id)
     context = {
         'candidate' : candidate,
@@ -57,8 +57,8 @@ def job_board_view(request):
     return render(request, 'admin-user/job-List.html', context)
 
 @login_required
-def job_detail_view(request, pk):
-    job = Job_Posting.objects.get(pk=pk)
+def job_detail_view(request, slug):
+    job = Job_Posting.objects.get(slug=slug)
     form = JobPostingForm(request.POST or None, instance=job)
 
     if request.method == 'POST':
@@ -77,8 +77,8 @@ def job_detail_view(request, pk):
 
 
 @login_required
-def job_delete_view(request, pk):
-    job = Job_Posting.objects.get(pk=pk)
+def job_delete_view(request, slug):
+    job = Job_Posting.objects.get(slug=slug)
 
     if job.delete():
         messages.success(request, 'Successfully Deleted')
@@ -87,8 +87,7 @@ def job_delete_view(request, pk):
         messages.error(request, 'Your request has not been Successfully please try again!')
         
     
-    return redirect('job-detail-admin', pk)
-    s
+    return redirect(request.META.get('HTTP_REFERER'))
 
 @login_required
 def department(request):
@@ -112,10 +111,10 @@ def department(request):
     return render(request, 'admin-user/department-list.html', context)
 
 @login_required
-def department_detail(request, pk):
-    department = Sector.objects.get(id = pk)
+def department_detail(request, slug):
+    department = Sector.objects.get(slug = slug)
     form = SectorForm(request.POST or None, instance=department)
-    job_list = Job_Posting.objects.filter(sector__id = pk)
+    job_list = Job_Posting.objects.filter(sector__slug = slug)
     paginator = Paginator(job_list,5)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
@@ -136,8 +135,8 @@ def department_detail(request, pk):
     return render(request, 'admin-user/department-detail.html', context)
 
 @login_required
-def department_delete(request, pk):
-    job = Sector.objects.get(pk=pk)
+def department_delete(request, slug):
+    job = Sector.objects.get(slug=slug)
 
     if job.delete():
         messages.success(request, 'Successfully Deleted')
@@ -145,7 +144,7 @@ def department_delete(request, pk):
     else:
         messages.error(request, 'Your request has not been Successfully please try again!')
         
-    return redirect('department-admin', pk)
+    return redirect(request.META.get('HTTP_REFERER'))
   
 
 @login_required

@@ -210,7 +210,7 @@
                         {% if user.is_authenticated %}
                          <div class="bookmark-label text-center">
                           <a
-                            href="{% url 'user-add-bookmark' job.id %}"
+                            href="{% url 'user-add-bookmark' job.slug %}"
                             class="align-middle text-white" type="submit"
                             ><i class="mdi mdi-star "></i
                           ></a>
@@ -223,7 +223,7 @@
                             <div class="col-md-3 ms-5">
                               <div class="mb-2 mb-md-0">
                                 <h5 class="fs-18 mb-0">
-                                  <a href="{% url 'Job-detail' job.id %}" class="text-dark"
+                                  <a href="{% url 'Job-detail' job.slug %}" class="text-dark"
                                     >{{job.title}}</a
                                   >
                                 </h5>
@@ -308,6 +308,8 @@
                       
 
                     </div>
+
+                    <!--pagination-->
                     <div class="row">
                       <div class="col-lg-12 mt-5">
                           <nav aria-label="Page navigation example">

@@ -195,7 +195,7 @@
                   <div class="h3">Experience history's</div>
                   <hr> 
                   {% for experience in user_experience %}
-                      <a class="btn btn-secondary mt-3 ms-2" href="{% url 'detail-user-experience' experience.id  %}">{{experience.company_name}}</a>
+                      <a class="btn btn-secondary mt-3 ms-2" href="{% url 'detail-user-experience' experience.slug  %}">{{experience.company_name}}</a>
                   {% endfor %}
                   {% endif %}
 

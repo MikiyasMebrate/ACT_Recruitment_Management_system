@@ -161,7 +161,7 @@
                   <div class="h3">Education history's</div>
                   <hr> 
                   {% for education in user_education %}
-                      <a class="btn btn-secondary mt-3 ms-2" href="{% url 'detail-user-education' education.id  %}">{{education.institution_name}}</a>
+                      <a class="btn btn-secondary mt-3 ms-2" href="{% url 'detail-user-education' education.slug  %}">{{education.institution_name}}</a>
                   {% endfor %}
                   {% endif %}
 
