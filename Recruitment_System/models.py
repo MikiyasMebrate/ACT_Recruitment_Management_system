@@ -36,9 +36,14 @@ class Candidate(models.Model):
 
     def __str__(self) -> str:
         return self.first_name + " " + self.last_name
+    
+    def age(self):
+        date = datetime.datetime.now()
+        today = date.today()
+        return today.year - self.date_of_birth.year - ((today.month, today.day) < (self.date_of_birth.month, self.date_of_birth.day))
+    
     def save(self, *args, **kwargs):
         if not self.slug:
-            now = datetime.datetime.now()
             self.slug = slugify(unidecode(self.user.username))
         super().save(*args, **kwargs)
 
@@ -134,6 +139,7 @@ class Sector(models.Model):
         count = Job_Posting.objects.filter(sector_id = self.id).count()
         return count
 
+
     def __str__(self) -> str:
         return self.name
 
@@ -183,60 +189,57 @@ class Job_Posting(models.Model):
         return self.title
 
 application_status = [
-    ('new', 'new'),
-    ('in_review', 'in review'),
-    ('rejected', 'rejected'),
-    ('hired', 'hired')
+    ('pending', 'Pending'),
+    ('in_review', 'In review'),
+    ('rejected', 'Rejected'),
+    ('hired', 'Hired')
 ]
 
 class Application(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True)  # Related with Candidate
     job = models.ForeignKey(Job_Posting, on_delete=models.SET_NULL, null=True)  # Related with Job_Post
     date_applied = models.DateField(auto_now_add=True) # Select Option from application_status
-    status = models.CharField(max_length=15, choices=application_status, default='new')
-    slug = models.SlugField(unique=True, null=True, blank=True)
+    status = models.CharField(max_length=15, choices=application_status, default='pending')
+    slug = models.SlugField(unique=True, null=True, blank=True, max_length=200)
 
     def save(self, *args, **kwargs):
         if not self.slug:
             now = datetime.datetime.now()
-            self.slug = slugify(unidecode(self.user.username)) + '-' + self.job.title
+            self.slug = slugify(unidecode(self.user.username)) + '-' + slugify(unidecode(self.job.title))
         super().save(*args, **kwargs)
 
     def __str__(self) -> str:
         return str(self.user.username)+" - "+str(self.job)
 
-interview_status = [
-    ('scheduled', 'scheduled'),
-    ('completed', 'completed'),
-    ('canceled', 'canceled'),
-]
 
 job_status_interview = [
+    ('pending', 'Pending'),
     ('rejected', 'Rejected'),
     ('hired', 'hired'),
 ]
 
 interview_type = [
-    ('phone', 'phone'),
-    ('in-person', 'in-person'),
-    ('video', 'video')
+    ('phone', 'Phone'),
+    ('in-person', 'In-Person'),
+    ('video', 'Video')
 ]
 
 class Interviews(models.Model):
-    candidate = models.ForeignKey(
-        Candidate, on_delete=models.SET_NULL, null=True)  # Related Wih Candidate
-    # Related with Job_Post
-    job = models.ForeignKey(Job_Posting, on_delete=models.SET_NULL, null=True)
+    application = models.ForeignKey(Application, on_delete=models.CASCADE, null=True, blank=True)
     interviewer = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True)  # Related with User
-    date_schedule = models.DateField()
-    time_schedule = models.TimeField()
-    status = models.CharField(max_length=15, choices=interview_status)
-    job_status = models.CharField(max_length=25, choices=job_status_interview)
-    # feedback
-    type = models.CharField(max_length=15, choices=interview_type)
+    date_schedule = models.DateField(null=True, blank=True)
+    time_schedule = models.TimeField(null=True, blank=True)
+    job_status = models.CharField(max_length=25, choices=job_status_interview, null=True, blank=True)# feedback
+    type = models.CharField(max_length=15, choices=interview_type, null=True, blank=True)
+    slug = models.SlugField(unique=True, null=True, blank=True, max_length=600)
 
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(unidecode(self.application.user.username)) + '-' + slugify(unidecode(self.interviewer.username)) + '-' + slugify(unidecode(self.application.job.title))
+        super().save(*args, **kwargs)
     def __str__(self) -> str:
-        return self.candidate + " Interviewer: " + self.interviewer
+        return self.interviewer.username + '-'+self.application.user.username
+
 
 class Notes(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True)

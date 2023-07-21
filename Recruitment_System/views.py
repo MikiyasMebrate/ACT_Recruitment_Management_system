@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
 from Company.models import Social_Media, Contact
 from .forms import CandidateForm, EducationForm, ExperienceForm
-from .models import Skill, Candidate, Education, Experience, Job_Posting, Bookmarks, Application
+from .models import Skill, Candidate, Education, Experience, Job_Posting, Bookmarks, Application,Interviews
 from django.contrib import messages
 import csv
 from django.shortcuts import render, redirect
@@ -20,6 +20,8 @@ def csv_file_reader():
                     Skill.objects.create(title = j)
 
 social_medias = Social_Media.objects.all()
+
+#Session
 def login_view(request):
     form = Login_Form(request.POST or None)
     if request.method == 'POST':
@@ -59,6 +61,9 @@ def registration_view(request):
 
     return render(request, 'RMS/registrations.html', context)
 
+
+
+#Lists
 def index(request):
 
     context = {
@@ -108,6 +113,9 @@ def job_detail(request, slug):
     }
     return render(request, 'RMS/job-details.html', context)
 
+
+
+#Password
 @login_required
 def reset_password(request):
     context = {
@@ -116,9 +124,38 @@ def reset_password(request):
     return render(request, 'RMS/reset-password.html', context)
 
 @login_required
+def user_change_password(request):
+    return render(request, 'RMS/user/dashboard-change-password.html')
+
+
+#User Dashboard
+@login_required
 def user_dashboard(request):
     return render(request, 'RMS/user/candidate-dashboard.html')
 
+@login_required
+def user_profile(request):
+    try: 
+        candidate = Candidate.objects.get(user = request.user)
+        education = Education.objects.filter(candidate = request.user)
+        experience = Experience.objects.filter(candidate = request.user)
+    except:
+        candidate = None 
+        education = None
+        experience = None
+    
+    context = {
+        'candidate' : candidate,
+        'social_medias' : social_medias,
+        'education' : education,
+        'experience': experience
+        
+    }
+    return render(request, 'RMS/user/dashboard-my-profile.html', context)
+
+
+
+#Resume
 @login_required
 def user_resume(request):
     skills = Skill.objects.all()
@@ -147,6 +184,9 @@ def user_resume(request):
         }
     return render(request, 'RMS/user/dashboard-add-personal-info.html', context)
 
+
+
+#Education
 @login_required
 def user_add_education(request):
     education = Education.objects.filter(candidate = request.user)
@@ -196,6 +236,9 @@ def detail_user_education(request, slug):
     }
     return render(request, 'RMS/user/dashboard-education-detail.html', context)
 
+
+
+#Experience 
 @login_required
 def user_add_experience(request):
     form_experience = ExperienceForm(request.POST or None)
@@ -246,10 +289,60 @@ def user_delete_experience(request, slug):
         messages.error(request,'Your request has not been Unsuccessful Please try again!')
         return redirect('user-add-experience')
 
+
+
+#User Job
 @login_required
 def user_applied_jobs(request):
-    return render(request, 'RMS/user/dashboard-applied-jobs.html')
+    application = Application.objects.filter(user = request.user)
+    interview = Interviews.objects.filter(application__user = request.user)
+    context = {
+        'application' : application,
+        'interviews' : interview
+    }
+    return render(request, 'RMS/user/dashboard-applied-jobs.html', context)
 
+@login_required
+def user_apply_job(request, slug):
+    try: applied = Application.objects.get(user = request.user, job__slug = slug)
+    except: applied = None
+
+    try : candidate = Candidate.objects.get(user = request.user)
+    except : candidate = None
+
+    education = Education.objects.filter(candidate = request.user).count()
+    
+    if applied is not None:
+        messages.error(request, 'You are already Applied on this JOB please Check your Applied Jobs Lists')
+        return redirect(request.META.get('HTTP_REFERER'))
+    elif candidate is None:
+        messages.error(request, 'Please Add Personal Information! ')
+        return redirect('user-resume')
+    elif education < 1:
+        messages.error(request, 'Please at least add One Education Background!')
+        return redirect('user-add-education')
+    else:
+        job = Job_Posting.objects.get(slug=slug)
+        obj = Application()
+        obj.user = request.user
+        obj.job = job
+        obj.save()
+        messages.success(request, 'Successfully Applied Check your Applied Jobs')
+        return redirect(request.META.get('HTTP_REFERER'))
+
+@login_required
+def user_cancel_job(request, slug):
+    application = Application.objects.get(user = request.user, job__slug=slug)
+    if application.delete():
+        messages.success(request, 'Successfully Canceled')
+        return redirect(request.META.get('HTTP_REFERER'))
+    else:
+        messages.error(request, 'Your request has not been Successfully please try again!')
+        return redirect(request.META.get('HTTP_REFERER'))
+
+
+
+#Bookmark
 @login_required
 def user_bookmark(request):
     bookmarks = Bookmarks.objects.filter(user = request.user)
@@ -289,63 +382,5 @@ def user_delete_bookmark(request, slug):
         messages.error(request, 'Your request has not been Successfully please try again!')
         return redirect(request.META.get('HTTP_REFERER'))
 
-@login_required
-def user_apply_job(request, slug):
-    try:
-        applied = Application.objects.get(user = request.user, job__slug = slug)
-    except:
-        applied = None
 
-    education = Education.objects.filter(candidate = request.user).count()
-    candidate = Candidate.objects.get(user = request.user)
-    if applied is not None:
-        messages.error(request, 'You are already Applied on this JOB please Check your Applied Jobs Lists')
-        return redirect(request.META.get('HTTP_REFERER'))
-    elif candidate is None:
-        messages.error(request, 'Please Add Personal Information! ')
-        return redirect('user-resume')
-    elif education < 1:
-        messages.error(request, 'Please at least add One Education Background!')
-        return redirect('user-add-education')
-    else:
-        job = Job_Posting.objects.get(slug=slug)
-        obj = Application()
-        obj.user = request.user
-        obj.job = job
-        obj.save()
-        messages.success(request, 'Successfully Applied Check your Applied Jobs')
-        return redirect(request.META.get('HTTP_REFERER'))
-    
-def user_cancel_job(request, slug):
-    application = Application.objects.get(user = request.user, job__slug=slug)
-    if application.delete():
-        messages.success(request, 'Successfully Canceled')
-        return redirect(request.META.get('HTTP_REFERER'))
-    else:
-        messages.error(request, 'Your request has not been Successfully please try again!')
-        return redirect(request.META.get('HTTP_REFERER'))
 
-@login_required
-def user_change_password(request):
-    return render(request, 'RMS/user/dashboard-change-password.html')
-
-@login_required
-def user_profile(request):
-    try: 
-        candidate = Candidate.objects.get(user = request.user)
-        education = Education.objects.filter(candidate = request.user)
-        experience = Experience.objects.filter(candidate = request.user)
-    except:
-        candidate = None 
-        education = None
-        experience = None
-    
-    
-    context = {
-        'candidate' : candidate,
-        'social_medias' : social_medias,
-        'education' : education,
-        'experience': experience
-        
-    }
-    return render(request, 'RMS/user/dashboard-my-profile.html', context)

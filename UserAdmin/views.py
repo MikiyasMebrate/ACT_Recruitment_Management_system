@@ -1,14 +1,17 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from Recruitment_System.models import Candidate, Education, Job_Posting, Sector
+from Recruitment_System.models import Candidate, Education,Interviews, Job_Posting, Sector, Application, Experience
 from django.core.paginator import Paginator
-from Recruitment_System.forms import JobPostingForm, SectorForm
+from Recruitment_System.forms import JobPostingForm, SectorForm,ApplicationForm, InterviewForm
 from django.contrib import messages
+
 # Create your views here.
 @login_required
 def admin_index(request):
     return render(request, 'admin-user/Dashboard.html')
 
+
+#Candidate
 @login_required
 def candidate_view(request):
     candidate_list = Candidate.objects.all()
@@ -25,13 +28,18 @@ def candidate_view(request):
 def candidate_detail_view(request, slug):
     candidate = Candidate.objects.get(slug=slug)
     education = Education.objects.filter(candidate__id = candidate.user.id)
+    experience = Experience.objects.filter(candidate__id = candidate.user.id)
+    application = Application.objects.filter(user__id = candidate.user.id)
     context = {
         'candidate' : candidate,
-        'education' : education
+        'educations' : education,
+        'experiences' : experience,
+        'applications' : application
     }
     return render(request, 'admin-user/candidate-Detail.html', context)
 
 
+#JOB
 @login_required
 def job_board_view(request):
     form = JobPostingForm(request.POST or None)
@@ -75,7 +83,6 @@ def job_detail_view(request, slug):
     }
     return render(request, 'admin-user/job-Detail.html', context)
 
-
 @login_required
 def job_delete_view(request, slug):
     job = Job_Posting.objects.get(slug=slug)
@@ -89,6 +96,9 @@ def job_delete_view(request, slug):
     
     return redirect(request.META.get('HTTP_REFERER'))
 
+
+
+#Sector
 @login_required
 def department(request):
     department = Sector.objects.all()
@@ -147,50 +157,72 @@ def department_delete(request, slug):
     return redirect(request.META.get('HTTP_REFERER'))
   
 
+#Applicant
 @login_required
-def discount(request):
-    return render(request, 'admin-user/discount.html')
+def applicant_all(request):
+    job_post = Job_Posting.objects.filter(job_status =True)
+    sector = Sector.objects.filter()
+    applicants = Application.objects.filter(job__job_status =True)
 
-@login_required
-def Orders_detail(request):
-    return render(request, 'admin-user/Orders-Detail.html')
+    paginator = Paginator(applicants,15)
+    page_number = request.GET.get('page')
+    page = paginator.get_page(page_number)
 
+    context = {
+        'sectors' : sector,
+        'job_list' : job_post,
+        'applicants' : page,
+    }
+    return render(request, 'admin-user/applicant-sector.html', context)
 
+def applicant_category(request, slug):
+    job_post = Job_Posting.objects.filter(job_status =True)
+    selected_job = Job_Posting.objects.get(slug = slug)
+    sector = Sector.objects.filter()
+    applicants = Application.objects.filter(job__job_status =True, job = selected_job)
 
-@login_required
-def general_setting(request):
-    return render(request, 'admin-user/Settings-General.html')
+    paginator = Paginator(applicants,15)
+    page_number = request.GET.get('page')
+    page = paginator.get_page(page_number)
 
+    context = {
+        'sectors' : sector,
+        'job_list' : job_post,
+        'applicants' : page,
+    }
+    return render(request, 'admin-user/applicant-sector.html', context)
 
-@login_required
-def settings(request):
-    return render(request, 'admin-user/Settings.html')
+def applicant_detail(request, slug, slug2):
+    candidate = Candidate.objects.get(slug=slug)
+    education = Education.objects.filter(candidate__id = candidate.user.id)
+    experience = Experience.objects.filter(candidate__id = candidate.user.id)
+    application_applicant = Application.objects.get(user__id = candidate.user.id, job__slug = slug2)
+    
+    try : interview = Interviews.objects.get(application = application_applicant)
+    except: interview = None
+    form = ApplicationForm(request.POST or None, instance=application_applicant)
+    interview_form = InterviewForm(request.POST or None)
 
-@login_required
-def Shipping(request):
-    return render(request, 'admin-user/Shipping.html')
+    if request.method == 'POST':
+        if form.is_valid():
+            if form.save():
+                messages.success(request, f'Successfully Changed .')
+        
+        if interview_form.is_valid():
+            obj = interview_form.save(commit=False)
+            obj.application = application_applicant
+            obj.save()
+            messages.success(request, 'Successfully Transferred into Interview .')
+        
+        return redirect(request.META.get('HTTP_REFERER'))
 
-@login_required
-def Storefront_cart(request):
-    return render(request, 'admin-user/Storefront-Cart.html')
-
-@login_required
-def Storefront_Categories(request):
-    return render(request, 'admin-user/Storefront-Categories.html')
-
-@login_required
-def Storefront_Checkout(request):
-    return render(request, 'admin-user/Storefront-Checkout.html')
-
-@login_required
-def Storefront_Detail(request):
-    return render(request, 'admin-user/Storefront-Detail.html')
-
-@login_required
-def Storefront_Filters(request):
-    return render(request, 'admin-user/Storefront-Filters.html')
-
-@login_required
-def Storefront_Home(request):
-    return render(request, 'admin-user/Storefront-Home.html')
-
+    context = {
+        'candidate' : candidate,
+        'educations' : education,
+        'experiences' : experience,
+        'application_applicant' : application_applicant,
+        'form' : form,
+        'interview_form' : interview_form,
+        'interview': interview
+    }
+    return render(request, 'admin-user/candidate-Detail.html', context)

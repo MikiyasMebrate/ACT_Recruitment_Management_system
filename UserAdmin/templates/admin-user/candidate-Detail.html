@@ -1,699 +1,352 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en" data-footer="true">
-  <head>
-    <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width,initial-scale=1,maximum-scale=1"
-    />
-    <title>Acorn Admin Template | Customer Detail Page</title>
-    <meta name="description" content="Ecommerce Customer Detail Page" />
-    {% include 'admin-user/include/head.html'%}
-  </head>
-  <body>
-    <div id="root">
-        {% include 'admin-user/include/navbar.html'%}
-      <main>
-        <div class="container">
-          <div class="page-title-container">
-            <div class="row">
-              <div class="col-auto mb-3 mb-md-0 me-auto">
-                <div class="w-auto sw-md-30">
-                  <a
-                    href="{% url 'candidate' %}"
-                    class="muted-link pb-1 d-inline-block breadcrumb-back"
-                  >
-                    <i data-acorn-icon="chevron-left" data-acorn-size="13"></i>
-                    <span class="text-small align-middle">Candidate</span>
-                  </a>
-                  <h1 class="mb-0 pb-0 display-4" id="title">
-                    Candidate Detail
-                  </h1>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1" />
+  <title>Acorn Admin Template | Customer Detail Page</title>
+  <meta name="description" content="Ecommerce Customer Detail Page" />
+  {% include 'admin-user/include/head.html'%}
+</head>
+
+<body>
+  <div id="root">
+          <!-- Modal -->
+          <div class="modal fade" id="makeInterview" tabindex="-1" aria-labelledby="makeInterviewLabel" aria-hidden="true">
+
+              {% if interview_form.errors %}
+                <div class="alert alert-danger">
+                  <strong>Error:</strong>
+                  {% for field, errors in interview_form.errors.items %}
+                    {{ field }}:
+                    {% for error in errors %}
+                      {{ error }}
+                    {% endfor %}
+                  {% endfor %}
+                </div>
+              {% endif %}
+            
+            <form action="" method="post">{% csrf_token %}
+            <div class="modal-dialog  modal-xl modal-dialog-centered modal-dialog-scrollable">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="makeInterviewLabel">Add Sector</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+              
+                <div class="modal-body">
+                  <div class="row">
+                    <div class="col">
+                      <div class="mb-5">
+                        <h2 class="small-title">Sector Info</h2>
+                        <div class="card">
+                          <div class="card-body">
+                              <div class="mb-3">
+                               
+                                <label class="form-label">Interviewer {% for err in interview_form.interviewer.errors%} <small class="text-danger">{{err}}</small> {% endfor %} </label>
+                                {{interview_form.interviewer}}
+
+                              </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    </div>
+                  
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-muted" data-bs-dismiss="modal">Close</button>
+                  <button type="submit" class="btn btn-primary">Save changes</button>
                 </div>
               </div>
-              <div
-                class="col-12 col-md-5 d-flex align-items-end justify-content-end"
-              >
-                <button
-                  type="button"
-                  class="btn btn-outline-primary btn-icon btn-icon-start ms-0 ms-sm-1 w-100 w-md-auto"
-                >
-                  <i data-acorn-icon="save"></i>
-                  <span>Update</span>
-                </button>
-                <div class="ms-1">
-                  <button
-                    type="button"
-                    class="btn btn-outline-primary btn-icon btn-icon-only"
-                    data-bs-offset="0,3"
-                    data-bs-toggle="dropdown"
-                    aria-haspopup="true"
-                    aria-expanded="false"
-                    data-submenu
-                  >
-                    <i data-acorn-icon="more-horizontal"></i>
-                  </button>
-                  <div class="dropdown-menu dropdown-menu-end">
-                    <button class="dropdown-item" type="button">Edit</button>
-                    <button class="dropdown-item" type="button">
-                      View Purchases
-                    </button>
-                    <button class="dropdown-item" type="button">
-                      Check Ip
-                    </button>
+            </form>
+            </div>
+          </div>
+    {% include 'admin-user/include/navbar.html'%}
+    <main>
+      <div class="container">
+        <div class="page-title-container">
+          <div class="row">
+            <div class="col-auto mb-3 mb-md-0 me-auto">
+              <div class="w-auto sw-md-30">
+                <a href="{% url 'candidate' %}" class="muted-link pb-1 d-inline-block breadcrumb-back">
+                  <i data-acorn-icon="chevron-left" data-acorn-size="13"></i>
+                  <span class="text-small align-middle">Candidate</span>
+                </a>
+                <h1 class="mb-0 pb-0 display-4" id="title">
+                  Candidate Detail
+                </h1>
+              </div>
+            </div>
+            {% if not interview%}
+            {% if application_applicant %}
+            <div class="col-12 col-md-5 d-flex align-items-end justify-content-end">
+              <div class="dropdown-as-select w-100 w-md-auto">
+                <button type="button" data-bs-toggle="modal" data-bs-target="#makeInterview" class="btn btn-primary" >Transfer to Interview</button>
+              </div>
+            </div>
+           {% endif %}
+           {% endif %}
+
+          </div>
+        </div>
+        {% include 'admin-user/include/messages.html'%}
+        <div class="row gx-4 gy-5">
+          <div class="col-12 col-xl-4 col-xxl-3">
+            <h2 class="small-title">Info</h2>
+            <div class="card">
+              <div class="card-body mb-n5">
+                <div class="d-flex align-items-center flex-column">
+                  <div class="mb-5 d-flex align-items-center flex-column">
+                    <div
+                      class="sw-6 sh-6 mb-3 d-inline-block bg-primary d-flex justify-content-center align-items-center rounded-xl">
+                      <div class="text-white">
+                        {% if candidate.photo%}
+                        <img class="img-fluid rounded-pill" src="/media/{{candidate.photo}}" alt="">
+                        {% else %}
+                        {{candidate.first_name |first | capfirst}}{{candidate.last_name | first | capfirst}}
+                        {% endif %}
+                      </div>
+                    </div>
+                    <div class="h5 mb-1">{{candidate.first_name}} {{candidate.last_name}}</div>
+                    <div class="text-muted">
+                      <i data-acorn-icon="pin" class="text-muted"></i>
+                      <span class="align-middle">{{candidate.address}}</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="mb-5">
+                  <div>
+                    <p class="text-small text-muted mb-2">Candidate Information</p>
+                    <div class="row g-0 mb-2">
+                      <div class="col-auto">
+                        <div class="sw-3 me-1">
+                          <i class="fa-sharp fa-solid fa-user" style="color: #5bbe81;"></i>
+                        </div>
+                      </div>
+                      <div class="col text-alternate align-middle">
+                        {{candidate.first_name}} {{candidate.last_name}}
+                      </div>
+                    </div>
+                    <div class="row g-0 mb-2">
+                      <div class="col-auto">
+                        <div class="sw-3 me-1">
+                          <i class="fa-sharp fa-solid fa-venus" style="color: #5bbe81;"></i>
+                        </div>
+                      </div>
+                      <div class="col text-alternate align-middle">
+                        {{candidate.gender | capfirst}}
+                      </div>
+                    </div>
+                    <div class="row g-0 mb-2">
+                      <div class="col-auto">
+                        <div class="sw-3 me-1">
+                          <i class="fa-sharp fa-solid fa-location-dot" style="color: #5bbe81;"></i>
+                        </div>
+                      </div>
+                      <div class="col text-alternate">
+                        {{candidate.address}}
+                      </div>
+                    </div>
+                    <div class="row g-0 mb-2">
+                      <div class="col-auto">
+                        <div class="sw-3 me-1">
+                          <i class="fa-sharp fa-solid fa-phone" style="color: #5bbe81;"></i>
+                        </div>
+                      </div>
+                      <div class="col text-alternate">{{candidate.phone1}}</div>
+                    </div>
+                    <div class="row g-0 mb-2">
+                      <div class="col-auto">
+                        <div class="sw-3 me-1">
+                          <i class="fa-sharp fa-solid fa-envelope" style="color: #5bbe81;"></i>
+                        </div>
+                      </div>
+                      <div class="col text-alternate">
+                        {{candidate.email}}
+                      </div>
+                    </div>
+                    {% if candidate.resume%}
+                    <div class="row g-0 mb-2">
+                      <div class="col-auto">
+                        <div class="sw-3 me-1">
+                          <i class="fa-solid fa-file" style="color: #5bbe81;"></i>
+                        </div>
+                      </div>
+                      <div class="col text-alternate">
+                        <a href="/media/{{candidate.resume}}">{{candidate.resume}}</a>
+                        
+                      </div>
+                    </div>
+                    {% endif %}
+                  </div>
+                </div>
+                <div class="mb-5">
+                  <div>
+                    <p class="text-small text-muted mb-2">Skills</p>
+                    <div class="row g-0 mb-2">
+
+                      {% for skill in candidate.skill.all %}
+                      {{skill}} {% if not forloop.last %}, {% endif %}
+                      {% endfor %}
+
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          <div class="row gx-4 gy-5">
-            <div class="col-12 col-xl-4 col-xxl-3">
-              <h2 class="small-title">Info</h2>
-              <div class="card">
-                <div class="card-body mb-n5">
-                  <div class="d-flex align-items-center flex-column">
-                    <div class="mb-5 d-flex align-items-center flex-column">
-                      <div
-                        class="sw-6 sh-6 mb-3 d-inline-block bg-primary d-flex justify-content-center align-items-center rounded-xl"
-                      >
-                        <div class="text-white">{{candidate.first_name |first | capfirst}}{{candidate.last_name | first | capfirst}} </div>
-                      </div>
-                      <div class="h5 mb-1">{{candidate.first_name}} {{candidate.last_name}}</div>
-                      <div class="text-muted">
-                        <i data-acorn-icon="pin" class="text-muted"></i>
-                        <span class="align-middle">{{candidate.address}}</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="mb-5">
-                    <div class="row g-0 align-items-center mb-2">
-                      
-                      <div class="col ps-3">
-                       <p>Educations </p>
-                       <hr>
-                       {% for edu in education %}
-                        <button class="btn btn-secondary btn-sm mb-2">{{edu.field_of_study}}</button>
-                        {% endfor %}
-                      </div>
-                    </div>
+          <div class="col-12 col-xl-8 col-xxl-9">
 
-
-
-                    
-                  </div>
-                  <div class="mb-5">
-                    <div>
-                      <p class="text-small text-muted mb-2">Candidate Information</p>
-                      <div class="row g-0 mb-2">
-                        <div class="col-auto">
-                          <div class="sw-3 me-1">
-                            <i class="fa-sharp fa-solid fa-user" style="color: #5bbe81;"></i>
-                          </div>
-                        </div>
-                        <div class="col text-alternate align-middle">
-                          {{candidate.first_name}} {{candidate.last_name}}
-                        </div>
-                      </div>
-                      <div class="row g-0 mb-2">
-                        <div class="col-auto">
-                          <div class="sw-3 me-1">
-                            <i class="fa-sharp fa-solid fa-venus" style="color: #5bbe81;"></i>
-                          </div>
-                        </div>
-                        <div class="col text-alternate align-middle">
-                          {{candidate.gender | capfirst}}
-                        </div>
-                      </div>
-                      <div class="row g-0 mb-2">
-                        <div class="col-auto">
-                          <div class="sw-3 me-1">
-                            <i class="fa-sharp fa-solid fa-location-dot" style="color: #5bbe81;"></i>
-                          </div>
-                        </div>
-                        <div class="col text-alternate">
-                         {{candidate.address}}
-                        </div>
-                      </div>
-                      <div class="row g-0 mb-2">
-                        <div class="col-auto">
-                          <div class="sw-3 me-1">
-                            <i class="fa-sharp fa-solid fa-phone" style="color: #5bbe81;"></i>
-                          </div>
-                        </div>
-                        <div class="col text-alternate">{{candidate.phone1}}</div>
-                      </div>
-                      <div class="row g-0 mb-2">
-                        <div class="col-auto">
-                          <div class="sw-3 me-1">
-                            <i class="fa-sharp fa-solid fa-envelope" style="color: #5bbe81;"></i>
-                          </div>
-                        </div>
-                        <div class="col text-alternate">
-                          {{candidate.email}}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="mb-5">
-                    <div>
-                      <p class="text-small text-muted mb-2">Skills</p>
-                      <div class="row g-0 mb-2">
-                          
-                        {% for skill in candidate.skill.all %}
-                         {{skill}} {% if not forloop.last %}, {% endif %}
-                        {% endfor %}
-                      
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-12 col-xl-8 col-xxl-9">
-              <div class="d-flex justify-content-between">
-                <h2 class="small-title">Recent Orders</h2>
-                <button
-                  class="btn btn-icon btn-icon-end btn-xs btn-background-alternate p-0 text-small"
-                  type="button"
-                >
-                  <span class="align-bottom">View All</span>
-                  <i
-                    data-acorn-icon="chevron-right"
-                    class="align-middle"
-                    data-acorn-size="12"
-                  ></i>
-                </button>
-              </div>
-              <div class="mb-5">
-                <div class="card mb-2">
-                  <div class="row g-0 sh-16 sh-md-8">
-                    <div class="col">
-                      <div class="card-body pt-0 pb-0 h-100">
-                        <div class="row g-0 h-100 align-content-center">
-                          <div
-                            class="col-6 col-md-3 d-flex flex-column justify-content-center mb-2 mb-md-0 h-md-100"
-                          >
-                            <div class="text-muted text-small d-md-none">
-                              Id
-                            </div>
-                            <a
-                              href="Orders.Detail.html"
-                              class="text-truncate h-100 d-flex align-items-center"
-                              >1239</a
-                            >
-                          </div>
-                          <div
-                            class="col-6 col-md-4 d-flex flex-column justify-content-center mb-2 mb-md-0"
-                          >
-                            <div class="text-muted text-small d-md-none">
-                              Price
-                            </div>
-                            <div class="text-alternate">
-                              <span>
-                                <span class="text-small">$</span>
-                                321.75
-                              </span>
-                            </div>
-                          </div>
-                          <div
-                            class="col-6 col-md-2 d-flex flex-column justify-content-center mb-2 mb-md-0"
-                          >
-                            <div class="text-muted text-small d-md-none">
-                              Date
-                            </div>
-                            <div class="text-alternate">13.09.2020</div>
-                          </div>
-                          <div
-                            class="col-6 col-md-3 d-flex flex-column justify-content-center mb-2 mb-md-0 align-items-md-end"
-                          >
-                            <div class="text-muted text-small d-md-none">
-                              Status
-                            </div>
-                            <div class="text-alternate">
-                              <span
-                                class="badge rounded-pill bg-outline-secondary"
-                                >PENDING</span
-                              >
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="card mb-2">
-                  <div class="row g-0 sh-16 sh-md-8">
-                    <div class="col">
-                      <div class="card-body pt-0 pb-0 h-100">
-                        <div class="row g-0 h-100 align-content-center">
-                          <div
-                            class="col-6 col-md-3 d-flex flex-column justify-content-center mb-2 mb-md-0 h-md-100"
-                          >
-                            <div class="text-muted text-small d-md-none">
-                              Id
-                            </div>
-                            <a
-                              href="Orders.Detail.html"
-                              class="text-truncate h-100 d-flex align-items-center"
-                              >1251</a
-                            >
-                          </div>
-                          <div
-                            class="col-6 col-md-4 d-flex flex-column justify-content-center mb-2 mb-md-0"
-                          >
-                            <div class="text-muted text-small d-md-none">
-                              Price
-                            </div>
-                            <div class="text-alternate">
-                              <span>
-                                <span class="text-small">$</span>
-                                59.00
-                              </span>
-                            </div>
-                          </div>
-                          <div
-                            class="col-6 col-md-2 d-flex flex-column justify-content-center mb-2 mb-md-0"
-                          >
-                            <div class="text-muted text-small d-md-none">
-                              Date
-                            </div>
-                            <div class="text-alternate">14.09.2020</div>
-                          </div>
-                          <div
-                            class="col-6 col-md-3 d-flex flex-column justify-content-center mb-2 mb-md-0 align-items-md-end"
-                          >
-                            <div class="text-muted text-small d-md-none">
-                              Status
-                            </div>
-                            <div class="text-alternate">
-                              <span
-                                class="badge rounded-pill bg-outline-primary"
-                                >DELIVERED</span
-                              >
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="card mb-2">
-                  <div class="row g-0 sh-16 sh-md-8">
-                    <div class="col">
-                      <div class="card-body pt-0 pb-0 h-100">
-                        <div class="row g-0 h-100 align-content-center">
-                          <div
-                            class="col-6 col-md-3 d-flex flex-column justify-content-center mb-2 mb-md-0 h-md-100"
-                          >
-                            <div class="text-muted text-small d-md-none">
-                              Id
-                            </div>
-                            <a
-                              href="Orders.Detail.html"
-                              class="text-truncate h-100 d-flex align-items-center"
-                              >1397</a
-                            >
-                          </div>
-                          <div
-                            class="col-6 col-md-4 d-flex flex-column justify-content-center mb-2 mb-md-0"
-                          >
-                            <div class="text-muted text-small d-md-none">
-                              Price
-                            </div>
-                            <div class="text-alternate">
-                              <span>
-                                <span class="text-small">$</span>
-                                128.25
-                              </span>
-                            </div>
-                          </div>
-                          <div
-                            class="col-6 col-md-2 d-flex flex-column justify-content-center mb-2 mb-md-0"
-                          >
-                            <div class="text-muted text-small d-md-none">
-                              Date
-                            </div>
-                            <div class="text-alternate">17.09.2020</div>
-                          </div>
-                          <div
-                            class="col-6 col-md-3 d-flex flex-column justify-content-center mb-2 mb-md-0 align-items-md-end"
-                          >
-                            <div class="text-muted text-small d-md-none">
-                              Status
-                            </div>
-                            <div class="text-alternate">
-                              <span
-                                class="badge rounded-pill bg-outline-primary"
-                                >DELIVERED</span
-                              >
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="card mb-2">
-                  <div class="row g-0 sh-16 sh-md-8">
-                    <div class="col">
-                      <div class="card-body pt-0 pb-0 h-100">
-                        <div class="row g-0 h-100 align-content-center">
-                          <div
-                            class="col-6 col-md-3 d-flex flex-column justify-content-center mb-2 mb-md-0 h-md-100"
-                          >
-                            <div class="text-muted text-small d-md-none">
-                              Id
-                            </div>
-                            <a
-                              href="Orders.Detail.html"
-                              class="text-truncate h-100 d-flex align-items-center"
-                              >1421</a
-                            >
-                          </div>
-                          <div
-                            class="col-6 col-md-4 d-flex flex-column justify-content-center mb-2 mb-md-0"
-                          >
-                            <div class="text-muted text-small d-md-none">
-                              Price
-                            </div>
-                            <div class="text-alternate">
-                              <span>
-                                <span class="text-small">$</span>
-                                252.75
-                              </span>
-                            </div>
-                          </div>
-                          <div
-                            class="col-6 col-md-2 d-flex flex-column justify-content-center mb-2 mb-md-0"
-                          >
-                            <div class="text-muted text-small d-md-none">
-                              Date
-                            </div>
-                            <div class="text-alternate">17.09.2020</div>
-                          </div>
-                          <div
-                            class="col-6 col-md-3 d-flex flex-column justify-content-center mb-2 mb-md-0 align-items-md-end"
-                          >
-                            <div class="text-muted text-small d-md-none">
-                              Status
-                            </div>
-                            <div class="text-alternate">
-                              <span
-                                class="badge rounded-pill bg-outline-primary"
-                                >DELIVERED</span
-                              >
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="card mb-2">
-                  <div class="row g-0 sh-16 sh-md-8">
-                    <div class="col">
-                      <div class="card-body pt-0 pb-0 h-100">
-                        <div class="row g-0 h-100 align-content-center">
-                          <div
-                            class="col-6 col-md-3 d-flex flex-column justify-content-center mb-2 mb-md-0 h-md-100"
-                          >
-                            <div class="text-muted text-small d-md-none">
-                              Id
-                            </div>
-                            <a
-                              href="Orders.Detail.html"
-                              class="text-truncate h-100 d-flex align-items-center"
-                              >1438</a
-                            >
-                          </div>
-                          <div
-                            class="col-6 col-md-4 d-flex flex-column justify-content-center mb-2 mb-md-0"
-                          >
-                            <div class="text-muted text-small d-md-none">
-                              Price
-                            </div>
-                            <div class="text-alternate">
-                              <span>
-                                <span class="text-small">$</span>
-                                189.50
-                              </span>
-                            </div>
-                          </div>
-                          <div
-                            class="col-6 col-md-2 d-flex flex-column justify-content-center mb-2 mb-md-0"
-                          >
-                            <div class="text-muted text-small d-md-none">
-                              Date
-                            </div>
-                            <div class="text-alternate">18.09.2020</div>
-                          </div>
-                          <div
-                            class="col-6 col-md-3 d-flex flex-column justify-content-center mb-2 mb-md-0 align-items-md-end"
-                          >
-                            <div class="text-muted text-small d-md-none">
-                              Status
-                            </div>
-                            <div class="text-alternate">
-                              <span
-                                class="badge rounded-pill bg-outline-primary"
-                                >DELIVERED</span
-                              >
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <h2 class="small-title">History</h2>
+            
+            <div class="mb-5">
+              {% if educations %}
+              <h2 class="small-title">Education</h2>
               <div class="card mb-5">
                 <div class="card-body">
+                  {% for education in educations %}
                   <div class="row g-0">
                     <div
-                      class="col-auto sw-1 d-flex flex-column justify-content-center align-items-center position-relative me-4"
-                    >
+                      class="col-auto sw-1 d-flex flex-column justify-content-center align-items-center position-relative me-4">
                       <div class="w-100 d-flex sh-1"></div>
-                      <div
-                        class="rounded-xl shadow d-flex flex-shrink-0 justify-content-center align-items-center"
-                      >
-                        <div
-                          class="bg-gradient-light sw-1 sh-1 rounded-xl position-relative"
-                        ></div>
+                      <div class="rounded-xl shadow d-flex flex-shrink-0 justify-content-center align-items-center">
+                        <div class="bg-gradient-light sw-1 sh-1 rounded-xl position-relative"></div>
                       </div>
-                      <div
-                        class="w-100 d-flex h-100 justify-content-center position-relative"
-                      >
-                        <div
-                          class="line-w-1 bg-separator h-100 position-absolute"
-                        ></div>
+                      <div class="w-100 d-flex h-100 justify-content-center position-relative">
+                        <div class="line-w-1 bg-separator h-100 position-absolute"></div>
                       </div>
                     </div>
                     <div class="col mb-4">
                       <div class="h-100">
                         <div class="d-flex flex-column justify-content-start">
                           <div class="d-flex flex-column">
-                            <a href="#" class="heading stretched-link"
-                              >New Order</a
-                            >
-                            <div class="text-alternate">21.02.2021</div>
+                            <a  class="heading stretched-link">{{education.institution_name}} [{{education.get_education_status_display}}]</a>
+                            <div class="text-alternate"> {{education.field_of_study}} </div>
                             <div class="text-muted mt-1">
-                              Biscuit donut powder sugar plum pastry. Chupa
-                              chups topping pastry halvah.
+                              {{education.education_period_start}} - {{education.education_period_end}}
                             </div>
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                  <div class="row g-0">
-                    <div
-                      class="col-auto sw-1 d-flex flex-column justify-content-center align-items-center position-relative me-4"
-                    >
-                      <div
-                        class="w-100 d-flex sh-1 position-relative justify-content-center"
-                      >
-                        <div
-                          class="line-w-1 bg-separator h-100 position-absolute"
-                        ></div>
-                      </div>
-                      <div
-                        class="rounded-xl shadow d-flex flex-shrink-0 justify-content-center align-items-center"
-                      >
-                        <div
-                          class="bg-gradient-light sw-1 sh-1 rounded-xl position-relative"
-                        ></div>
-                      </div>
-                      <div
-                        class="w-100 d-flex h-100 justify-content-center position-relative"
-                      >
-                        <div
-                          class="line-w-1 bg-separator h-100 position-absolute"
-                        ></div>
-                      </div>
-                    </div>
-                    <div class="col mb-4">
-                      <div class="h-100">
-                        <div class="d-flex flex-column justify-content-start">
-                          <div class="d-flex flex-column">
-                            <a href="#" class="heading stretched-link"
-                              >New Order</a
-                            >
-                            <div class="text-alternate">18.02.2021</div>
-                            <div class="text-muted mt-1">
-                              Apple pie cotton candy tiramisu biscuit cake
-                              muffin tootsie roll bear claw cake.
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="row g-0">
-                    <div
-                      class="col-auto sw-1 d-flex flex-column justify-content-center align-items-center position-relative me-4"
-                    >
-                      <div
-                        class="w-100 d-flex sh-1 position-relative justify-content-center"
-                      >
-                        <div
-                          class="line-w-1 bg-separator h-100 position-absolute"
-                        ></div>
-                      </div>
-                      <div
-                        class="rounded-xl shadow d-flex flex-shrink-0 justify-content-center align-items-center"
-                      >
-                        <div
-                          class="bg-gradient-light sw-1 sh-1 rounded-xl position-relative"
-                        ></div>
-                      </div>
-                      <div
-                        class="w-100 d-flex h-100 justify-content-center position-relative"
-                      >
-                        <div
-                          class="line-w-1 bg-separator h-100 position-absolute"
-                        ></div>
-                      </div>
-                    </div>
-                    <div class="col mb-4">
-                      <div class="h-100">
-                        <div class="d-flex flex-column justify-content-start">
-                          <div class="d-flex flex-column">
-                            <a href="#" class="heading stretched-link"
-                              >New Order</a
-                            >
-                            <div class="text-alternate">15.02.2021</div>
-                            <div class="text-muted mt-1">
-                              Marzipan muffin cheesecake. Caramels wafer jelly
-                              beans. Icing pudding dessert caramels cake topping
-                              marzipan.
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="row g-0">
-                    <div
-                      class="col-auto sw-1 d-flex flex-column justify-content-center align-items-center position-relative me-4"
-                    >
-                      <div
-                        class="w-100 d-flex sh-1 position-relative justify-content-center"
-                      >
-                        <div
-                          class="line-w-1 bg-separator h-100 position-absolute"
-                        ></div>
-                      </div>
-                      <div
-                        class="rounded-xl shadow d-flex flex-shrink-0 justify-content-center align-items-center"
-                      >
-                        <div
-                          class="bg-gradient-light sw-1 sh-1 rounded-xl position-relative"
-                        ></div>
-                      </div>
-                      <div
-                        class="w-100 d-flex h-100 justify-content-center position-relative"
-                      >
-                        <div
-                          class="line-w-1 bg-separator h-100 position-absolute"
-                        ></div>
-                      </div>
-                    </div>
-                    <div class="col mb-4">
-                      <div class="h-100">
-                        <div class="d-flex flex-column justify-content-start">
-                          <div class="d-flex flex-column">
-                            <a href="#" class="heading stretched-link"
-                              >New Order</a
-                            >
-                            <div class="text-alternate">12.02.2021</div>
-                            <div class="text-muted mt-1">
-                              Dragée macaroon lemon drops icing cupcake
-                              gingerbread. Apple pie caramels tart.
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="row g-0">
-                    <div
-                      class="col-auto sw-1 d-flex flex-column justify-content-center align-items-center position-relative me-4"
-                    >
-                      <div
-                        class="w-100 d-flex sh-1 position-relative justify-content-center"
-                      >
-                        <div
-                          class="line-w-1 bg-separator h-100 position-absolute"
-                        ></div>
-                      </div>
-                      <div
-                        class="rounded-xl shadow d-flex flex-shrink-0 justify-content-center align-items-center"
-                      >
-                        <div
-                          class="bg-gradient-light sw-1 sh-1 rounded-xl position-relative"
-                        ></div>
-                      </div>
-                      <div
-                        class="w-100 d-flex h-100 justify-content-center position-relative"
-                      ></div>
-                    </div>
-                    <div class="col">
-                      <div class="h-100">
-                        <div class="d-flex flex-column justify-content-start">
-                          <div class="d-flex flex-column">
-                            <a href="#" class="heading stretched-link"
-                              >Registered</a
-                            >
-                            <div class="text-alternate">12.02.2021</div>
-                            <div class="text-muted mt-1">
-                              Marshmallow donut sweet roll. Wafer tootsie roll
-                              gingerbread croissant ice cream.
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                  {% endfor %}
                 </div>
               </div>
-              <h2 class="small-title">About</h2>
+              {% endif %}
+
+              {% if experiences %}
+              <h2 class="small-title">Experience</h2>
               <div class="card mb-5">
                 <div class="card-body">
-                  <form>
-                    <div class="mb-3">
-                      <label class="form-label"></label>
-                      {{candidate.about}}
+                  {% for experience in experiences %}
+                  <div class="row g-0">
+                    <div
+                      class="col-auto sw-1 d-flex flex-column justify-content-center align-items-center position-relative me-4">
+                      <div class="w-100 d-flex sh-1"></div>
+                      <div class="rounded-xl shadow d-flex flex-shrink-0 justify-content-center align-items-center">
+                        <div class="bg-gradient-light sw-1 sh-1 rounded-xl position-relative"></div>
+                      </div>
+                      <div class="w-100 d-flex h-100 justify-content-center position-relative">
+                        <div class="line-w-1 bg-separator h-100 position-absolute"></div>
+                      </div>
                     </div>
-                  </form>
+                    <div class="col mb-4">
+                      <div class="h-100">
+                        <div class="d-flex flex-column justify-content-start">
+                          <div class="d-flex flex-column">
+                            <a  class="heading stretched-link">{{experience.company_name}}</a>
+                            <div class="text-alternate mb-3"> {{experience.job_title}} </div>
+                            <div class="text-muted mt-1">
+                              {{experience.work_time_line_start}} - {{experience.work_time_line_end}}
+                            </div>
+                            <div class="text-muted mt-1">
+                              <p class="mb-2"> Responsibility: {{experience.responsibility}}</p>
+                            </div>
+                            <div class="text-muted mt-1">
+                              <p class="mb-2"> Reference Name: {{experience.reference_name}}</p>
+                              <p class="mb-2">Reference Phone: {{experience.reference_phone}}</p>
+                              <p class="mb-2">Reference Email: {{experience.reference_email}}</p>
+                              <p class="mb-2">Reference Job Position: {{experience.reference_job_title}}</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  {% endfor %}
                 </div>
               </div>
+              {% endif %}
+               
+              
+             <h2 class="small-title">About</h2>
+             <div class="card mb-5">
+               <div class="card-body">
+                   <div class="mb-3">
+                     <label class="form-label"></label>
+                     {{candidate.about}}
+                   </div>
+               </div>
+             </div>
+             
+             {% if applications %}
+             <h2 class="small-title">Applications</h2>
+              <div class="card mb-2">
+                
+                {% for application in applications %}
+                <div class="row g-0 sh-16 sh-md-8">
+                  <div class="col">
+                    <div class="card-body pt-0 pb-0 h-100">
+                      <div class="row g-0 h-100 align-content-center">
+                        <div class="col-6 col-md-3 d-flex flex-column justify-content-center mb-2 mb-md-0 h-md-100">
+                          <div class="text-muted text-small d-md-none">Id</div>
+                          <a href="{% url 'job-detail-admin' application.job.slug %}" class="text-truncate h-100 d-flex align-items-center">{{application.id}}</a>
+                        </div>
+                        <div class="col-6 col-md-4 d-flex flex-column justify-content-center mb-2 mb-md-0">
+                          <div class="text-muted text-small d-md-none"> Title </div>
+                          <div class="text-alternate">
+                            <span class="">{{application.job.title}}</span>
+                          </div>
+                        </div>
+                        <div class="col-6 col-md-2 d-flex flex-column justify-content-center mb-2 mb-md-0">
+                          <div class="text-muted text-small d-md-none"> Date of Apply</div>
+                          <div class="text-alternate">{{application.date_applied}}</div>
+                        </div>
+                        <div
+                          class="col-6 col-md-3 d-flex flex-column justify-content-center mb-2 mb-md-0 align-items-md-end">
+                          <div class="text-muted d-md-none"> Status </div>
+                          <div class="text-alternate"> <span
+                              class="badge rounded-pill bg-outline-secondary">{{application.status}}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                {% endfor %}
+
+                
+
+              </div>
+              {% endif %}
+
             </div>
           </div>
         </div>
-      </main>
+        {% if not interview%}
+        {% if application_applicant%}
+        <form action="" method="post">{% csrf_token %}
+          {{ form.as_p }}
+          <button class="btn btn-primary" type="submit">Update</button>
+        </form>
+      {% endif %}
+      {% endif %}
+      </div>
+    </main>
     {% include 'admin-user/include/footer-js.html'%}
 
-  </body>
+</body>
+
 </html>

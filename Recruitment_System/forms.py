@@ -1,5 +1,5 @@
 from django import forms
-from .models import Candidate, Skill, Education, Experience, Job_Posting,Sector
+from .models import Candidate, Skill, Education, Experience, Job_Posting,Sector,Application, Interviews, application_status
 from datetime import date
 from django.forms import formset_factory
 from phonenumber_field.formfields import PhoneNumberField
@@ -281,3 +281,42 @@ class SectorForm(forms.ModelForm):
                 'class' : 'form-control'
             })
         }
+
+
+class ApplicationForm(forms.ModelForm):
+    status = forms.ChoiceField(choices=application_status, required=False, widget=forms.Select(attrs={
+        'class' : 'form-select'
+    }))
+    class Meta:
+        model = Application
+        fields = ('status',)
+
+class InterviewForm(forms.ModelForm):
+    
+    class Meta:
+        model = Interviews
+        fields = '__all__'
+
+        widgets = {
+            'date_schedule' : forms.DateInput(attrs={
+                'class' : 'form-control',
+                'type' : 'date',
+                'placeholder' : 'dd/mm/yy'
+            }),
+            'time_schedule' : forms.TimeInput(attrs={
+                'class' : 'form-control',
+                'type' : 'time'
+            }),
+            'status' : forms.Select(attrs={
+                'class' : 'form-select'
+            }),
+            'job_status' : forms.Select(attrs={
+                'class' : 'form-select'
+            }),
+            'type' : forms.Select(attrs={
+                'class' : 'form-select'
+            }),
+            'interviewer' : forms.Select(attrs={
+                'class' : 'form-select'
+            }),
+         }

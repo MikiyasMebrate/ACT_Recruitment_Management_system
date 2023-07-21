@@ -11,15 +11,7 @@ urlpatterns = [
     path('department-admin/', views.department, name='department-admin'),
     path('department-detail-admin/<slug:slug>', views.department_detail, name='department-detail-admin'),
     path('department-delete-admin/<slug:slug>', views.department_delete, name='delete-department-admin'),
-    
-    path('discount/', views.discount, name='discount'),
-    path('general-setting/', views.general_setting, name='general-setting'),
-    path('settings/', views.settings, name='setting'),
-    path('Shipping/', views.Shipping, name='Shipping'),
-    path('Storefront-Cart/', views.Storefront_cart, name='Storefront-Cart'),
-    path('Storefront-Categories/', views.Storefront_Categories, name='Storefront-Categories'),
-    path('Storefront-Checkout/', views.Storefront_Checkout, name='Storefront-Checkout'),
-    path('Storefront_Detail/', views.Storefront_Detail, name='Storefront_Detail'),
-    path('Storefront_Filters/', views.Storefront_Filters, name='Storefront_Filters'),
-    path('Storefront-Home/', views.Storefront_Home, name='Storefront-Home.html')
+    path('applicant/', views.applicant_all, name='applicant'),
+    path('applicant/<slug:slug>/', views.applicant_category, name='applicant_category'),
+    path('applicant/<slug:slug>//<slug:slug2>/', views.applicant_detail, name='applicant_detail'),
 ]

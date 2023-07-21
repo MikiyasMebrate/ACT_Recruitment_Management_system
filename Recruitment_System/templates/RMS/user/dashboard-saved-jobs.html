@@ -135,11 +135,11 @@
                               <td>
                                 <div class="dash-action">
                                   <a
-                                    href="{% url 'Job-detail' book.job.id %}"
+                                    href="{% url 'Job-detail' book.job.slug %}"
                                     class="p-2 circle text-info bg-light-info d-inline-flex align-items-center justify-content-center me-1"
                                     ><i class="lni lni-eye"></i
                                   ></a>
-                                  <a href="{% url 'user-delete-bookmark' book.job.id%}"
+                                  <a href="{% url 'user-delete-bookmark' book.job.slug%}"
                                     class="btn p-2 circle  btn-danger d-inline-flex align-items-center justify-content-center ms-1"
                                     ><i class="lni lni-trash-can"></i
                                   ></a>
