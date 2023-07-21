@@ -14,6 +14,49 @@
 
   <body>
     <div>
+      <!-- Modal Apply Job -->
+      <div class="modal fade" id="applyJob" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="applyJobLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="applyJobLabel">Are you sure you want to Apply</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body h3">
+              {{job.title}}?
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-muted" data-bs-dismiss="modal">Close</button>
+              <form action="" method="post">
+                {% csrf_token %}
+              <a href="{% url 'user-apply-job' job.id %}" type="submit" class="btn btn-danger">Yes</a>
+            </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Cancel Job -->
+      <div class="modal fade" id="cancelJob" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="cancelJobLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="cancelJobLabel">Are you sure you want to Cancel</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body h3">
+              {{job.title}}?
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-muted" data-bs-dismiss="modal">Close</button>
+              <form action="" method="post">
+                {% csrf_token %}
+              <a href="{% url 'user-cancel-job' job.id %}" type="submit" class="btn btn-danger">Yes</a>
+            </form>
+            </div>
+          </div>
+        </div>
+      </div>
         {% include 'include/navbar.html'%}
       <div class="main-content">
         <div class="page-content">
@@ -68,6 +111,21 @@
             </div>
           </div>
           <!-- END SHAPE -->
+          <div class="row d-flex  justify-content-center">
+            <div class="col-8">
+              
+               {% if messages %}
+               <ul class="messages">
+                   {% for message in messages %}
+                   <div class="alert {% if message.tags == 'success' %} alert-success {% else %} alert-danger {% endif %}  alert-dismissible">
+                     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                      {{message}}
+                   </div>
+                   {% endfor %}
+               </ul>
+               {% endif %}
+            </div>
+          </div>
 
           <!-- START JOB-DEATILS -->
           <section class="section">
@@ -136,6 +194,7 @@
                   </div>
                   <!--end job-detail-->
 
+                  <!--Related Job-->
                   <div class="mt-4">
                     <h5>Related Jobs</h5>
                     <div class="job-box card mt-4">
@@ -519,23 +578,49 @@
                           </li>
                         </ul>
                         <div class="mt-3">
+
+
+                          {% if user.is_authenticated and job.id in application %}
+                            <button
+                              type="button"
+                              data-bs-toggle="modal" data-bs-target="#cancelJob"
+                              class="btn btn-primary btn-hover w-100 mt-2">
+                              Cancel Application 
+                              <i class="uil uil-arrow-right"></i>
+                            </button>
+                          {% else %}
+                            <button
+                             type="button"
+                             data-bs-toggle="modal" data-bs-target="#applyJob"
+                             class="btn btn-primary btn-hover w-100 mt-2">
+                             Apply Now 
+                             <i class="uil uil-arrow-right"></i>
+                            </button>                       
+                           {% endif %}
+
+
+                          {% if user.is_authenticated %}
+                          {% if bookmark %}
                           <a
-                            href="#applyNow"
-                            data-bs-toggle="modal"
-                            class="btn btn-primary btn-hover w-100 mt-2"
-                            >Apply Now <i class="uil uil-arrow-right"></i
-                          ></a>
-                          <a
-                            href="bookmark-jobs.html"
+                            href="{% url 'user-delete-bookmark' job.id %}"
                             class="btn btn-soft-warning btn-hover w-100 mt-2"
-                            ><i class="uil uil-bookmark"></i> Add Bookmark</a
+                            ><i class="uil uil-bookmark"></i> Remove Bookmark</a
                           >
+                          {%else%}
+                          <a
+                          href="{% url 'user-add-bookmark' job.id %}"
+                          class="btn btn-soft-warning btn-hover w-100 mt-2"
+                          ><i class="uil uil-bookmark"></i> Add Bookmark</a
+                        >
+                          {% endif %}
+                          {% endif %}
                         </div>
                       </div>
                       <!--end card-body-->
                     </div>
                     <!--end job-overview-->
 
+                    {% if social_media%}
                     <div class="card company-profile mt-4">
                       <div class="card-body p-4">
                         <div class="text-center">
@@ -607,6 +692,7 @@
                         </div>
                       </div>
                     </div>
+                    {% endif %}
 
                   </div>
                   <!--end side-bar-->

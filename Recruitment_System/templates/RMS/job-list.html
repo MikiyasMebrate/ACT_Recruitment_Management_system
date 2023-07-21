@@ -9,12 +9,14 @@
     <meta name="description" content=" " />
     <meta name="keywords" content="" />
     <meta content="Themesdesign" name="author" />
-
     {% include 'include/head.html'%}
   </head>
 
   <body>
 
+    <!--Modal-->
+    <div id="modal_apply_job">
+    </div>
     <!-- Begin page -->
     <div>
     {% include 'include/navbar.html'%}
@@ -72,6 +74,24 @@
             </div>
           </div>
           <!-- END SHAPE -->
+
+          <!--Messages-->
+          <div class="row d-flex  justify-content-center">
+            <div class="col-8">
+              
+               {% if messages %}
+               <ul class="messages">
+                   {% for message in messages %}
+                   <div class="alert {% if message.tags == 'success' %} alert-success {% else %} alert-danger {% endif %}  alert-dismissible">
+                     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                      {{message}}
+                   </div>
+                   {% endfor %}
+               </ul>
+               {% endif %}
+            </div>
+          </div>
+          <!--End Message-->
 
           <!-- START JOB-LIST -->
           <section class="section">
@@ -179,14 +199,25 @@
 
                       {% if job_list%}
                          {% for job in job_list%}
-                      <div class="job-box card mt-5">
-                        <div class="bookmark-label text-center">
+                        
+                      <div class="job-box
+
+                        {% if user.is_authenticated and job.id in bookmark %}
+                               bookmark-post
+                        {% endif %}
+                        card mt-5">
+
+                        {% if user.is_authenticated %}
+                         <div class="bookmark-label text-center">
                           <a
-                            href="#"
-                            class="align-middle text-white"
-                            ><i class="mdi mdi-star"></i
+                            href="{% url 'user-add-bookmark' job.id %}"
+                            class="align-middle text-white" type="submit"
+                            ><i class="mdi mdi-star "></i
                           ></a>
-                        </div>
+                         </div>
+                        {% endif %}
+
+
                         <div class="p-4">
                           <div class="row align-items-center">
                             <div class="col-md-3 ms-5">
@@ -242,21 +273,29 @@
                               <div>
                                 <p class="text-muted mb-0">
                                   <span class="text-dark">Experience :</span> {{job.experience}} <br>
-                                  <span class="text-dark">Vacancies  :</span> {{job.vacancies}}
                                 </p>
                               </div>
                             </div>
                             <!--end col-->
                             <div class="col-lg-2 col-md-3">
-                              <div class="text-start text-md-end">
+                              <span class="text-dark">Vacancies  :</span> {{job.vacancies}}
+                              <!--Apply JOB-->
+                              <!-- <div class="text-start text-md-end">
+                                
+                                {% if user.is_authenticated and job.id in application %}
+                                   <a
+                                   href="{% url 'user-cancel-job' job.id %}"
+                                   class="text-danger border-0 bg-light" type="submit">
+                                   Cancel<i class="mdi mdi-chevron-double-right"></i>
+                                 </a>
+                                {% else %}
                                 <a
-                                  href="#applyNow"
-                                  data-bs-toggle="modal"
-                                  class="primary-link"
-                                  >Apply Now
-                                  <i class="mdi mdi-chevron-double-right"></i
-                                ></a>
-                              </div>
+                                   href="{% url 'user-apply-job' job.id %}"
+                                   class="primary-link border-0 bg-light" type="submit">
+                                   Apply Now<i class="mdi mdi-chevron-double-right"></i>
+                                   </a>
+                                {% endif %}
+                              </div> -->
                             </div>
                             <!--end col-->
                           </div>
@@ -269,57 +308,59 @@
                       
 
                     </div>
-                    <!-- End Job-list -->
                     <div class="row">
-                      <div class="col-lg-12 mt-4 pt-2">
-                        <nav aria-label="Page navigation example">
-                          <ul
-                            class="pagination job-pagination mb-0 justify-content-center"
-                          >
-                            <li class="page-item disabled">
-                              <a
-                                class="page-link"
-                                href="javascript:void(0)"
-                                tabindex="-1"
-                              >
-                                <i
-                                  class="mdi mdi-chevron-double-left fs-15"
-                                ></i>
-                              </a>
-                            </li>
-                            <li class="page-item active">
-                              <a class="page-link" href="javascript:void(0)"
-                                >1</a
-                              >
-                            </li>
-                            <li class="page-item">
-                              <a class="page-link" href="javascript:void(0)"
-                                >2</a
-                              >
-                            </li>
-                            <li class="page-item">
-                              <a class="page-link" href="javascript:void(0)"
-                                >3</a
-                              >
-                            </li>
-                            <li class="page-item">
-                              <a class="page-link" href="javascript:void(0)"
-                                >4</a
-                              >
-                            </li>
-                            <li class="page-item">
-                              <a class="page-link" href="javascript:void(0)">
-                                <i
-                                  class="mdi mdi-chevron-double-right fs-15"
-                                ></i>
-                              </a>
-                            </li>
-                          </ul>
-                        </nav>
-                      </div>
-                      <!--end col-->
-                    </div>
-                    <!-- end row -->
+                      <div class="col-lg-12 mt-5">
+                          <nav aria-label="Page navigation example">
+                              <ul class="pagination job-pagination mb-0 justify-content-center">
+                                {% if not job_list.has_previous %}
+                                <li class="page-item ">
+                                  <a class="page-link disabled" href="">
+                                      <i class="mdi mdi-chevron-double-left fs-15"></i>
+                                  </a>
+                              </li>
+                              {% endif %}
+                                {% if job_list.has_previous %}
+                                <li class="page-item ">
+                                  <a class="page-link" href="?page={{ job_list.previous_page_number }}">
+                                      <i class="mdi mdi-chevron-double-left fs-15"></i>
+                                  </a>
+                              </li>
+                                {% endif %}
+      
+                                {% if job_list.has_previous %}
+                                      <li class="page-item "><a class="page-link" href="?page={{ job_list.previous_page_number }}">{{ job_list.previous_page_number }}</a></li>
+                                {% endif %}
+      
+                                <span class="current-page">
+                                  <li class="page-item active"><a class="page-link" href="#">{{ job_list.number }}</a></li>
+                                </span>
+                                 
+                                {% if job_list.has_next %}
+                                <li class="page-item"><a  class="page-link"  href="?page={{ job_list.next_page_number }}">{{ job_list.next_page_number }}</a></li>
+                               {% endif %}
+      
+                               {% if job_list.has_next %}
+                               <li class="page-item">
+                                <a class="page-link" href="?page={{ job_list.next_page_number }}">
+                                    <i class="mdi mdi-chevron-double-right fs-15"></i>
+                                </a>
+                                </li>
+                              {% endif %}
+      
+                              {% if  not job_list.has_next %}
+                              <li class="page-item">
+                               <a class="page-link disabled " href="">
+                                   <i class="mdi mdi-chevron-double-right fs-15"></i>
+                               </a>
+                               </li>
+                             {% endif %}
+                                      <!-- End blog pagination -->
+                                  
+                              </ul>
+                          </nav>
+                      </div><!--end col-->
+                  </div><!-- end row -->
+                    
                   </div>
                 </div>
                 <!--end col-->
@@ -666,81 +707,6 @@
           </section>
           <!-- END JOB-LIST -->
 
-          <!-- START APPLY MODAL -->
-          <div
-            class="modal fade"
-            id="applyNow"
-            tabindex="-1"
-            aria-labelledby="applyNow"
-            aria-hidden="true"
-          >
-            <div class="modal-dialog modal-dialog-centered">
-              <div class="modal-content">
-                <div class="modal-body p-5">
-                  <div class="text-center mb-4">
-                    <h5 class="modal-title" id="staticBackdropLabel">
-                      Apply For This Job
-                    </h5>
-                  </div>
-                  <div class="position-absolute end-0 top-0 p-3">
-                    <button
-                      type="button"
-                      class="btn-close"
-                      data-bs-dismiss="modal"
-                      aria-label="Close"
-                    ></button>
-                  </div>
-                  <div class="mb-3">
-                    <label for="nameControlInput" class="form-label"
-                      >Name</label
-                    >
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="nameControlInput"
-                      placeholder="Enter your name"
-                    />
-                  </div>
-                  <div class="mb-3">
-                    <label for="emailControlInput2" class="form-label"
-                      >Email Address</label
-                    >
-                    <input
-                      type="email"
-                      class="form-control"
-                      id="emailControlInput2"
-                      placeholder="Enter your email"
-                    />
-                  </div>
-                  <div class="mb-3">
-                    <label for="messageControlTextarea" class="form-label"
-                      >Message</label
-                    >
-                    <textarea
-                      class="form-control"
-                      id="messageControlTextarea"
-                      rows="4"
-                      placeholder="Enter your message"
-                    ></textarea>
-                  </div>
-                  <div class="mb-4">
-                    <label class="form-label" for="inputGroupFile01"
-                      >Resume Upload</label
-                    >
-                    <input
-                      type="file"
-                      class="form-control"
-                      id="inputGroupFile01"
-                    />
-                  </div>
-                  <button type="submit" class="btn btn-primary w-100">
-                    Send Application
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- END APPLY MODAL --> 
         </div>
         <!-- End Page-content -->
 
@@ -756,7 +722,10 @@
       <!-- end main content-->
     </div>
     <!-- END layout-wrapper -->
+
   {% include 'include/footerjs.html'%}
+
+
   </body>
 
   <!-- Mirrored from themesdesign.in/jobcy/layout/job-list.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 12 Jun 2023 16:55:14 GMT -->

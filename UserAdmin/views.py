@@ -88,7 +88,7 @@ def job_delete_view(request, pk):
         
     
     return redirect('job-detail-admin', pk)
-    
+    s
 
 @login_required
 def department(request):
@@ -137,7 +137,7 @@ def department_detail(request, pk):
 
 @login_required
 def department_delete(request, pk):
-    job = Department.objects.get(pk=pk)
+    job = Sector.objects.get(pk=pk)
 
     if job.delete():
         messages.success(request, 'Successfully Deleted')

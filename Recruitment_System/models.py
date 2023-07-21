@@ -80,12 +80,11 @@ class Skill(models.Model):
         return self.title
     
 class Bookmarks(models.Model):
-    candidate = models.ForeignKey(Candidate, on_delete=models.CASCADE)
-    jobs = models.ForeignKey('Job_Posting', on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    job = models.ForeignKey('Job_Posting', on_delete=models.CASCADE)
 
     def __str__(self) -> str:
-        return self.jobs
-
+        return self.job.title
 
 
 class Sector(models.Model):
@@ -97,12 +96,6 @@ class Sector(models.Model):
 
     def __str__(self) -> str:
         return self.name
-
-class Job_Type(models.Model):
-    type = models.CharField(max_length=20)  # Full Time, Part Time, Freelance
-
-    def __str__(self) -> str:
-        return self.type
 
 
 job_type = [
@@ -150,16 +143,13 @@ application_status = [
 ]
 
 class Application(models.Model):
-    candidate = models.ForeignKey(
-        Candidate, on_delete=models.SET_NULL, null=True)  # Related with Candidate
-    # Related with Job_Post
-    job = models.ForeignKey(Job_Posting, on_delete=models.SET_NULL, null=True)
-    date_applied = models.DateField(auto_now_add=True)
-    # Select Option from application_status
-    status = models.CharField(max_length=15, choices=application_status)
+    user = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True)  # Related with Candidate
+    job = models.ForeignKey(Job_Posting, on_delete=models.SET_NULL, null=True)  # Related with Job_Post
+    date_applied = models.DateField(auto_now_add=True) # Select Option from application_status
+    status = models.CharField(max_length=15, choices=application_status, default='new')
 
     def __str__(self) -> str:
-        return self.candidate+" "+self.job
+        return str(self.user.username)+" - "+str(self.job)
 
 interview_status = [
     ('scheduled', 'scheduled'),
