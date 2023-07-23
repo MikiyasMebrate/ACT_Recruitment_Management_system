@@ -1,15 +1,18 @@
 from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
 from Company.models import Social_Media, Contact
-from .forms import CandidateForm, EducationForm, ExperienceForm
-from .models import Skill, Candidate, Education, Experience, Job_Posting, Bookmarks, Application,Interviews
+from .forms import CandidateForm, EducationForm, ExperienceForm, InterviewerForm as InterviewFormInterview, ApplicationForm, InterviewerNoteForm
+from .models import Skill,Sector, Candidate, Education, Experience, Job_Posting, Bookmarks, Application,Interviews
 from django.contrib import messages
 import csv
 from django.shortcuts import render, redirect
 from django.contrib.auth import login,authenticate,logout
 from django.contrib.auth.decorators import login_required
-from Account.forms import CustomUserCreationForm, Login_Form
+from Account.forms import CustomUserCreationForm, Login_Form, InterviewerForm
 from django.core.paginator import Paginator
-# Create your views here.
+from django.db.models import Q
+import datetime
+from Account.decorators import interviewer_user_required
+
 
 
 def csv_file_reader():
@@ -29,9 +32,12 @@ def login_view(request):
             email = form.cleaned_data['email']
             password = form.cleaned_data['password']
             user = authenticate(request, email=email,password=password)
-        if user is not None and user.is_superuser:
+        if (user is not None and user.is_superuser) or (user is not None and user.is_admin):
             login(request, user)
             return redirect('admin-dashboard')
+        elif user is not None and user.is_interviewer:
+            login(request, user)
+            return redirect('interviewer-dashboard')
         elif user is not None and user.is_candidate:
             login(request, user)
             return redirect('index')
@@ -163,7 +169,6 @@ def user_resume(request):
         user_per_info = Candidate.objects.get(user = request.user)
     except: 
         user_per_info = None
-    print(user_per_info)
     form_personal_info = CandidateForm(request.POST or None, request.FILES or None, instance=user_per_info)
 
     if request.method == 'POST':
@@ -384,3 +389,206 @@ def user_delete_bookmark(request, slug):
 
 
 
+#Interviewer
+@login_required
+@interviewer_user_required
+def interviewer_dashboard(request):
+    total_application = Application.objects.all().count()
+    total_jobs = Job_Posting.objects.all().count()
+    total_interviews = Interviews.objects.filter(interviewer = request.user).count()
+    now = datetime.datetime.now()
+    date = now.strftime("%Y-%m-%d")
+    today_interviews = Interviews.objects.filter(~Q(application__status = 'canceled'), Q(status = 'scheduled') | Q(status = 'completed') , interviewer = request.user,date_schedule = date )
+    applicant_status = Interviews.objects.filter()[:6]
+    context = {
+        'total_application' : total_application,
+        'total_jobs' : total_jobs,
+        'total_interview' : total_interviews,
+        'today_interviews' : today_interviews,
+        'applicant_status' : applicant_status
+    }
+    return render(request, 'RMS/interviewer/dashboard.html', context)
+
+@login_required
+@interviewer_user_required
+def interviewer_job_list(request):
+    job_lists = Job_Posting.objects.filter(job_status = True)
+    context = {
+        'job_lists' : job_lists
+    }
+    return render(request, 'RMS/interviewer/job-list.html', context)
+
+@login_required
+@interviewer_user_required
+def interviewer_personal_info(request):
+    form = InterviewerForm(request.POST or None, request.FILES or None, instance = request.user)
+    
+    if request.method == 'POST':
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Your Information has been successfully updated')
+            return redirect(request.META.get('HTTP_REFERER'))
+    context = {
+        'form' : form
+    }
+    return render(request, 'RMS/interviewer/personal-info.html', context)
+
+@login_required
+@interviewer_user_required
+def interviewer_job_detail(request, slug):
+    job = Job_Posting.objects.get(slug=slug)
+
+    context = {
+        'job' : job,
+    }
+    return render(request, 'RMS/interviewer/job-detail.html', context)
+
+@login_required
+@interviewer_user_required
+def interviewer_interviews_lists(request):
+    interviews = Interviews.objects.filter(~Q(application__status = 'canceled'), status = 'pending', interviewer = request.user)
+    context = {
+        'interviews' : interviews,
+    }
+    return render(request, 'RMS/interviewer/interview.html', context)
+
+@login_required
+@interviewer_user_required
+def interview_detail(request, slug):
+    interview = Interviews.objects.get(slug = slug)
+    education = Education.objects.filter(candidate = interview.application.user)
+    experience = Experience.objects.filter(candidate = interview.application.user)
+    interview_form = InterviewFormInterview(request.POST or None, instance=interview)
+    job_status_form = ApplicationForm(request.POST or None, instance=interview.application)
+
+    if request.method == 'POST':
+        if interview_form.is_valid():
+            obj = interview_form.save(commit=False)
+            obj.status = 'scheduled'
+            obj.save()
+            messages.success(request, 'Successfully Scheduled. ')
+        
+        if job_status_form.is_valid():
+            obj1 = job_status_form.save(commit=False)
+            value = obj1.status
+            obj1.save()
+            messages.success(request, f'Successfully {value}')
+        
+        return redirect('interview-scheduled')
+
+
+    context = {
+        'interview' : interview,
+        'educations': education,
+        'experiences' : experience,
+        'interview_form' : interview_form,
+        'job_status_form' : job_status_form
+    }
+    return render(request, 'RMS/interviewer/interview-detail.html', context)
+
+@login_required
+@interviewer_user_required
+def interview_cancel(request, slug):
+    interview = Interviews.objects.get(slug = slug)
+    application = Application.objects.get(id = interview.application.id)
+
+    application.status = 'rejected'
+    interview.status = 'canceled'
+    
+    application.save()
+    interview.save()
+
+    messages.success(request, 'Successfully Cancelled')
+    return redirect('interviewer-interviews-list')
+
+@login_required
+@interviewer_user_required
+def interview_scheduled(request):
+    interviews = Interviews.objects.filter(~Q(application__status = 'canceled'), status = 'scheduled', interviewer = request.user)
+
+    context = {
+        'interviews' : interviews,
+    }
+
+    return render(request, 'RMS/interviewer/interview-scheduled.html', context)
+
+@login_required
+@interviewer_user_required
+def interview_today_interview_list(request):
+    now = datetime.datetime.now()
+    date = now.strftime("%Y-%m-%d")
+ 
+    interviews = Interviews.objects.filter(~Q(application__status = 'canceled'), Q(status = 'scheduled') | Q(status = 'completed') , interviewer = request.user,date_schedule = date )
+    context = {
+        'interviews' : interviews,
+    }
+
+    return render(request, 'RMS/interviewer/interview-scheduled.html', context)
+
+@login_required
+@interviewer_user_required
+def interview_individual_now(request, slug):
+    interview = Interviews.objects.get(slug = slug)
+    education = Education.objects.filter(candidate = interview.application.user)
+    experience = Experience.objects.filter(candidate = interview.application.user)
+    interview_form = InterviewerNoteForm(request.POST or None, instance=interview)
+    application_form = ApplicationForm()
+
+    if request.method == 'POST':
+        if interview_form.is_valid():
+            obj = interview_form.save(commit=False)
+            obj.status = 'completed'
+            obj.save()
+            messages.success(request, 'Successfully Completed. ')
+            return redirect('interview-scheduled')
+
+    context = {
+        'interview' : interview,
+        'educations': education,
+        'experiences' : experience,
+        'interview_form' : interview_form,
+    }
+    return render(request, 'RMS/interviewer/today-interview.html', context)
+
+@login_required
+@interviewer_user_required
+def interview_candidate_job_status(request):
+    interview = Interviews.objects.filter(status = 'completed', application__status= 'in_review')
+    job_post = Job_Posting.objects.filter(job_status =True)
+    sector = Sector.objects.filter()
+    applicants = Interviews.objects.filter(application__status = 'in_review', status = 'completed')
+
+
+    paginator = Paginator(interview,15)
+    page_number = request.GET.get('page')
+    page = paginator.get_page(page_number)
+
+    context = {
+        'sectors' : sector,
+        'job_list' : job_post,
+        'interview' : page,
+        'applicants' : applicants
+    }
+    return render(request, 'RMS/interviewer/job-candidate-status.html', context)
+
+@login_required
+@interviewer_user_required
+def interview_applicant_category(request, slug):
+    selected_job = Job_Posting.objects.get(slug = slug)
+    interview = Interviews.objects.filter(status = 'completed', application__status= 'in_review')
+    job_post = Job_Posting.objects.filter(job_status =True)
+    sector = Sector.objects.filter()
+    applicants = Interviews.objects.filter(application__job = selected_job,application__status = 'in_review', status = 'completed')
+
+
+    paginator = Paginator(interview,15)
+    page_number = request.GET.get('page')
+    page = paginator.get_page(page_number)
+
+    context = {
+        'sectors' : sector,
+        'job_list' : job_post,
+        'interview' : page,
+        'applicants' : applicants
+    }
+    return render(request, 'RMS/interviewer/job-candidate-status.html', context)

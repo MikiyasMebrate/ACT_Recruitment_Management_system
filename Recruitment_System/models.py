@@ -138,6 +138,10 @@ class Sector(models.Model):
     def count_job_post(self) :
         count = Job_Posting.objects.filter(sector_id = self.id).count()
         return count
+    
+    def count_interview_completed(self) -> int:
+        applicant = Interviews.objects.filter(status='completed', application__job__sector_id = self.id).count()
+        return applicant
 
 
     def __str__(self) -> str:
@@ -153,7 +157,6 @@ job_type = [
     ('contract', 'Contract'),
     ('remote', 'Remote'),
 ]
-
 
 
 class Job_Posting(models.Model):
@@ -184,6 +187,10 @@ class Job_Posting(models.Model):
     def count_applicant(self) -> int:
         applicant = Application.objects.filter(job__id = self.id).count()
         return applicant
+    
+    def count_interview_completed(self) -> int:
+        applicant = Interviews.objects.filter(status='completed', application__job__id = self.id).count()
+        return applicant
 
     def __str__(self) -> str:
         return self.title
@@ -205,11 +212,14 @@ class Application(models.Model):
     def save(self, *args, **kwargs):
         if not self.slug:
             now = datetime.datetime.now()
-            self.slug = slugify(unidecode(self.user.username)) + '-' + slugify(unidecode(self.job.title))
+            self.slug = slugify(unidecode(self.user.username)) + '-' + slugify(unidecode(self.job.title)) + '-' + now.strftime("%Y-%m-%d")
         super().save(*args, **kwargs)
 
     def __str__(self) -> str:
         return str(self.user.username)+" - "+str(self.job)
+    
+    class Meta:
+       ordering = ['-date_applied']
 
 interview_status = [
     ('pending', 'Pending'),
@@ -237,22 +247,21 @@ class Interviews(models.Model):
     time_schedule = models.TimeField(null=True, blank=True)
     status = models.CharField(max_length=15, choices=interview_status, default='pending', null=True, blank=True)
     type = models.CharField(max_length=15, choices=interview_type, null=True, blank=True)
+    note = FroalaField( null=True, blank=True)
     slug = models.SlugField(unique=True, null=True, blank=True, max_length=600)
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug = slugify(unidecode(self.application.user.username)) + '-' + slugify(unidecode(self.interviewer.username)) + '-' + slugify(unidecode(self.application.job.title))
+            now = datetime.datetime.now()
+            self.slug = slugify(unidecode(self.application.user.username)) + '-' + slugify(unidecode(self.interviewer.username)) + '-' + slugify(unidecode(self.application.job.title))+ '-' + now.strftime("%Y-%m-%d")
         super().save(*args, **kwargs)
     def __str__(self) -> str:
         return self.interviewer.username + '-'+self.application.user.username
+    
+    class Meta:
+       ordering = ['date_schedule']
 
 
-class Notes(models.Model):
-    user = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True)
-    candidate = models.ForeignKey(
-        Candidate, on_delete=models.SET_NULL, null=True)
-    content = models.TextField()  # HTML Editor
-    date_created = models.DateField(auto_now_add=True)
 
-    def __str__(self) -> str:
-        return self.candidate
+    
+

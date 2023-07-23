@@ -310,6 +310,30 @@ class InterviewForm(forms.ModelForm):
             'status' : forms.Select(attrs={
                 'class' : 'form-select'
             }),
+            'type' : forms.Select(attrs={
+                'class' : 'form-select'
+            }),
+         }
+
+class InterviewerForm(forms.ModelForm):
+    
+    class Meta:
+        model = Interviews
+        fields = ('date_schedule','time_schedule', 'status','type')
+
+        widgets = {
+            'date_schedule' : forms.DateInput(attrs={
+                'class' : 'form-control',
+                'type' : 'date',
+                'placeholder' : 'dd/mm/yy'
+            }),
+            'time_schedule' : forms.TimeInput(attrs={
+                'class' : 'form-control',
+                'type' : 'time'
+            }),
+            'status' : forms.Select(attrs={
+                'class' : 'form-select'
+            }),
             'job_status' : forms.Select(attrs={
                 'class' : 'form-select'
             }),
@@ -320,3 +344,13 @@ class InterviewForm(forms.ModelForm):
                 'class' : 'form-select'
             }),
          }
+
+
+class InterviewerNoteForm(forms.ModelForm):
+    class Meta:
+        model = Interviews
+        fields = ('note',)
+
+        widgets = {
+            'note' : FroalaEditor()
+        }

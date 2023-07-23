@@ -5,6 +5,7 @@ from django.contrib.auth.models import AbstractUser
 class CustomUser(AbstractUser):
     is_candidate = models.BooleanField(default=False)
     is_interviewer = models.BooleanField(default=False)
+    is_admin = models.BooleanField(default=False)
     email = models.EmailField(unique=True)
     photo = models.ImageField(upload_to='Admin/Photo', null=True, blank=True)
 

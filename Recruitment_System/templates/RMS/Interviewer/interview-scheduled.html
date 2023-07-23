@@ -5,43 +5,27 @@
     <meta charset="utf-8" />
     <meta name="author" content="Themezhub" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Bookmarks | ACT - American College Of Technology </title>
+    <title>JOB-Lists | ACT - American College Of Technology </title>
     <link href="{% static 'assets/css/styles.css' %}" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/jquery.dataTables.min.css" />
     {% include 'include/head.html' %}
+
   </head>
 
   <body>
-		<div class="mt-5">{% include 'include/navbar.html'%}</div>
     <div id="main-wrapper">
       <div class="dashboard-wrap bg-light">
 		 <!--Left Navbar-->
-		{% include 'RMS/user/include/user-dashboard.html'%}
+		{% include 'RMS/interviewer/include/navbar.html'%}
         <div class="dashboard-content">
           <div class="dashboard-tlbar d-block mb-5">
             <div class="row">
               <div class="colxl-12 col-lg-12 col-md-12">
-                <h1 class="ft-medium">Applied Jobs</h1>
+                <h1 class="ft-medium">JOB Lists</h1>
               </div>
             </div>
 
-                      <!--Messages-->
-          <div class="row d-flex  justify-content-center">
-            <div class="col-8">
-              
-               {% if messages %}
-               <ul class="messages">
-                   {% for message in messages %}
-                   <div class="alert {% if message.tags == 'success' %} alert-success {% else %} alert-danger {% endif %}  alert-dismissible">
-                     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                      {{message}}
-                   </div>
-                   {% endfor %}
-               </ul>
-               {% endif %}
-            </div>
-          </div>
-          <!--End Message-->
+            {% include 'RMS/messages.html'%}
           
           </div>
 
@@ -54,10 +38,11 @@
                     <table class="table">
                       <thead class="thead-dark">
                         <tr>
+                          <th scope="col">Full Name</th>
                           <th scope="col">Job Title</th>
-                          <th scope="col">Vacancies</th>
-                          <th scope="col">Close Date</th>
-                          <th scope="col">Status</th>
+                          <th scope="col">Applied Date</th>
+                          <th scope="col">Interviews Dste</th>
+                          <th scope="col">Job Status</th>
                           <th scope="col">Action</th>
                         </tr>
                       </thead>
@@ -65,16 +50,16 @@
                         <table id="example" class="display " style="width:100%">
                           <thead>
                               <tr>
+                                  <th>Full Name</th>
                                   <th>Job Title</th>
-                                  <th>Vacancies</th>
                                   <th>Applied Date</th>
-                                  <th>Application Status</th>
-                                  <th>Interview Status</th>
+                                  <th>Interviews Date</th>
+                                  <th>Job Status</th>
                                   <th>Action</th>
                               </tr>
                           </thead>
                           <tbody class="bg-white">
-                            {% for app in application %}
+                            {% for interview in interviews %}
                             <tr class="bg-white">
                               <td class="bg-white">
                                 <div class="cats-box rounded d-flex align-items-center">
@@ -83,44 +68,48 @@
                                   </div>
                                   <div class="cats-box-caption px-2">
                                     <h4 class="fs-md mb-0 ft-medium">
-                                      {{app.job.title}}
+                                      {{interview.application.user.candidate.first_name}} {{interview.application.user.candidate.last_name}}
                                     </h4>
                                     <div class="d-block mb-2 position-relative">
-                                      <span class="muted medium ms-2 theme-cl"><i class="lni lni-briefcase me-1"></i>{{app.job.get_type_display}}</span>
+                                      <span class="muted medium ms-2 theme-cl"><i class="lni lni-briefcase me-1"></i>{{job.job.get_type_display}}</span>
                                     </div>
                                   </div>
                                 </div>
                               </td>
                               <td>
-                                <span>{{ app.job.vacancies}}</span>
+                                <span>{{interview.application.job.title}}</span>
                               </td>
                               <td>
-                                <span>{{ app.date_applied }}</span>
+                                <span>{{ interview.application.date_applied | date }}</span>
                               </td>
-                              <td><span class="text-info">{{app.get_status_display}}</span></td>
-                              <td><span class="text-dark fw-bold">
-                                {% for interview in interviews %}
-                                    {% if app.id is interview.application.id %}
-                                           {% if interview.status %}
-                                               {{ interview.get_status_display}}
-                                           {% endif %}
-                                    {% endif %}
-                                {% endfor %}
-                              </span></td>
+                              <td>
+                                <span>{{ interview.date_schedule | date }} at {{ interview.time_schedule | time }} </span> 
+                              </td>
+                              <td>
+                                <span>{{ interview.application.get_status_display}}</span>
+                              </td>
                               <td>
                                 <div class="dash-action">
+                                  {% if request.path == '/interview-scheduled/' %}
                                   <a
-                                    href="{% url 'Job-detail' app.job.slug %}"
+                                    href=" {% url 'interview_detail' interview.slug %} "
                                     class="p-2 circle text-info bg-light-info d-inline-flex align-items-center justify-content-center me-1"
-                                    ><i class="lni lni-eye"></i
-                                  ></a>
-                                  <a href="{% url 'user-cancel-job' app.job.slug%}"
-                                    class="btn p-2 circle  btn-danger d-inline-flex align-items-center justify-content-center ms-1"
-                                    ><i class="lni lni-trash-can"></i
-                                  ></a>
+                                    ><i class="lni lni-eye"></i>
+                                  </a>
+                                  {% else %}
+                                  <a
+                                  href="{% url 'interviews-now' interview.slug %}"
+                                  class="btn {% if interview.status == 'completed'%} btn-success {% else %}btn-primary {% endif %} ">
+                                  {% if interview.status == 'completed'%}
+                                  Completed
+                                  {% else %}
+                                  Interview Now
+                                  {% endif %}
+                                  </a>
+                                  {% endif %}
+
                                 </div>
                               </td>
-                              
                             </tr>
                             {% endfor %}
                              
@@ -144,7 +133,6 @@
         ><i class="ti-arrow-up"></i
       ></a>
     </div>
-    {% include 'include/footer.html' %} 
     <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
     <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
     <script>

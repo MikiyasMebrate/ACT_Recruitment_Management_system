@@ -13,5 +13,6 @@ urlpatterns = [
     path('department-delete-admin/<slug:slug>', views.department_delete, name='delete-department-admin'),
     path('applicant/', views.applicant_all, name='applicant'),
     path('applicant/<slug:slug>/', views.applicant_category, name='applicant_category'),
-    path('applicant/<slug:slug>//<slug:slug2>/', views.applicant_detail, name='applicant_detail'),
+    path('applicant/<slug:slug>/<slug:slug2>/', views.applicant_detail, name='applicant_detail'),
+    path('admin-list/', views.admin_account_list, name='admin-account-list')
 ]

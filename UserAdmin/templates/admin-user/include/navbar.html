@@ -1,4 +1,5 @@
 {% load static %}
+<script src="https://kit.fontawesome.com/47080b3c1e.js" crossorigin="anonymous"></script>
 <div id="nav" class="nav-container d-flex">
     <div class="nav-content d-flex">
       <div class="logo position-relative">
@@ -298,15 +299,11 @@
             </a>
           </li>
           <li>
-            <a href="Shipping.html">
-              <i
-                data-acorn-icon="shipping"
-                class="icon"
-                data-acorn-size="18"
-              ></i>
-              <span class="label">Shipping</span>
+            <a href="{% url 'admin-account-list' %}" data-href="">
+              <i class="fa-solid fa-users"></i>
+                <span class="label">ACCOUNT</span>
             </a>
-          </li>
+        </li>
           <li>
             <a href="Discount.html">
               <i
@@ -337,3 +334,4 @@
     </div>
     <div class="nav-shadow"></div>
   </div>
+

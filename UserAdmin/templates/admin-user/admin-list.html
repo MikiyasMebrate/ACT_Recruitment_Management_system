@@ -1,0 +1,411 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" data-footer="true">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1" />
+    <title>ACT American College OF Technology | JOB List</title>
+    <meta name="description" content="Ecommerce Products List" />
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/habibmhamadi/multi-select-tag/dist/css/multi-select-tag.css" />
+    <script src="https://cdn.jsdelivr.net/gh/habibmhamadi/multi-select-tag/dist/js/multi-select-tag.js"></script>
+
+    {% include 'admin-user/include/head.html'%}
+    {{form.media}}
+</head>
+
+<body>
+
+        <!-- Modal -->
+        <div class="modal fade" id="addAccount" tabindex="-1" aria-labelledby="addAccountLabel" aria-hidden="true">
+            <form action="" method="post" enctype="multipart/form-data">{% csrf_token %}
+                <div class="modal-dialog  modal-lg modal-dialog-centered modal-dialog-scrollable">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="addAccountLabel">Add Admin</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col">
+                                    <div class="mb-5">
+                                        <h2 class="small-title">Admin Info</h2>
+                                        <div class="card">
+                                            <div class="card-body">
+
+                                                <div class="row">
+                                                    <div class="col-6 mb-3">
+                                                        <label class="form-label">First Name {% for err in form.first_name.errors%}
+                                                            <small class="text-danger">{{err}}</small> {% endfor %} </label>
+                                                        {{form.first_name}}
+                                                    </div>
+                                                    <div class="col-6 mb-3">
+                                                        <label class="form-label">First Name {% for err in form.last_name.errors%}
+                                                            <small class="text-danger">{{err}}</small> {% endfor %} </label>
+                                                        {{form.last_name}}
+                                                    </div>
+                                                </div>
+
+                                                
+                                                <div class="row">
+                                                    <div class="col-6 mb-3">
+                                                        <label class="form-label">Username {% for err in form.username.errors%}
+                                                            <small class="text-danger">{{err}}</small> {% endfor %} </label>
+                                                        {{form.username}}
+                                                    </div>
+                                                    <div class="col-6 mb-3">
+                                                        <label class="form-label">Email {% for err in form.email.errors%}
+                                                            <small class="text-danger">{{err}}</small> {% endfor %} </label>
+                                                        {{form.email}}
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-2 mb-3">
+                                                        <label class="form-label">Is Admin {% for err in form.is_admin.errors%}
+                                                            <small class="text-danger">{{err}}</small> {% endfor %} </label>
+                                                        <div class="div">
+                                                            {{form.is_admin}}
+                                                        </div>
+                                                    </div>
+                                                    {% if user.is_superuser%}
+                                                    <div class="col-2 mb-3">
+                                                        <label class="form-label">Is Superuser {% for err in form.is_superuser.errors%}
+                                                            <small class="text-danger">{{err}}</small> {% endfor %} </label>
+                                                        <div class="div">
+                                                            {{form.is_superuser}}
+                                                        </div>
+                                                    </div>
+                                                    {% endif %}
+                                                    <div class="col-2 mb-3">
+                                                        <label class="form-label">Is Interviewer {% for err in form.is_interviewer.errors%}
+                                                            <small class="text-danger">{{err}}</small> {% endfor %} </label>
+                                                        <div class="div">
+                                                            {{form.is_interviewer}}
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-6 mb-3">
+                                                    <label class="form-label">Photo {% for err in form.photo.errors%}
+                                                        <small class="text-danger">{{err}}</small> {% endfor %} </label>
+                                                    {{form.photo}}
+                                                </div>
+
+
+                                                <div class="mb-3">
+                                                    <label class="form-label">Password {% for err in form.password1.errors%}
+                                                        <small class="text-danger">{{err}}</small> {% endfor %} </label>
+                                                    {{form.password1}}
+                                                </div>
+
+                                                <div class="mb-3">
+                                                    <label class="form-label">Confirm Password {% for err in form.password2.errors%}
+                                                        <small class="text-danger">{{err}}</small> {% endfor %} </label>
+                                                    {{form.password2}}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-muted" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Create Account</button>
+                        </div>
+                    </div>
+            </form>
+        </div>
+
+    </div>
+    {% include 'admin-user/include/navbar.html'%}
+    <main>
+        <div class="container">
+            <div class="page-title-container">
+                <div class="row g-0">
+
+                    {% include 'admin-user/include/messages.html'%}
+
+                    <div class="col-auto mb-3 mb-md-0 me-auto">
+                        <div class="w-auto sw-md-30">
+                            <a href="{% url 'admin-dashboard'%}" class="muted-link pb-1 d-inline-block breadcrumb-back">
+                                <i data-acorn-icon="chevron-left" data-acorn-size="13"></i>
+                                <span class="text-small align-middle">Home</span>
+                            </a>
+                            <h1 class="mb-0 pb-0 display-4" id="title">Admin List</h1>
+                        </div>
+                    </div>
+                    <div class="w-100 d-md-none"></div>
+
+                    <div
+                        class="col-12 col-sm-6 col-md-auto d-flex align-items-end justify-content-end mb-2 mb-sm-0 order-sm-3">
+                        <button type="button"
+                            class="btn btn-outline-primary btn-icon btn-icon-start ms-0 ms-sm-1 w-100 w-md-auto"
+                            data-bs-toggle="modal" data-bs-target="#addAccount">
+                            <i data-acorn-icon="plus"></i>
+                            <span>
+                                Add Account
+                            </span>
+                        </button>
+                        <div class="dropdown d-inline-block d-lg-none">
+                            <button type="button" class="btn btn-outline-primary btn-icon btn-icon-only ms-1"
+                                data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-haspopup="true"
+                                aria-expanded="false">
+                                <i data-acorn-icon="sort"></i>
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-end custom-sort">
+                                <a class="dropdown-item sort" data-sort="name" href="#">Title</a>
+                                <a class="dropdown-item sort" data-sort="email" href="#">Experience</a>
+                                <a class="dropdown-item sort" data-sort="phone" href="#">Price</a>
+                                <a class="dropdown-item sort" data-sort="group" href="#">Status</a>
+                            </div>
+                        </div>
+                        <div class="btn-group ms-1 check-all-container-checkbox-click">
+                            <div class="btn btn-outline-primary btn-custom-control p-0 ps-3 pe-2"
+                                data-target="#checkboxTable">
+                                <span class="form-check float-end">
+                                    <input type="checkbox" class="form-check-input" id="checkAll" />
+                                </span>
+                            </div>
+                            <button type="button" class="btn btn-outline-primary dropdown-toggle dropdown-toggle-split"
+                                data-bs-offset="0,3" data-bs-toggle="dropdown" aria-haspopup="true"
+                                aria-expanded="false"></button>
+                            <div class="dropdown-menu dropdown-menu-end">
+                                <button class="dropdown-item" id="deleteChecked" type="button">
+                                    Delete
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                 
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-sm-12 col-md-5 col-lg-3 col-xxl-2 mb-1">
+                    <div
+                        class="d-inline-block float-md-start me-1 mb-1 search-input-container w-100 shadow bg-foreground">
+                        <input class="form-control" placeholder="Search" />
+                        <span class="search-magnifier-icon">
+                            <i data-acorn-icon="search"></i>
+                        </span>
+                        <span class="search-delete-icon d-none">
+                            <i data-acorn-icon="close"></i>
+                        </span>
+                    </div>
+                </div>
+                <div class="col-sm-12 col-md-7 col-lg-9 col-xxl-10 text-end mb-1">
+                    <div class="d-inline-block">
+                        <button class="btn btn-icon btn-icon-only btn-foreground-alternate shadow"
+                            data-bs-toggle="tooltip" data-bs-placement="top" data-bs-delay="0" title="Print"
+                            type="button">
+                            <i data-acorn-icon="print"></i>
+                        </button>
+                        <div class="d-inline-block">
+                            <button class="btn p-0" data-bs-toggle="dropdown" type="button" data-bs-offset="0,3">
+                                <span class="btn btn-icon btn-icon-only btn-foreground-alternate shadow dropdown"
+                                    data-bs-delay="0" data-bs-placement="top" data-bs-toggle="tooltip" title="Export">
+                                    <i data-acorn-icon="download"></i>
+                                </span>
+                            </button>
+                            <div class="dropdown-menu shadow dropdown-menu-end">
+                                <button class="dropdown-item export-copy" type="button">
+                                    Copy
+                                </button>
+                                <button class="dropdown-item export-excel" type="button">
+                                    Excel
+                                </button>
+                                <button class="dropdown-item export-cvs" type="button">
+                                    Cvs
+                                </button>
+                            </div>
+                        </div>
+                        <div class="dropdown-as-select d-inline-block" data-childselector="span">
+                            <button class="btn p-0 shadow" type="button" data-bs-toggle="dropdown" aria-haspopup="true"
+                                aria-expanded="false" data-bs-offset="0,3">
+                                <span class="btn btn-foreground-alternate dropdown-toggle" data-bs-toggle="tooltip"
+                                    data-bs-placement="top" data-bs-delay="0" title="Item Count">
+                                    10 Items
+                                </span>
+                            </button>
+                            <div class="dropdown-menu shadow dropdown-menu-end">
+                                <a class="dropdown-item" href="#">5 Items</a>
+                                <a class="dropdown-item active" href="#">10 Items</a>
+                                <a class="dropdown-item" href="#">20 Items</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="row">
+                <div class="col-12 mb-5">
+                    <div class="card mb-2 bg-transparent no-shadow d-none d-lg-block">
+                        <div class="row g-0 sh-3">
+                            <div class="col">
+                                <div class="card-body pt-0 pb-0 h-100">
+                                    <div class="row g-0 h-100 align-content-center">
+                                        <div class="col-lg-2 d-flex align-items-center text-muted text-small">
+                                            Full Name
+                                        </div>
+                                        <div class="col-lg-3 d-flex align-items-center text-muted text-small">
+                                            Email
+                                        </div>
+                                        <div class="col-lg-2 d-flex align-items-center text-muted text-small">
+                                            Username
+                                        </div>
+                                        <div class="col-lg-2 d-flex align-items-center text-muted text-small">
+                                            Account Type
+                                        </div>
+                                        <div class="col-lg-2 d-flex align-items-center text-muted text-small">
+                                            STATUS
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="checkboxTable">
+                        
+                        {% if accounts %}
+                        {% for account in accounts%}
+                        <div class="card mb-2">
+
+                            <div class="card-body pt-0 pb-0 sh-30 sh-lg-8">
+                                <div class="row g-0 h-100 align-content-center">
+                                    <div class="col-6 col-lg-2 d-flex flex-column justify-content-center mb-2 mb-lg-0 order-3 order-lg-2">
+                                        <div class="text-muted text-small d-lg-none">Full Name</div>
+                                        <div class="text-alternate"><a href="">{{account.first_name|capfirst}} {{account.last_name|capfirst}}</a></div>
+                                    </div>
+                                    <div
+                                        class="col-6 col-lg-3 d-flex flex-column justify-content-center mb-2 mb-lg-0 order-5 order-lg-3">
+                                        <div class="text-muted text-small d-lg-none">
+                                            Email
+                                        </div>
+                                        <div class="text-alternate">{{account.email}}</div>
+                                    </div>
+                                    <div
+                                        class="col-6 col-lg-2 d-flex flex-column justify-content-center mb-2 mb-lg-0 order-4 order-lg-4">
+                                        <div class="text-muted text-small d-lg-none">Username</div>
+                                        <div class="text-alternate">
+                                            <span>
+                                                {{account.username}}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div
+                                        class="col-6 col-lg-2 d-flex flex-column justify-content-center mb-2 mb-lg-0 order-5 order-lg-4">
+                                        <div class="text-muted text-small d-lg-none">
+                                            Account Type
+                                        </div>
+                                        <div class="text-alternate">
+                                            {% if account.is_superuser%} Superuser
+                                            {% elif account.is_interviewer %} Interviewer
+                                            {% else %} admin
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div
+                                        class="col-12 col-lg-1 d-flex flex-column justify-content-center mb-2 mb-lg-0 order-last order-lg-5">
+                                        <div class="text-muted text-small d-lg-none mb-1">
+                                            Status
+                                        </div>
+                                        <div class="text-alternate">
+                                            <span>
+                                                {% if account.is_active %}
+                                                <span  class="text-primary">Active</span>
+                                                {% else %}
+                                                <span  class="text-danger">Deactive</span>
+                                                {% endif %}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div
+                                        class="col-1 col-lg-1 d-flex flex-column justify-content-center align-items-lg-end mb-2 mb-lg-0 order-2 text-end order-lg-last">
+                                        <label class="form-check float-end mt-1">
+                                            <input type="checkbox" class="form-check-input" />
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                        {% endif %}
+
+                    </div>
+                </div>
+            </div>
+
+            <!--pagination-->
+            <div class="d-flex justify-content-center">
+                <nav>
+                    <ul class="pagination">
+                        {% if not job_list.has_previous %}
+                        <li class="page-item disabled">
+                            <a class="page-link shadow" href="#" tabindex="-1" aria-disabled="true">
+                                <i data-acorn-icon="chevron-left"></i>
+                            </a>
+                        </li>
+                        {% endif %}
+
+
+                        {% if job_list.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link shadow" href="?page={{ job_list.previous_page_number }}">
+                                <i data-acorn-icon="chevron-left"></i>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link shadow" href="?page={{ job_list.previous_page_number }}">{{
+                                job_list.previous_page_number }}</a>
+                        </li>
+                        {% endif %}
+
+                        <li class="page-item active">
+                            <a class="page-link shadow" href="#">{{job_list.number}}</a>
+                        </li>
+
+                        {% if job_list.has_next %}
+                        <li class="page-item">
+                            <a class="page-link shadow" href="?page={{ job_list.next_page_number }}">{{
+                                job_list.next_page_number }}</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ job_list.next_page_number }}">
+                                <i data-acorn-icon="chevron-right"></i>
+                            </a>
+                        </li>
+                        {% endif %}
+
+                        {% if not job_list.has_next%}
+
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
+                                <i data-acorn-icon="chevron-right"></i>
+                            </a>
+                        </li>
+                        {% endif %}
+
+                    </ul>
+                </nav>
+            </div>
+
+
+            <script>
+                new MultiSelectTag("id_skills", {
+                    rounded: true, // default true
+                    shadow: true, // default false
+                    placeholder: "Search", // default Search...
+                    onChange: function (values) {
+                        console.log(values);
+                    },
+                });
+            </script>
+            {% include 'admin-user/include/footer-js.html' %}
+</body>
+
+</html>
