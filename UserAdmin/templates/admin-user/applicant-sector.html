@@ -51,7 +51,7 @@
                         {% for job in job_list%}
                         {% if job.sector.id is sector.id %}
                         <div><a href="{% url 'applicant_category' job.slug %}">{{job.title}}
-                            ({{job.count_applicant}})</a></div>
+                            ({{job.count_interview_pending}})</a></div>
                         {% endif %}
                         {% endfor %}
 

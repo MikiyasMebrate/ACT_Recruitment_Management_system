@@ -119,7 +119,8 @@ class Bookmarks(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug = slugify(unidecode(self.user.username))
+            now = datetime.datetime.now()
+            self.slug = slugify(unidecode(self.user.username)) + "-" + slugify(unidecode(self.job.title))+ '-' + now.strftime("%Y-%m-%d")
         super().save(*args, **kwargs)
 
     def __str__(self) -> str:
@@ -135,7 +136,7 @@ class Sector(models.Model):
             self.slug = slugify(unidecode(self.name))
         super().save(*args, **kwargs)
 
-    def count_job_post(self) :
+    def count_job_post(self) -> int:
         count = Job_Posting.objects.filter(sector_id = self.id).count()
         return count
     
@@ -186,6 +187,10 @@ class Job_Posting(models.Model):
 
     def count_applicant(self) -> int:
         applicant = Application.objects.filter(job__id = self.id).count()
+        return applicant
+    
+    def count_interview_pending(self) -> int:
+        applicant = Application.objects.filter(status='pending', job__id = self.id).count()
         return applicant
     
     def count_interview_completed(self) -> int:

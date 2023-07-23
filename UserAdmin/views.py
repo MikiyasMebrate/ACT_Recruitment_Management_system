@@ -8,11 +8,46 @@ from Account.models import CustomUser
 from Account.forms import CustomUserCreationForm
 from Account.decorators import admin_user_required
 from django.db.models import Q
+from django.contrib.sessions.models import Session
+from django.utils import timezone
+from Company.models import Comment
+
 # Create your views here.
 @login_required
 @admin_user_required
 def admin_index(request):
-    return render(request, 'admin-user/Dashboard.html')
+    count_user = CustomUser.objects.count()
+    total_jobs = Job_Posting.objects.count()
+    sector = Sector.objects.count()
+    now = timezone.now()
+    live_sessions = Session.objects.filter(expire_date__gte=now).count()
+    hired = Interviews.objects.filter(application__status = 'hired').count()
+    total_comment = Comment.objects.count 
+    recent_jobs = Job_Posting.objects.all()[:10]
+    sectors = Sector.objects.all()
+
+    sector_data = []
+    for i in sectors:
+        graph = {
+            i.name : i.count_job_post()
+        }
+        sector_data.append(graph)
+    
+    sector_data_list = [[k.lower().replace(' ', '-'), v] for d in sector_data for k, v in d.items()]
+
+                     
+
+    context = {
+        'count_user' : count_user,
+        'live_sessions' : live_sessions,
+        'total_jobs' : total_jobs,
+        'sector' : sector,
+        'hired' : hired,
+        'comment' : total_comment,
+        'recent_jobs' : recent_jobs,
+        'sector_data' : sector_data_list
+    }
+    return render(request, 'admin-user/Dashboard.html', context)
 
 
 #Candidate
@@ -194,7 +229,8 @@ def applicant_category(request, slug):
     job_post = Job_Posting.objects.filter(job_status =True)
     selected_job = Job_Posting.objects.get(slug = slug)
     sector = Sector.objects.filter()
-    applicants = Application.objects.filter(job__job_status =True, job = selected_job)
+    applicants = Application.objects.filter(job__job_status =True, status = 'pending',job = selected_job)
+
 
     paginator = Paginator(applicants,15)
     page_number = request.GET.get('page')
@@ -217,11 +253,19 @@ def applicant_detail(request, slug, slug2):
     
     try : interview = Interviews.objects.get(application = application_applicant)
     except: interview = None
+
     form = ApplicationForm(request.POST or None, instance=application_applicant)
     interview_form = InterviewForm(request.POST or None)
 
 
     if request.method == 'POST':
+        if form.is_valid() and interview_form.is_valid():
+            obj = form.save(commit=False)
+            obj.status = 'in_review'
+            obj.save()
+            messages.success(request, f'Successfully Changed .')
+            return redirect(request.META.get('HTTP_REFERER'))
+        
         if form.is_valid():
             if form.save():
                 messages.success(request, f'Successfully Changed .')

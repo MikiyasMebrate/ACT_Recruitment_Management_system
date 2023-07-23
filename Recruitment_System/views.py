@@ -12,6 +12,7 @@ from django.core.paginator import Paginator
 from django.db.models import Q
 import datetime
 from Account.decorators import interviewer_user_required
+from django.core.mail import send_mail, EmailMultiAlternatives
 
 
 
@@ -71,7 +72,6 @@ def registration_view(request):
 
 #Lists
 def index(request):
-
     context = {
         'social_medias' : social_medias,
     }
@@ -466,12 +466,93 @@ def interview_detail(request, slug):
             obj = interview_form.save(commit=False)
             obj.status = 'scheduled'
             obj.save()
+            time = str(interview.time_schedule.strftime('%I:%M %p'))
+            
+            content = f'''
+             <p>  Hi {interview.application.user.first_name} {interview.application.user.last_name} </p>
+
+             <p> Your interview is scheduled for {interview.date_schedule} at {time} in the position of {interview.application.job.title} and will take place at our office located at {interview.application.job.location}. 
+               Please plan to arrive a few minutes early to allow time for check-in.</p>
+
+             <p> During the interview, you'll have the opportunity to meet with our team and learn more about the position and our company culture. We're excited to get to know you better
+               and learn about your experience and qualifications.</p>
+
+            <p> Best regards,</p>
+            <p> {interview.interviewer.first_name} {interview.interviewer.last_name},</p>
+            <p> ACT American College Of Technology HR </p> '''
+
+            def send_email_interview_schedule():
+                subject = 'Interview Schedule'
+                from_email = 'mikiyasmebrate2656@gmail.com'
+                to_email = interview.application.user.candidate.email
+                text_content = '<!DOCTYPE html>'
+                html_content = content
+                msg = EmailMultiAlternatives(subject, text_content, from_email, [to_email])
+                msg.attach_alternative(html_content, "text/html")
+                msg.send()
+
+            send_email_interview_schedule()
             messages.success(request, 'Successfully Scheduled. ')
         
         if job_status_form.is_valid():
             obj1 = job_status_form.save(commit=False)
             value = obj1.status
             obj1.save()
+            if value == 'hired':
+                content = f'''
+                        <p> Hi {interview.application.user.first_name} {interview.application.user.last_name}, </p>
+                          
+                        <p> I'm thrilled to inform you that you've been selected for the {interview.application.job.title} role at ACT American College of Technology! 
+                            On behalf of the entire team, I want to congratulate you and welcome you to our organization.</p>
+                          
+                        <p> We were impressed by your skills, experience, and enthusiasm for the role. We believe that you'll be a valuable addition to our team and contribute
+                            greatly to our mission.</p>
+                          
+                        <p>In the coming days, you'll receive an email from our HR department with details about your start date, onboarding process, and other important information.
+                           If you have any questions in the meantime, please don't hesitate to reach out to me directly.</p>
+                          
+                        <p> Once again, congratulations on your new role, and we look forward to having you on board! </p>
+                          
+                         <p> Best regards,</p>
+                          
+                        <p> {interview.interviewer.first_name} {interview.interviewer.last_name},</p>
+                        <p> ACT American College Of Technology HR </p>
+                          
+                     '''
+            elif value == 'rejected':
+                content = f'''
+                        <p>Dear {interview.application.user.first_name} {interview.application.user.last_name}, </p>
+
+                        <p>Thanks you for taking the time to meet with our team for the role of {interview.application.job.title}.
+                        It was a pleasure to learn about your skill and accomplishments.</p>
+
+                        <p>We received a large number of job applications and after carefully reviewing all of them. we unfortunately 
+                        have to inform you that we will be selecting another candidate at this time.</P>
+
+                        <p>We want to note that competition for jobs is strong and that we often have to make difficult choices between 
+                        many high-caliber candidates. Now that we've had chance to know more about your skills, we will be keeping
+                        your resume on file for future openings. </p>
+
+                        <p>We wish you every personal and professional success in your endeavors. Please fell free to reach out
+                        to us if you have any questions. </p> 
+
+                        <p> Best regards,</p>
+                          
+                        <p> {interview.interviewer.first_name} {interview.interviewer.last_name},</p>
+                        <p> ACT American College Of Technology HR </p>
+                        '''
+
+            def send_email_interview_schedule():
+                subject = 'Interview Schedule'
+                from_email = 'mikiyasmebrate2656@gmail.com'
+                to_email = interview.application.user.candidate.email
+                text_content = '<!DOCTYPE html>'
+                html_content = content
+                msg = EmailMultiAlternatives(subject, text_content, from_email, [to_email])
+                msg.attach_alternative(html_content, "text/html")
+                msg.send()
+
+            send_email_interview_schedule()
             messages.success(request, f'Successfully {value}')
         
         return redirect('interview-scheduled')
@@ -497,7 +578,41 @@ def interview_cancel(request, slug):
     
     application.save()
     interview.save()
+    content = f'''
+              <p>Dear {interview.application.user.first_name} {interview.application.user.last_name}, </p>
 
+              <p>Thanks you for taking the time to meet with our team for the role of {interview.application.job.title}.
+              It was a pleasure to learn about your skill and accomplishments.</p>
+
+              <p>We received a large number of job applications and after carefully reviewing all of them. we unfortunately 
+              have to inform you that we will be selecting another candidate at this time.</P>
+
+              <p>We want to note that competition for jobs is strong and that we often have to make difficult choices between 
+              many high-caliber candidates. Now that we've had chance to know more about your skills, we will be keeping
+              your resume on file for future openings. </p>
+
+              <p>We wish you every personal and professional success in your endeavors. Please fell free to reach out
+              to us if you have any questions. </p>
+
+              <p> Best regards,</p>
+                          
+             <p> {interview.interviewer.first_name} {interview.interviewer.last_name},</p>
+            <p> ACT American College Of Technology HR </p>
+ 
+'''
+
+    def send_email_interview_schedule():
+        subject = 'Interview Feedback'
+        from_email = 'mikiyasmebrate2656@gmail.com'
+        to_email = interview.application.user.candidate.email
+        text_content = '<!DOCTYPE html>'
+        html_content = content
+        msg = EmailMultiAlternatives(subject, text_content, from_email, [to_email])
+        msg.attach_alternative(html_content, "text/html")
+        msg.send()
+
+    send_email_interview_schedule()
+            
     messages.success(request, 'Successfully Cancelled')
     return redirect('interviewer-interviews-list')
 
