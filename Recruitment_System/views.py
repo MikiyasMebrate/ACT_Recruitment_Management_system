@@ -13,8 +13,28 @@ from django.db.models import Q
 import datetime
 from Account.decorators import interviewer_user_required
 from django.core.mail import send_mail, EmailMultiAlternatives
+import os
+import telebot
+import requests
+from bs4 import BeautifulSoup
 
 
+def scrap_skill():
+    url = 'https://www.freelancer.com/job/'
+    
+    response = requests.get(url)
+    content = response.content
+    soup = BeautifulSoup(content, 'html.parser')
+    
+    skill = soup.find_all('a', {'class': 'PageJob-category-link PageJob-category-link--contest'})#.attrs.get('title')
+    skill2 = soup.find_all('a', {'class' : 'PageJob-category-link'})
+    for i in skill:
+        k = i.attrs.get('title')
+        skill_list = skill_list.replace('Contests', "")
+        obj = Skill()
+        obj.title = skill_list
+        try: obj.save()
+        except: pass
 
 def csv_file_reader():
     with open('skill_data.csv', 'r') as csv_file:
