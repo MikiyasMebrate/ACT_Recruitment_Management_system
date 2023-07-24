@@ -128,8 +128,14 @@ def job_list(request):
     except: application = None
     try: count_skill = candidate.skill.all()
     except: count_skill = 0
-    print(count_skill)
+
+    sector_new = []
     sector = Sector.objects.all()
+    for i in sector:
+        if i.count_job_post() > 0:
+            sector_new.append(i)
+
+
     sector_popular = Sector.objects.all()[0:5]
     job = Job_Posting.objects.filter(job_status = True)
     paginator = Paginator(job,5)
@@ -142,7 +148,7 @@ def job_list(request):
         'bookmark' : bookmark,
         'candidate' : candidate,
         'application' : application,
-        'sector' : sector,
+        'sector' : sector_new,
         'sector_popular' : sector_popular
     }
     return render(request, 'RMS/job-list.html', context)
@@ -575,7 +581,8 @@ def interview_detail(request, slug):
                 html_content = content
                 msg = EmailMultiAlternatives(subject, text_content, from_email, [to_email])
                 msg.attach_alternative(html_content, "text/html")
-                msg.send()
+                if msg.send():
+                    messages.success(request, 'Successfully email sent.')
 
             send_email_interview_schedule()
             messages.success(request, 'Successfully Scheduled. ')
@@ -636,7 +643,9 @@ def interview_detail(request, slug):
                 html_content = content
                 msg = EmailMultiAlternatives(subject, text_content, from_email, [to_email])
                 msg.attach_alternative(html_content, "text/html")
-                msg.send()
+                if msg.send():
+                    messages.success(request, 'Successfully email sent.')
+
 
             send_email_interview_schedule()
             messages.success(request, f'Successfully {value}')
@@ -695,7 +704,8 @@ def interview_cancel(request, slug):
         html_content = content
         msg = EmailMultiAlternatives(subject, text_content, from_email, [to_email])
         msg.attach_alternative(html_content, "text/html")
-        msg.send()
+        if msg.send():
+            messages.success(request, 'Email Successfully sent.')
 
     send_email_interview_schedule()
             

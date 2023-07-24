@@ -354,6 +354,11 @@ def applicant_detail(request, slug, slug2):
             obj = form.save(commit=False)
             obj.status = 'in_review'
             obj.save()
+
+            obj_interview = interview_form.save(commit=False)
+            obj_interview.application = application_applicant
+            obj_interview.save()
+
             messages.success(request, f'Successfully Changed .')
             return redirect(request.META.get('HTTP_REFERER'))
         
