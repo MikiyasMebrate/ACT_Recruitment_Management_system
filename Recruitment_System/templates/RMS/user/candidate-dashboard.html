@@ -35,37 +35,23 @@
 
           <div class="dashboard-widg-bar d-block">
             <div class="row">
-              <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6">
+              <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6">
                 <div class="dash-widgets py-5 px-4 bg-info rounded">
-                  <h2 class="ft-medium mb-1 fs-xl text-light">46</h2>
+                  <h2 class="ft-medium mb-1 fs-xl text-light">{{count_application}}</h2>
                   <p class="p-0 m-0 text-light fs-md">Applied Jobs</p>
                   <i class="lni lni-empty-file"></i>
                 </div>
               </div>
-              <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6">
+              <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6">
                 <div class="dash-widgets py-5 px-4 bg-dark rounded">
-                  <h2 class="ft-medium mb-1 fs-xl text-light">87</h2>
-                  <p class="p-0 m-0 text-light fs-md">Notifications</p>
+                  <h2 class="ft-medium mb-1 fs-xl text-light">{{count_bookmark}}</h2>
+                  <p class="p-0 m-0 text-light fs-md">Bookmark</p>
                   <i class="lni lni-users"></i>
-                </div>
-              </div>
-              <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6">
-                <div class="dash-widgets py-5 px-4 bg-warning rounded">
-                  <h2 class="ft-medium mb-1 fs-xl text-light">312</h2>
-                  <p class="p-0 m-0 text-light fs-md">Alert Jobs</p>
-                  <i class="lni lni-bar-chart"></i>
-                </div>
-              </div>
-              <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6">
-                <div class="dash-widgets py-5 px-4 bg-purple rounded">
-                  <h2 class="ft-medium mb-1 fs-xl text-light">32</h2>
-                  <p class="p-0 m-0 text-light fs-md">Bookmark jobs</p>
-                  <i class="lni lni-heart"></i>
                 </div>
               </div>
             </div>
 
-            <div class="row">
+            {% comment %} <div class="row">
               <div class="col-lg-6 col-md-12">
                 <div class="dashboard-gravity-list with-icons">
                   <h4 class="mb-0 ft-medium">Recent Activities</h4>
@@ -299,7 +285,7 @@
                   </ul>
                 </div>
               </div>
-            </div>
+            </div> {% endcomment %}
           </div>
         </div>
       </div>

@@ -72,20 +72,17 @@ def registration_view(request):
 
 #Lists
 def index(request):
-    context = {
-        'social_medias' : social_medias,
-    }
-    return render(request, 'RMS/index.html', context)
-
-def job_list(request):
     try: bookmark = Bookmarks.objects.filter(user=request.user).values_list('job__id', flat=True)
     except: bookmark = None
     try: candidate = Candidate.objects.get(user = request.user)
     except: candidate = None
     try: application = Application.objects.filter(user=request.user).values_list('job__id', flat=True)
     except: application = None
-
-
+    try: count_skill = candidate.skill.all()
+    except: count_skill = 0
+    print(count_skill)
+    sector = Sector.objects.all()
+    sector_popular = Sector.objects.all()[0:5]
     job = Job_Posting.objects.filter(job_status = True)
     paginator = Paginator(job,5)
     page_number = request.GET.get('page')
@@ -96,9 +93,72 @@ def job_list(request):
         'job_list' : page,
         'bookmark' : bookmark,
         'candidate' : candidate,
-        'application' : application
+        'application' : application,
+        'sector' : sector,
+        'sector_popular' : sector_popular
+    }
+    return render(request, 'RMS/index.html', context)
+
+def job_list(request):
+    try: bookmark = Bookmarks.objects.filter(user=request.user).values_list('job__id', flat=True)
+    except: bookmark = None
+    try: candidate = Candidate.objects.get(user = request.user)
+    except: candidate = None
+    try: application = Application.objects.filter(user=request.user).values_list('job__id', flat=True)
+    except: application = None
+    try: count_skill = candidate.skill.all()
+    except: count_skill = 0
+    print(count_skill)
+    sector = Sector.objects.all()
+    sector_popular = Sector.objects.all()[0:5]
+    job = Job_Posting.objects.filter(job_status = True)
+    paginator = Paginator(job,5)
+    page_number = request.GET.get('page')
+    page = paginator.get_page(page_number)
+
+    context = {
+        'social_medias' : social_medias,
+        'job_list' : page,
+        'bookmark' : bookmark,
+        'candidate' : candidate,
+        'application' : application,
+        'sector' : sector,
+        'sector_popular' : sector_popular
     }
     return render(request, 'RMS/job-list.html', context)
+
+
+def job_sector_categories(request, slug):
+    try: bookmark = Bookmarks.objects.filter(user=request.user).values_list('job__id', flat=True)
+    except: bookmark = None
+    try: candidate = Candidate.objects.get(user = request.user)
+    except: candidate = None
+    try: application = Application.objects.filter(user=request.user).values_list('job__id', flat=True)
+    except: application = None
+
+
+    
+ 
+    sector_popular = Sector.objects.all()[0:5]
+    sector1 = Sector.objects.get(slug = slug)
+    sector = Sector.objects.all()
+    job = Job_Posting.objects.filter(job_status = True, sector = sector1)
+
+    paginator = Paginator(job,5)
+    page_number = request.GET.get('page')
+    page = paginator.get_page(page_number)
+
+    context = {
+        'social_medias' : social_medias,
+        'job_list' : page,
+        'bookmark' : bookmark,
+        'candidate' : candidate,
+        'application' : application,
+        'sector' : sector,
+        'sector_popular' : sector_popular
+    }
+    return render(request, 'RMS/job-list.html', context)
+
 
 def job_detail(request, slug):
     job = Job_Posting.objects.get(slug=slug)
@@ -137,7 +197,13 @@ def user_change_password(request):
 #User Dashboard
 @login_required
 def user_dashboard(request):
-    return render(request, 'RMS/user/candidate-dashboard.html')
+    application = Application.objects.filter(user = request.user).count()
+    bookmark  = Bookmarks.objects.filter(user = request.user).count()
+    context = {
+        'count_application' : application,
+        'count_bookmark' : bookmark
+    }
+    return render(request, 'RMS/user/candidate-dashboard.html', context)
 
 @login_required
 def user_profile(request):

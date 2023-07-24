@@ -96,37 +96,19 @@
           <!-- START JOB-LIST -->
           <section class="section">
             <div class="container">
-              <div class="row">
+              <div class="row d-flex">
                 <div class="col-lg-9">
                   <div class="me-lg-5">
                     <div class="job-list-header">
                       <form action="#">
                         <div class="row g-2">
-                          <div class="col-lg-3 col-md-6" >
+                          <div class="col-lg-4 col-md-6" >
                             <div class="filler-job-form">
-                              <select
-                                class="form-select"
-                                data-trigger
-                                name="choices-single-categories"
-                                id="choices-single-categories"
-                                aria-label="Default select example"
-                              >
-                                <option value="4">Accounting</option>
-                                <option value="1">IT & Software</option>
-                                <option value="3">Marketing</option>
-                                <option value="5">Banking</option>
-                              </select>
+                              <a class="btn btn-primary" href="">Click for Related Job's</a>
                             </div>
                           </div>
                           <!--end col-->
                           
-                          <div class="col-lg-3 col-md-6">
-                            <a
-                              href="javascript:void(0)"
-                              class="btn btn-primary w-100"
-                              ><i class="uil uil-filter"></i> Fliter</a
-                            >
-                          </div>
                           <!--end col-->
                         </div>
                         <!--end row-->
@@ -136,67 +118,28 @@
                     <div class="wedget-popular-title mt-4">
                       <h6>Popular</h6>
                       <ul class="list-inline">
+                        
+                        {% for popular in sector_popular%}
                         <li class="list-inline-item">
                           <div class="popular-box d-flex align-items-center">
-                            <div class="number flex-shrink-0 me-2">20</div>
+                            <div class="number flex-shrink-0 me-2">{{popular.count_job_post}}</div>
                             <a
-                              href="javascript:void(0)"
+                              href="{% url 'job_sector_categories' popular.slug%}"
                               class="primary-link stretched-link"
                             >
-                              <h6 class="fs-14 mb-0">UI/UX designer</h6>
+                              <h6 class="fs-14 mb-0">{{popular.name}}</h6>
                             </a>
                           </div>
                         </li>
-                        <li class="list-inline-item">
-                          <div class="popular-box d-flex align-items-center">
-                            <div class="number flex-shrink-0 me-2">18</div>
-                            <a
-                              href="javascript:void(0)"
-                              class="primary-link stretched-link"
-                            >
-                              <h6 class="fs-14 mb-0">HR manager</h6>
-                            </a>
-                          </div>
-                        </li>
-                        <li class="list-inline-item">
-                          <div class="popular-box d-flex align-items-center">
-                            <div class="number flex-shrink-0 me-2">10</div>
-                            <a
-                              href="javascript:void(0)"
-                              class="primary-link stretched-link"
-                            >
-                              <h6 class="fs-14 mb-0">Product manager</h6>
-                            </a>
-                          </div>
-                        </li>
-                        <li class="list-inline-item">
-                          <div class="popular-box d-flex align-items-center">
-                            <div class="number flex-shrink-0 me-2">15</div>
-                            <a
-                              href="javascript:void(0)"
-                              class="primary-link stretched-link"
-                            >
-                              <h6 class="fs-14 mb-0">Sales manager</h6>
-                            </a>
-                          </div>
-                        </li>
-                        <li class="list-inline-item">
-                          <div class="popular-box d-flex align-items-center">
-                            <div class="number flex-shrink-0 me-2">28</div>
-                            <a
-                              href="javascript:void(0)"
-                              class="primary-link stretched-link"
-                            >
-                              <h6 class="fs-14 mb-0">Developer</h6>
-                            </a>
-                          </div>
-                        </li>
+                        {% endfor %}
+
                       </ul>
                     </div>
                     <!--end wedget-popular-title-->
                     <!-- Job-list -->
-                    <div>
-
+                    <div class="row d-flex justify-content-center">
+                 
+                       <div class="col">
                       {% if job_list%}
                          {% for job in job_list%}
                         
@@ -308,9 +251,10 @@
                       
 
                     </div>
+                  </div>
 
                     <!--pagination-->
-                    <div class="row">
+                    <div class="row d-flex justify">
                       <div class="col-lg-12 mt-5">
                           <nav aria-label="Page navigation example">
                               <ul class="pagination job-pagination mb-0 justify-content-center">
@@ -367,7 +311,7 @@
                 </div>
                 <!--end col-->
 
-                <!-- START SIDE-BAR -->
+                 <!-- START SIDE-BAR -->
                 <div class="col-lg-3">
                   <div class="side-bar mt-5 mt-lg-0">
                     <div class="accordion" id="accordionExample">
@@ -382,7 +326,7 @@
                             aria-expanded="true"
                             aria-controls="experience"
                           >
-                            Work experience
+                           Sectors
                           </button>
                         </h2>
                         <div
@@ -391,305 +335,10 @@
                           aria-labelledby="experienceOne"
                         >
                           <div class="accordion-body">
-                            <div class="side-title">
-                              <div class="form-check mt-2">
-                                <input
-                                  class="form-check-input"
-                                  type="checkbox"
-                                  value=""
-                                  id="flexCheckChecked1"
-                                />
-                                <label
-                                  class="form-check-label ms-2 text-muted"
-                                  for="flexCheckChecked1"
-                                  >No experience</label
-                                >
-                              </div>
-                              <div class="form-check mt-2">
-                                <input
-                                  class="form-check-input"
-                                  type="checkbox"
-                                  value=""
-                                  id="flexCheckChecked2"
-                                  checked
-                                />
-                                <label
-                                  class="form-check-label ms-2 text-muted"
-                                  for="flexCheckChecked2"
-                                  >0-3 years</label
-                                >
-                              </div>
-                              <div class="form-check mt-2">
-                                <input
-                                  class="form-check-input"
-                                  type="checkbox"
-                                  value=""
-                                  id="flexCheckChecked3"
-                                />
-                                <label
-                                  class="form-check-label ms-2 text-muted"
-                                  for="flexCheckChecked3"
-                                  >3-6 years</label
-                                >
-                              </div>
-                              <div class="form-check mt-2">
-                                <input
-                                  class="form-check-input"
-                                  type="checkbox"
-                                  value=""
-                                  id="flexCheckChecked4"
-                                />
-                                <label
-                                  class="form-check-label ms-2 text-muted"
-                                  for="flexCheckChecked4"
-                                  >More than 6 years</label
-                                >
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <!-- end accordion-item -->
-
-                      <div class="accordion-item mt-3">
-                        <h2 class="accordion-header" id="jobType">
-                          <button
-                            class="accordion-button"
-                            type="button"
-                            data-bs-toggle="collapse"
-                            data-bs-target="#jobtype"
-                            aria-expanded="false"
-                            aria-controls="jobtype"
-                          >
-                            Type of employment
-                          </button>
-                        </h2>
-                        <div
-                          id="jobtype"
-                          class="accordion-collapse collapse show"
-                          aria-labelledby="jobType"
-                        >
-                          <div class="accordion-body">
-                            <div class="side-title">
-                              <div class="form-check mt-2">
-                                <input
-                                  class="form-check-input"
-                                  type="radio"
-                                  name="flexRadioDefault"
-                                  id="flexRadioDefault6"
-                                  checked
-                                />
-                                <label
-                                  class="form-check-label ms-2 text-muted"
-                                  for="flexRadioDefault6"
-                                >
-                                  Freelance
-                                </label>
-                              </div>
-                              <div class="form-check mt-2">
-                                <input
-                                  class="form-check-input"
-                                  type="radio"
-                                  name="flexRadioDefault"
-                                  id="flexRadioDefault2"
-                                />
-                                <label
-                                  class="form-check-label ms-2 text-muted"
-                                  for="flexRadioDefault2"
-                                >
-                                  Full Time
-                                </label>
-                              </div>
-                              <div class="form-check mt-2">
-                                <input
-                                  class="form-check-input"
-                                  type="radio"
-                                  name="flexRadioDefault"
-                                  id="flexRadioDefault3"
-                                />
-                                <label
-                                  class="form-check-label ms-2 text-muted"
-                                  for="flexRadioDefault3"
-                                >
-                                  Internship
-                                </label>
-                              </div>
-                              <div class="form-check mt-2">
-                                <input
-                                  class="form-check-input"
-                                  type="radio"
-                                  name="flexRadioDefault"
-                                  id="flexRadioDefault4"
-                                />
-                                <label
-                                  class="form-check-label ms-2 text-muted"
-                                  for="flexRadioDefault4"
-                                >
-                                  Part Time
-                                </label>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <!-- end accordion-item -->
-
-                      <div class="accordion-item mt-3">
-                        <h2 class="accordion-header" id="datePosted">
-                          <button
-                            class="accordion-button"
-                            type="button"
-                            data-bs-toggle="collapse"
-                            data-bs-target="#dateposted"
-                            aria-expanded="false"
-                            aria-controls="dateposted"
-                          >
-                            Date Posted
-                          </button>
-                        </h2>
-                        <div
-                          id="dateposted"
-                          class="accordion-collapse collapse show"
-                          aria-labelledby="datePosted"
-                        >
-                          <div class="accordion-body">
-                            <div class="side-title form-check-all">
-                              <div class="form-check">
-                                <input
-                                  class="form-check-input"
-                                  type="checkbox"
-                                  id="checkAll"
-                                  value=""
-                                />
-                                <label
-                                  class="form-check-label ms-2 text-muted"
-                                  for="checkAll"
-                                >
-                                  All
-                                </label>
-                              </div>
-                              <div class="form-check mt-2">
-                                <input
-                                  class="form-check-input"
-                                  type="checkbox"
-                                  name="datePosted"
-                                  value="last"
-                                  id="flexCheckChecked5"
-                                  checked
-                                />
-                                <label
-                                  class="form-check-label ms-2 text-muted"
-                                  for="flexCheckChecked5"
-                                >
-                                  Last Hour
-                                </label>
-                              </div>
-                              <div class="form-check mt-2">
-                                <input
-                                  class="form-check-input"
-                                  type="checkbox"
-                                  name="datePosted"
-                                  value="last"
-                                  id="flexCheckChecked6"
-                                />
-                                <label
-                                  class="form-check-label ms-2 text-muted"
-                                  for="flexCheckChecked6"
-                                >
-                                  Last 24 hours
-                                </label>
-                              </div>
-                              <div class="form-check mt-2">
-                                <input
-                                  class="form-check-input"
-                                  type="checkbox"
-                                  name="datePosted"
-                                  value="last"
-                                  id="flexCheckChecked7"
-                                />
-                                <label
-                                  class="form-check-label ms-2 text-muted"
-                                  for="flexCheckChecked7"
-                                >
-                                  Last 7 days
-                                </label>
-                              </div>
-                              <div class="form-check mt-2">
-                                <input
-                                  class="form-check-input"
-                                  type="checkbox"
-                                  name="datePosted"
-                                  value="last"
-                                  id="flexCheckChecked8"
-                                />
-                                <label
-                                  class="form-check-label ms-2 text-muted"
-                                  for="flexCheckChecked8"
-                                >
-                                  Last 14 days
-                                </label>
-                              </div>
-                              <div class="form-check mt-2">
-                                <input
-                                  class="form-check-input"
-                                  type="checkbox"
-                                  name="datePosted"
-                                  value="last"
-                                  id="flexCheckChecked9"
-                                />
-                                <label
-                                  class="form-check-label ms-2 text-muted"
-                                  for="flexCheckChecked9"
-                                >
-                                  Last 30 days
-                                </label>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <!-- end accordion-item -->
-
-                      <div class="accordion-item mt-3">
-                        <h2 class="accordion-header" id="tagCloud">
-                          <button
-                            class="accordion-button"
-                            type="button"
-                            data-bs-toggle="collapse"
-                            data-bs-target="#tagcloud"
-                            aria-expanded="false"
-                            aria-controls="tagcloud"
-                          >
-                            Tags Cloud
-                          </button>
-                        </h2>
-                        <div
-                          id="tagcloud"
-                          class="accordion-collapse collapse show"
-                          aria-labelledby="tagCloud"
-                        >
-                          <div class="accordion-body">
-                            <div class="side-title">
-                              <a
-                                href="javascript:void(0)"
-                                class="badge tag-cloud fs-13 mt-2"
-                                >design</a
-                              >
-                              <a
-                                href="javascript:void(0)"
-                                class="badge tag-cloud fs-13 mt-2"
-                                >marketing</a
-                              >
-                              <a
-                                href="javascript:void(0)"
-                                class="badge tag-cloud fs-13 mt-2"
-                                >business</a
-                              >
-                              <a
-                                href="javascript:void(0)"
-                                class="badge tag-cloud fs-13 mt-2"
-                                >developer</a
-                              >
+                            <div class="side-title ">
+                              {% for i in sector %}
+                              <div class="mt-2"><a href="{% url 'job_sector_categories' i.slug%}" >{{i.name}} ({{i.count_job_post}})</a></div>
+                              {% endfor %}
                             </div>
                           </div>
                         </div>
@@ -700,7 +349,7 @@
                   </div>
                   <!--end side-bar-->
                 </div>
-                <!--end col-->
+                <!--end col--> 
                 <!-- END SIDE-BAR -->
               </div>
               <!--end row-->
