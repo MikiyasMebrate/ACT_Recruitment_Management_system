@@ -225,7 +225,8 @@ class JobPostingForm(forms.ModelForm):
         'class' : 'form-control '
     }))
     sector = forms.ModelChoiceField(queryset=Sector.objects.all(), widget=forms.Select(attrs={
-        'class' : 'form-select '
+        'class' : 'form-select ',
+        'onkeyup' : 'filterFunction()'
     }))
 
     experience = forms.CharField(widget=forms.TextInput(attrs={

@@ -28,11 +28,11 @@ def scrap_skill():
     
     skill = soup.find_all('a', {'class': 'PageJob-category-link PageJob-category-link--contest'})#.attrs.get('title')
     skill2 = soup.find_all('a', {'class' : 'PageJob-category-link'})
-    for i in skill:
+    for i in skill2:
         k = i.attrs.get('title')
-        skill_list = skill_list.replace('Contests', "")
-        obj = Skill()
-        obj.title = skill_list
+        skill_list = k.replace('Contests', "")
+        obj = Sector()
+        obj.name = skill_list
         try: obj.save()
         except: pass
 

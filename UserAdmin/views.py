@@ -39,16 +39,17 @@ def admin_index(request):
     hired = Interviews.objects.filter(application__status = 'hired').count()
     total_comment = Comment.objects.count 
     recent_jobs = Job_Posting.objects.all()[:10]
-    sectors = Sector.objects.all()
+    sectors = Job_Posting.objects.all()[:10]
 
     sector_data = []
     for i in sectors:
         graph = {
-            i.name : i.count_job_post()
+            i.title : i.count_applicant()
         }
         sector_data.append(graph)
     
     sector_data_list = [[k.lower().replace(' ', '-'), v] for d in sector_data for k, v in d.items()]
+    print(sector_data_list)
 
                      
 
