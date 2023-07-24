@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" data-footer="true">
+   <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,maximum-scale=1"
+    />
+    <title>Acorn Admin Template | Customer List Page</title>
+    <meta name="description" content="Ecommerce Customer List Page" />
+    {{blog_form.media}}
+    {% include 'admin-user/include/head.html' %}
+  </head>
+  <body>
+    <div id="root">
+        {% include 'admin-user/include/navbar.html'%}
+        <main>
+            <div class="row d-flex justify-content-center">
+                <div class="col-8">
+                    <form action="" method="post" enctype="multipart/form-data"> {% csrf_token %}
+                        {{blog_form.as_p}}
+                        <button class="btn btn-primary" type="submit">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </main>
+         
+        
+    {% include 'admin-user/include/footer-js.html'%}
+  </body>
+  </html>

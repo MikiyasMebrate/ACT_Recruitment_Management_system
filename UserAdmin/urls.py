@@ -14,5 +14,7 @@ urlpatterns = [
     path('applicant/', views.applicant_all, name='applicant'),
     path('applicant/<slug:slug>/', views.applicant_category, name='applicant_category'),
     path('applicant/<slug:slug>/<slug:slug2>/', views.applicant_detail, name='applicant_detail'),
-    path('admin-list/', views.admin_account_list, name='admin-account-list')
+    path('admin-list/', views.admin_account_list, name='admin-account-list'),
+    path('admin-blog-list/', views.blog_lists, name='admin-blog-list'),
+    path('admin-blog-detail/<slug:slug>', views.blog_detail, name='admin-blog-detail'),
 ]

@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en" data-footer="true">
+   <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,maximum-scale=1"
+    />
+    <title>Acorn Admin Template | Customer List Page</title>
+    <meta name="description" content="Ecommerce Customer List Page" />
+    {% include 'admin-user/include/head.html' %}
+    {{blog_form.media}}
+  </head>
+  <body>
+            <!-- Modal -->
+            <div class="modal fade" id="allBlog" tabindex="-1" aria-labelledby="allBlogLabel" aria-hidden="true">
+              <form action="" method="post" enctype="multipart/form-data">{% csrf_token %}
+                  <div class="modal-dialog  modal-lg modal-dialog-centered modal-dialog-scrollable">
+                      <div class="modal-content">
+                          <div class="modal-header">
+                              <h5 class="modal-title" id="allBlogLabel">Add Admin</h5>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+  
+                          <div class="modal-body">
+                              <div class="row">
+                                  <div class="col">
+                                      <div class="mb-5">
+                                          <h2 class="small-title">Blog Info</h2>
+                                          <div class="card">
+                                              <div class="card-body">
+                                                {{blog_form.as_p}}
+                                              </div>
+                                          </div>
+                                      </div>
+                                  </div>
+                              </div>
+  
+                          </div>
+                          <div class="modal-footer">
+                              <button type="button" class="btn btn-muted" data-bs-dismiss="modal">Close</button>
+                              <button type="submit" class="btn btn-primary">Create Account</button>
+                          </div>
+                      </div>
+              </form>
+          </div>
+      </div>
+    <div id="root">
+
+        {% include 'admin-user/include/navbar.html'%}
+      <main>
+        {% include 'admin-user/include/messages.html' %}
+        
+        <!-- START BLOG-PAGE -->
+        <section class="section">
+            <div class="container">
+              <div class="row align-items-center">
+                <div class="col-lg-12">
+                  <div class="mb-4">
+                    <h4>Latest & Trending Blog Post</h4>
+                  </div>
+                </div>
+                <!--end col-->
+                <div class="row">
+                  <div class="col-6">
+                    <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#allBlog">Create Blog</button>
+                  </div>
+                </div>
+                <div class="col-lg-7">
+                  <div class="post-preview overflow-hidden rounded-3 mb-3 mb-lg-0">
+                    <a href="{% url 'admin-blog-detail' latest_blog.slug%}"><img src="/media/{{latest_blog.image}}" alt="Blog"
+                        class="img-fluid blog-img" /></a>
+                  </div>
+                </div>
+                <!--end col-->
+                <div class="col-lg-5">
+                  <!-- Post-->
+                  <article class="post position-relative">
+                    <div class="post ms-lg-4">
+                      <p class="text-muted mb-2">
+                       <b>
+                        {% if latest_blog %} 
+                        {% for types in latest_blog.type.all %}
+                        {{types}} {% endfor %}</b>- {{latest_blog.created_at|timesince }} ago 
+                        {% endif %}
+                      </p>
+                      <h5 class="mb-3">
+                        <a href="{% url 'admin-blog-detail' latest_blog.slug%}" class="primary-link">{{ latest_blog.title }}</a>
+                      </h5>
+                        <p class="text">{{latest_blog.description}}</p>
+                        <a class="read-more" href="{% url 'admin-blog-detail' latest_blog.slug%}">Read More</a>
+                      
+                      
+                    </div>
+                  </article>
+                  <!-- Post end-->
+                </div>
+                <!--end col-->
+              </div>
+              <!--end row-->
+  
+  
+  
+              <div class="row mt-5">
+                <div class="col-lg-12">
+                  <div>
+                    <h4>All Blog Post</h4>
+                  </div>
+                </div>
+  
+  
+                {% for blog in blogs %}
+                <div class="col-md-4 mt-2">
+                  <article class="post position-relative mt-4">
+                    <div class="post-preview overflow-hidden mb-3 rounded-3">
+                      <a href="{% url 'admin-blog-detail' blog.slug%}"><img src="/media/{{blog.image}}" alt=""
+                          class="img-fluid blog-img" style="width: auto; height: 230px;" /></a>
+                    </div>
+                    <p class="text-muted mb-2">
+                     
+                      <b>  {% for type in blog.type.all %} {{type}} {% endfor %} </b> - {{blog.created_at|timesince }} ago
+                    </p>
+                    <h5 class="mb-3">
+                      <a href="{% url 'admin-blog-detail' blog.slug %}" class="primary-link">{{blog.title}}</a>
+                    </h5>
+                    <p class="text">{{blog.description}}</p>
+                    <a class="read-more" href="{% url 'admin-blog-detail' blog.slug%}">Read More</a>
+                  </article>
+                </div>
+                <!--end col-->
+                {% endfor %}
+        
+
+         <div class="row">
+                    <div class="col-lg-12 mt-5">
+                        <nav aria-label="Page navigation example">
+                            <ul class="pagination job-pagination mb-0 justify-content-center">
+                              {% if not blogs.has_previous %}
+                              <li class="page-item ">
+                                <a class="page-link disabled" href="">
+                                    <i class="mdi mdi-chevron-double-left fs-15"></i>
+                                </a>
+                            </li>
+                            {% endif %}
+                              {% if blogs.has_previous %}
+                              <li class="page-item ">
+                                <a class="page-link" href="?page={{ blogs.previous_page_number }}">
+                                    <i class="mdi mdi-chevron-double-left fs-15"></i>
+                                </a>
+                            </li>
+                              {% endif %}
+    
+                              {% if blogs.has_previous %}
+                                    <li class="page-item "><a class="page-link" href="?page={{ blogs.previous_page_number }}">{{ blogs.previous_page_number }}</a></li>
+                              {% endif %}
+    
+                              <span class="current-page">
+                                <li class="page-item active"><a class="page-link" href="#">{{ blogs.number }}</a></li>
+                              </span>
+                               
+                              {% if blogs.has_next %}
+                              <li class="page-item"><a  class="page-link"  href="?page={{ blogs.next_page_number }}">{{ blogs.next_page_number }}</a></li>
+                             {% endif %}
+    
+                             {% if blogs.has_next %}
+                             <li class="page-item">
+                              <a class="page-link" href="?page={{ blogs.next_page_number }}">
+                                  <i class="mdi mdi-chevron-double-right fs-15"></i>
+                              </a>
+                              </li>
+                            {% endif %}
+    
+                            {% if  not blogs.has_next %}
+                            <li class="page-item">
+                             <a class="page-link disabled " href="">
+                                 <i class="mdi mdi-chevron-double-right fs-15"></i>
+                             </a>
+                             </li>
+                           {% endif %}
+                                    <!-- End blog pagination -->
+                                
+                            </ul>
+                        </nav>
+                    </div><!--end col-->
+       </div><!-- end row -->
+
+
+
+      </main>
+    {% include 'admin-user/include/footer-js.html'%}
+  </body>
+  </html>

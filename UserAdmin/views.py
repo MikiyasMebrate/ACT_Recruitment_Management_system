@@ -11,8 +11,23 @@ from django.db.models import Q
 from django.contrib.sessions.models import Session
 from django.utils import timezone
 from Company.models import Comment
+from Company.models import Blog, Blog_Categories
+from .forms import BlogForm
+import os
+import telebot
+from bs4 import BeautifulSoup
 
 # Create your views here.
+
+
+
+BOT_TOKEN = os.environ.get('6195701188:AAGYJvuebbXWUatD4MtOwJ8NNASCdMlXjwE')
+bot = telebot.TeleBot('6195701188:AAGYJvuebbXWUatD4MtOwJ8NNASCdMlXjwE')
+channel_name = '@act_job_board'
+
+
+
+
 @login_required
 @admin_user_required
 def admin_index(request):
@@ -89,8 +104,44 @@ def job_board_view(request):
     if request.method == 'POST':
         if form.is_valid():
             obj = form.save(commit=False)
+            title = obj.title
+            sector = obj.sector
+            description = BeautifulSoup(obj.description, 'html.parser').text
+            experience = obj.experience
+            vacancies = obj.vacancies
+            location = obj.location 
+            salary_range_start = obj.salary_range_start
+            salary_range_final  = obj.salary_range_final
+            type = obj.type
+            date_closed = obj.date_closed
+
             obj.save()
             form.save_m2m()
+
+            skills = obj.skills.all()
+            skill_names = [str(skill) for skill in skills]
+            skills = ', '.join(skill_names)
+
+
+            text = f'''@act_job_board
+ACT American College of Technology\n
+JOB BOARD\n
+- Job Title: {title}\n
+- Sector: {sector}\n
+- Vacancies: {vacancies}\n
+- Job Type: {type}\n
+- Experience: {experience}\n
+- Description: {description}\n
+- Skills: {skills}\n
+- Location: {location}\n
+- Date Close: {date_closed}\n
+- Salary: {salary_range_start} - {salary_range_final}\n
+            
+ '''
+            try: bot.send_message(chat_id=channel_name, text=text)
+            except: pass
+                        
+
             messages.success(request, "Successfully Published.")
             return redirect('job-list-admin')
         else:
@@ -114,7 +165,46 @@ def job_detail_view(request, slug):
 
     if request.method == 'POST':
         if form.is_valid():
-            form.save()
+            obj = form.save(commit=False)
+
+            title = obj.title
+            sector = obj.sector
+            description = BeautifulSoup(obj.description, 'html.parser').text
+            experience = obj.experience
+            vacancies = obj.vacancies
+            location = obj.location 
+            salary_range_start = obj.salary_range_start
+            salary_range_final  = obj.salary_range_final
+            type = obj.type
+            date_closed = obj.date_closed
+
+            obj.save()
+            form.save_m2m()
+
+            skills = obj.skills.all()
+            skill_names = [str(skill) for skill in skills]
+            skills = ', '.join(skill_names)
+
+
+            text = f'''@act_job_board
+ACT American College of Technology\n
+JOB BOARD\n
+- Job Title: {title}\n
+- Sector: {sector}\n
+- Vacancies: {vacancies}\n
+- Job Type: {type}\n
+- Experience: {experience}\n
+- Description: {description}\n
+- Skills: {skills}\n
+- Location: {location}\n
+- Date Close: {date_closed}\n
+- Salary: {salary_range_start} - {salary_range_final}\n
+            
+ '''
+            try: bot.send_message(chat_id=channel_name, text=text)
+            except: pass
+
+
             messages.success(request, "Successfully Published.")
             return redirect('job-list-admin')
         else:
@@ -312,3 +402,56 @@ def admin_account_list(request):
         'form':form
     }
     return render(request, 'admin-user/admin-list.html', context)
+
+
+#BLOG
+@login_required
+@admin_user_required
+def blog_lists(request):
+    try:
+        latest_blog = Blog.objects.first()
+        blogs = Blog.objects.all().exclude(id = latest_blog.id)
+    except:
+        latest_blog  = None
+        blogs = None
+
+    blog_form = BlogForm(request.POST or None, request.FILES or None)
+    if request.method == 'POST':
+        if blog_form.is_valid():
+            blog_form.save()
+            messages.success(request, 'Successfully Updated')
+            return redirect('admin-blog-list')
+
+    paginator = Paginator(blogs, 9)
+    page_number = request.GET.get('page')
+    page = paginator.get_page(page_number)
+
+    context = {
+        'latest_blog' : latest_blog,
+        'blogs' : page,
+        'blog_form' : blog_form
+    }
+    return render(request,'admin-user/blog.html',context )
+
+@login_required
+@admin_user_required
+def blog_detail(request, slug):
+    blog = Blog.objects.filter(slug = slug).first()
+    latest_post = Blog.objects.all().exclude(slug = slug)[:4]
+    comments =  Comment.objects.filter(blog__pk = blog.pk)
+   
+    blog_form = BlogForm(request.POST or None, request.FILES or None, instance=blog)
+    if request.method == 'POST':
+        if blog_form.is_valid():
+            blog_form.save()
+            messages.success(request, 'Successfully Updated')
+            return redirect('admin-blog-list')
+            
+
+    context = {
+        'blog' : blog,
+        'latest_posts' : latest_post,
+        'comments' : comments,
+        'blog_form' : blog_form
+    }
+    return render(request,'admin-user/blog-detail.html', context)
